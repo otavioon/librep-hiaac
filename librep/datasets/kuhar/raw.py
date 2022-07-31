@@ -70,6 +70,14 @@ class RawKuHar:
                              download_destination=file_path,
                              unzip_dir=self.dataset_dir)
 
+    @property
+    def users(self):
+        return self.get_all_user_ids()
+
+    @property
+    def activities(self):
+        return self.get_all_activity_ids()
+
     def _read_metadata(self):
         # Let's list all CSV files in the directory
         files = glob.glob(os.path.join(self.dataset_dir, "*", "*.csv"))
@@ -175,4 +183,3 @@ class RawKuHar:
 class TrimmedRawKuHar(RawKuHar):
     # 2. Trimmed Raw Dataset v5
     dataset_url = "https://data.mendeley.com/public-files/datasets/45f952y38r/files/49c6120b-59fd-466c-97da-35d53a4be595/file_downloaded"
-
