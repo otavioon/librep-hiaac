@@ -32,12 +32,12 @@ class FFT(InvertibleTransform):
         return fftpack.ifft(data)
 
     
-class TransformNode:
-    def __init__(self, transform, action: str = "fit_transform"):
-        self.transform = transform
-        self.action = action
+# class TransformNode:
+#     def __init__(self, transform, action: str = "fit_transform"):
+#         self.transform = transform
+#         self.action = action
         
-    def run(self, *args, **kwargs):
-        if action == "fit_transform":
-            return self.fit_transform(*args, **kwargs)
+#     def run(self, *args, **kwargs):
+#         if action == "fit_transform":
+#             return self.fit_transform(*args, **kwargs)
         
