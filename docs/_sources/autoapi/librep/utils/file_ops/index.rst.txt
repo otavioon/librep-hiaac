@@ -1,0 +1,56 @@
+:py:mod:`librep.utils.file_ops`
+===============================
+
+.. py:module:: librep.utils.file_ops
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   librep.utils.file_ops.download_unzip_check
+   librep.utils.file_ops.download_url
+   librep.utils.file_ops.file_checksum
+   librep.utils.file_ops.json_dump
+   librep.utils.file_ops.unzip_file
+
+
+
+.. py:exception:: ChecksumError
+
+   Bases: :py:obj:`Exception`
+
+   Common base class for all non-exit exceptions.
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+.. py:function:: download_unzip_check(url, download_destination, checksum = None, remove_on_check_error = True, unzip_dir = None, remove_downloads = True)
+
+
+.. py:function:: download_url(url, file_path)
+
+   Download an URL to a path
+
+   Args:
+       url (str): URL to perform download
+       file_path (Path): Path to store downloaded data
+
+   Returns:
+       None
+
+
+.. py:function:: file_checksum(file_path)
+
+
+.. py:function:: json_dump(file_path, data, indent = 4, sort_keys = True, **json_kwargs)
+
+
+.. py:function:: unzip_file(file_path, destination_dir)
+
+

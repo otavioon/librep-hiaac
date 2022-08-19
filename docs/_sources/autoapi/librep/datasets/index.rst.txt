@@ -1,0 +1,16 @@
+:py:mod:`librep.datasets`
+=========================
+
+.. py:module:: librep.datasets
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   kuhar/index.rst
+   motionsense/index.rst
+
+

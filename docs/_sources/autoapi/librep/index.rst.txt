@@ -1,0 +1,58 @@
+:py:mod:`librep`
+================
+
+.. py:module:: librep
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   base/index.rst
+   config/index.rst
+   datasets/index.rst
+   estimators/index.rst
+   losses/index.rst
+   metrics/index.rst
+   transforms/index.rst
+   utils/index.rst
+   workflow/index.rst
+
+
+Package Contents
+----------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   librep.import_submodules
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   librep.__all__
+
+
+.. py:data:: __all__
+   
+
+   
+
+.. py:function:: import_submodules(package_name)
+
+   Import all submodules of a module, recursively
+
+   :param package_name: Package name
+   :type package_name: str
+   :rtype: dict[types.ModuleType]
+
+

@@ -1,0 +1,25 @@
+:py:mod:`librep.utils.module`
+=============================
+
+.. py:module:: librep.utils.module
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   librep.utils.module.load_submodules
+
+
+
+.. py:function:: load_submodules(basemod, load_all = True, exclude_pattern = '(.*[tT]est.*)|(_.*)')
+
+   Traverse the source of the module structure starting with module `basemod`, loading all packages plus all files if
+   `load_all` is True, excluding anything whose name matches `exclude_pattern`.
+
+

@@ -1,0 +1,30 @@
+:py:mod:`librep.transforms.stats`
+=================================
+
+.. py:module:: librep.transforms.stats
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.transforms.stats.StatsTransform
+
+
+
+
+.. py:class:: StatsTransform(keep_values = False, capture_statistical = True, capture_indices = True)
+
+   Bases: :py:obj:`librep.base.transform.Transform`
+
+   .. py:method:: fit(X, y)
+
+
+   .. py:method:: transform(X)
+
+
+

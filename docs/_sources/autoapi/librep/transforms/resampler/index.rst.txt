@@ -1,0 +1,30 @@
+:py:mod:`librep.transforms.resampler`
+=====================================
+
+.. py:module:: librep.transforms.resampler
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.transforms.resampler.SimpleResampler
+
+
+
+
+.. py:class:: SimpleResampler(new_sample_size)
+
+   Bases: :py:obj:`librep.base.transform.Transform`
+
+   .. py:method:: fit(X, y)
+
+
+   .. py:method:: transform(X)
+
+
+

@@ -1,0 +1,36 @@
+:py:mod:`librep.base.estimator`
+===============================
+
+.. py:module:: librep.base.estimator
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.base.estimator.Estimator
+
+
+
+
+.. py:class:: Estimator
+
+   Bases: :py:obj:`librep.base.parametrizable.Parametrizable`
+
+   .. py:method:: fit(X, y = None, **estimator_params)
+      :abstractmethod:
+
+
+   .. py:method:: fit_predict(X, y = None, **estimator_params)
+      :abstractmethod:
+
+
+   .. py:method:: predict(X)
+      :abstractmethod:
+
+
+

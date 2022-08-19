@@ -1,0 +1,32 @@
+:py:mod:`librep.utils.transform`
+================================
+
+.. py:module:: librep.utils.transform
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.utils.transform.TransformDataset
+   librep.utils.transform.WindowedTransform
+
+
+
+
+.. py:class:: TransformDataset(transforms)
+
+   .. py:method:: __call__(dataset)
+
+
+
+.. py:class:: WindowedTransform(transform, window_size, overlap = 0, start = 0, end = None, collate_fn = np.concatenate)
+
+   .. py:method:: fit_transform(X, y = None, **fit_params)
+
+
+

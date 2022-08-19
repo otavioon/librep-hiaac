@@ -1,0 +1,156 @@
+:py:mod:`librep.datasets.kuhar`
+===============================
+
+.. py:module:: librep.datasets.kuhar
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.datasets.kuhar.KuHarDataset
+   librep.datasets.kuhar.KuHarDatasetGenerator
+   librep.datasets.kuhar.RawKuHar
+   librep.datasets.kuhar.RawKuHarIterator
+   librep.datasets.kuhar.TrimmedRawKuHar
+
+
+
+
+.. py:exception:: DatasetSplitError
+
+   Bases: :py:obj:`Exception`
+
+   Common base class for all non-exit exceptions.
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+.. py:class:: KuHarDataset(dataframe, sensors = None, label_columns = 'activity code', as_array = True)
+
+   Bases: :py:obj:`librep.utils.dataset.PandasDataset`
+
+   An abstract class representing a generic map-style dataset which
+   implement the getitem and len protocols. All datasets that represent a map
+   from keys to data samples should subclass it.
+
+   Datasets subclassed from this class can be acessed using the subscription
+   syntax, such as `dataset[index]`. It usually return a tuple where the first
+   element represent the sample and the second, the label.
+
+   All map-style datasets must be implement the len protocol which returns the
+   number of samples in the dataset.
+
+
+.. py:class:: KuHarDatasetGenerator(kuhar_iterator, time_window = None, window_overlap = None)
+
+   .. py:method:: __create_time_series(data)
+
+
+   .. py:method:: __repr__()
+
+      Return repr(self).
+
+
+   .. py:method:: __str__()
+
+      Return str(self).
+
+
+   .. py:method:: balance_dataset_to_minimum(dataframe, column = 'activity code')
+
+
+   .. py:method:: check_if_unique_per_df(dataset_to_check, datasets_list, column = 'user')
+
+
+   .. py:method:: create_datasets(train_size, validation_size, test_size, ensure_distinct_users_per_dataset = True, balance_samples = True, activities_remap = None, seed = None, use_tqdm = True)
+
+
+   .. py:method:: get_full_df(use_tqdm = True)
+
+
+   .. py:method:: train_test_split(df, users, activities, train_size, validation_size, test_size, retries = 10, ensure_distinct_users_per_dataset = True, seed = None)
+
+
+
+.. py:class:: RawKuHar(dataset_dir, download = False)
+
+   .. py:attribute:: activity_codes
+      
+
+      
+
+   .. py:attribute:: activity_names
+      
+
+      
+
+   .. py:attribute:: dataset_url
+      :annotation: = https://data.mendeley.com/public-files/datasets/45f952y38r/files/d3126562-b795-4eba-8559-310a2585...
+
+      
+
+   .. py:method:: __download_and_extract()
+
+
+   .. py:method:: __read_metadata()
+
+
+   .. py:method:: __repr__()
+
+      Return repr(self).
+
+
+   .. py:method:: __str__()
+
+      Return str(self).
+
+
+   .. py:method:: activities()
+      :property:
+
+
+   .. py:method:: read_information(file, activity_code, user, serial = None)
+
+
+   .. py:method:: users()
+      :property:
+
+
+
+.. py:class:: RawKuHarIterator(kuhar, users = None, activities = None, shuffle = False)
+
+   .. py:method:: __get_data_iterator()
+
+
+   .. py:method:: __iter__()
+
+
+   .. py:method:: __next__()
+
+
+   .. py:method:: __repr__()
+
+      Return repr(self).
+
+
+   .. py:method:: __str__()
+
+      Return str(self).
+
+
+
+.. py:class:: TrimmedRawKuHar(dataset_dir, download = False)
+
+   Bases: :py:obj:`RawKuHar`
+
+   .. py:attribute:: dataset_url
+      :annotation: = https://data.mendeley.com/public-files/datasets/45f952y38r/files/49c6120b-59fd-466c-97da-35d53a4b...
+
+      
+
+

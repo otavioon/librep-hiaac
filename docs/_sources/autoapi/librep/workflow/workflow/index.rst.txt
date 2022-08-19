@@ -1,0 +1,101 @@
+:py:mod:`librep.workflow.workflow`
+==================================
+
+.. py:module:: librep.workflow.workflow
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.workflow.workflow.CallableNode
+   librep.workflow.workflow.EstimatorNode
+   librep.workflow.workflow.TransformNode
+   librep.workflow.workflow.Workflow
+   librep.workflow.workflow.WorkflowNode
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   librep.workflow.workflow.make_workflow
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   librep.workflow.workflow.NodeType
+   librep.workflow.workflow.node_wrappers
+
+
+.. py:class:: CallableNode(fn, name = '', description = '')
+
+   Bases: :py:obj:`WorkflowNode`
+
+   .. py:method:: __call__(*args)
+
+
+
+.. py:class:: EstimatorNode(estimator, action = 'fit_predict', name = '', description = '', **estimator_params)
+
+   .. py:method:: __call__(*args)
+
+
+
+.. py:data:: NodeType
+   
+
+   
+
+.. py:class:: TransformNode(transform, action = 'fit_transform', name = '', description = '', **fit_params)
+
+   .. py:method:: __call__(*args)
+
+
+
+.. py:class:: Workflow(name = '', description = '')
+
+   .. py:method:: add_edge(from_node, to_node)
+
+
+   .. py:method:: add_node(key, value)
+
+
+   .. py:method:: from_nodes_edges(nodes, edges, start_node)
+      :staticmethod:
+
+
+   .. py:method:: set_start_node(key)
+
+
+
+.. py:class:: WorkflowNode(name = '', description = '')
+
+   .. py:method:: __call__(*args)
+      :abstractmethod:
+
+
+   .. py:method:: __str__()
+
+      Return str(self).
+
+
+
+.. py:function:: make_workflow(actions, graph = None, start_node = None)
+
+
+.. py:data:: node_wrappers
+   
+
+   
+

@@ -1,0 +1,55 @@
+:py:mod:`librep.base.transform`
+===============================
+
+.. py:module:: librep.base.transform
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.base.transform.InvertibleTransform
+   librep.base.transform.PartialTransform
+   librep.base.transform.Transform
+
+
+
+
+.. py:class:: InvertibleTransform
+
+   Bases: :py:obj:`Transform`
+
+   .. py:method:: inverse_transform(X)
+      :abstractmethod:
+
+
+
+.. py:class:: PartialTransform
+
+   Bases: :py:obj:`Transform`
+
+   .. py:method:: partial_fit(X, y = None, **fit_params)
+      :abstractmethod:
+
+
+
+.. py:class:: Transform
+
+   Bases: :py:obj:`librep.base.parametrizable.Parametrizable`
+
+   .. py:method:: fit(X, y = None, **fit_params)
+      :abstractmethod:
+
+
+   .. py:method:: fit_transform(X, y = None, **fit_params)
+
+
+   .. py:method:: transform(X)
+      :abstractmethod:
+
+
+

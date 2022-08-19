@@ -1,0 +1,24 @@
+:py:mod:`librep.config.type_definitions`
+========================================
+
+.. py:module:: librep.config.type_definitions
+
+
+Module Contents
+---------------
+
+.. py:data:: ArrayLike
+   
+
+   
+
+.. py:data:: KeyType
+   
+
+   
+
+.. py:data:: PathLike
+   
+
+   
+

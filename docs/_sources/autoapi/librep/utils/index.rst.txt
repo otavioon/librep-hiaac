@@ -1,0 +1,27 @@
+:py:mod:`librep.utils`
+======================
+
+.. py:module:: librep.utils
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   visualization/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   dataset/index.rst
+   file_ops/index.rst
+   module/index.rst
+   transform/index.rst
+
+

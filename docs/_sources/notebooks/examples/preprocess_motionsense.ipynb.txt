@@ -1,0 +1,344 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "498254b0-ea10-4f02-b718-d26ce855b77b",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-16T01:54:00.076826Z",
+     "iopub.status.busy": "2022-08-16T01:54:00.076720Z",
+     "iopub.status.idle": "2022-08-16T01:54:00.088907Z",
+     "shell.execute_reply": "2022-08-16T01:54:00.088535Z",
+     "shell.execute_reply.started": "2022-08-16T01:54:00.076804Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "%load_ext autoreload\n",
+    "%autoreload 2\n",
+    "\n",
+    "import sys\n",
+    "\n",
+    "sys.path.append(\"..\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "fad53baa-1190-4969-9ae9-489321c5966e",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-16T01:54:00.089584Z",
+     "iopub.status.busy": "2022-08-16T01:54:00.089450Z",
+     "iopub.status.idle": "2022-08-16T01:54:01.080724Z",
+     "shell.execute_reply": "2022-08-16T01:54:01.080256Z",
+     "shell.execute_reply.started": "2022-08-16T01:54:00.089569Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "from pathlib import Path\n",
+    "from typing import List\n",
+    "import hashlib\n",
+    "import matplotlib.pyplot as plt\n",
+    "\n",
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "from sklearn.ensemble import RandomForestClassifier\n",
+    "from sklearn.metrics import (\n",
+    "    classification_report,\n",
+    "    confusion_matrix,\n",
+    "    ConfusionMatrixDisplay,\n",
+    "    accuracy_score\n",
+    ")\n",
+    "\n",
+    "from librep.datasets.motionsense import (\n",
+    "    RawMotionSense,\n",
+    "    RawMotionSenseIterator,\n",
+    "    MotionSenseDatasetGenerator,\n",
+    "    MotionSenseDataset,\n",
+    ")\n",
+    "from librep.utils.dataset import load_full_data, PandasDatasetsIO\n",
+    "\n",
+    "%matplotlib inline"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "12bf855c-9947-4174-980c-5942527eaf04",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-16T01:54:01.081534Z",
+     "iopub.status.busy": "2022-08-16T01:54:01.081372Z",
+     "iopub.status.idle": "2022-08-16T01:54:01.101969Z",
+     "shell.execute_reply": "2022-08-16T01:54:01.101565Z",
+     "shell.execute_reply.started": "2022-08-16T01:54:01.081516Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "MotionSense Dataset at: '../data/datasets/MotionSense/A_DeviceMotion_data'"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "dataset_dir = Path(\"../data/datasets/MotionSense/A_DeviceMotion_data\")\n",
+    "motionsense_dataset = RawMotionSense(dataset_dir, download=False)\n",
+    "motionsense_dataset"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "366c2abc",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-16T01:54:01.102746Z",
+     "iopub.status.busy": "2022-08-16T01:54:01.102610Z",
+     "iopub.status.idle": "2022-08-16T01:54:01.118397Z",
+     "shell.execute_reply": "2022-08-16T01:54:01.118088Z",
+     "shell.execute_reply.started": "2022-08-16T01:54:01.102729Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "['dws', 'ups', 'sit', 'std', 'wlk', 'jog']"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "act_names = [motionsense_dataset.activity_names[i] for i in motionsense_dataset.activities]\n",
+    "act_names"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "39ffda3f-7686-49d1-a02d-576e4207b6c9",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-16T01:54:01.119047Z",
+     "iopub.status.busy": "2022-08-16T01:54:01.118936Z",
+     "iopub.status.idle": "2022-08-16T01:54:01.132571Z",
+     "shell.execute_reply": "2022-08-16T01:54:01.132123Z",
+     "shell.execute_reply.started": "2022-08-16T01:54:01.119033Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "MotionSense Iterator: users=24, activities=6"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "iterator = RawMotionSenseIterator(motionsense_dataset, users_to_select=None, activities_to_select=None)\n",
+    "iterator"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "f75a8cb6-5083-44f9-bfbd-50f55836bb75",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-16T01:54:01.133511Z",
+     "iopub.status.busy": "2022-08-16T01:54:01.133340Z",
+     "iopub.status.idle": "2022-08-16T01:54:01.149691Z",
+     "shell.execute_reply": "2022-08-16T01:54:01.149345Z",
+     "shell.execute_reply.started": "2022-08-16T01:54:01.133494Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Dataset generator: time_window=150, overlap=0"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "motionsense_v1 = MotionSenseDatasetGenerator(iterator, time_window=150, window_overlap=0)\n",
+    "motionsense_v1"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "add044d7-6666-4f31-93e5-d4af57e01e56",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-16T01:54:01.151136Z",
+     "iopub.status.busy": "2022-08-16T01:54:01.150980Z",
+     "iopub.status.idle": "2022-08-16T01:54:24.816452Z",
+     "shell.execute_reply": "2022-08-16T01:54:24.816008Z",
+     "shell.execute_reply.started": "2022-08-16T01:54:01.151120Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "Generating full df over MotionSense View: 360it [00:23, 15.43it/s]\n"
+     ]
+    }
+   ],
+   "source": [
+    "train, validation, test = motionsense_v1.create_datasets(\n",
+    "    train_size=0.7,\n",
+    "    validation_size=0.1,\n",
+    "    test_size=0.2,\n",
+    "    ensure_distinct_users_per_dataset=True,\n",
+    "    balance_samples=True,\n",
+    "    seed=0\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "9f0dcb11-f07e-4e60-a859-ea209900beb0",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-16T01:54:24.817093Z",
+     "iopub.status.busy": "2022-08-16T01:54:24.816984Z",
+     "iopub.status.idle": "2022-08-16T01:54:25.189801Z",
+     "shell.execute_reply": "2022-08-16T01:54:25.189374Z",
+     "shell.execute_reply.started": "2022-08-16T01:54:24.817079Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "bc25931a783ad4ddc7d5dfaafb6ef7bcc7caf547\n",
+      "a2995751f63a981b933a67386208d73cd0ae606a\n",
+      "3b3d2dc852908c1f499a2422e605e23a9344cfb2\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(hashlib.sha1(pd.util.hash_pandas_object(train).values).hexdigest())\n",
+    "print(hashlib.sha1(pd.util.hash_pandas_object(validation).values).hexdigest())\n",
+    "print(hashlib.sha1(pd.util.hash_pandas_object(test).values).hexdigest())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "c7a9cda8-f111-4715-94c2-e474574149ab",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-16T01:54:25.190488Z",
+     "iopub.status.busy": "2022-08-16T01:54:25.190374Z",
+     "iopub.status.idle": "2022-08-16T01:54:25.204611Z",
+     "shell.execute_reply": "2022-08-16T01:54:25.204240Z",
+     "shell.execute_reply.started": "2022-08-16T01:54:25.190473Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "PandasDatasetIO at '../data/views/MotionSense/balanced_view'"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "output_path = Path(\"../data/views/MotionSense/balanced_view\")\n",
+    "\n",
+    "description = \"\"\"# Balanced MotionSense\n",
+    "\n",
+    "This view contains train, validation and test subsets in the following proportions:\n",
+    "- Train: 70% of samples\n",
+    "- Validation: 10% of samples\n",
+    "- Test: 20% of samples\n",
+    "\n",
+    "After splits, the datasets were balanced in relation to the activity code column, that is, each subset have the same number of activitiy samples.\n",
+    "\n",
+    "**NOTE**: Each subset contain samples from distinct users, that is, samples of one user belongs exclusivelly to one of three subsets.\n",
+    "\"\"\"\n",
+    "pandas_io = PandasDatasetsIO(output_path)\n",
+    "pandas_io"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "4f4a9c1b-beca-4c22-a84a-319fc341e709",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-16T01:54:25.205376Z",
+     "iopub.status.busy": "2022-08-16T01:54:25.205212Z",
+     "iopub.status.idle": "2022-08-16T01:54:30.451228Z",
+     "shell.execute_reply": "2022-08-16T01:54:30.450782Z",
+     "shell.execute_reply.started": "2022-08-16T01:54:25.205359Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "pandas_io.save(train=train, validation=validation, test=test, description=description)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.10"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

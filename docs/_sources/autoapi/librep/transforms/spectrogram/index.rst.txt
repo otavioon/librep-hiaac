@@ -1,0 +1,30 @@
+:py:mod:`librep.transforms.spectrogram`
+=======================================
+
+.. py:module:: librep.transforms.spectrogram
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.transforms.spectrogram.Spectrogram
+
+
+
+
+.. py:class:: Spectrogram(fs = 100, segment_size = 50, overlap = 30)
+
+   Bases: :py:obj:`librep.base.transform.Transform`
+
+   .. py:method:: fit(X, y = None)
+
+
+   .. py:method:: transform(X)
+
+
+

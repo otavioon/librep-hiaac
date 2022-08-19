@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>librep &mdash; Librep 0.0.1-dev
+ documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="librep.base" href="base/index.html" />
+    <link rel="prev" title="Programming Reference" href="../../api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Librep
+          </a>
+              <div class="version">
+                0.0.1-dev
+
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../api.html">Programming Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="base/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.base</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.datasets</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="estimators/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.estimators</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="losses/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.losses</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="metrics/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.metrics</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="transforms/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.transforms</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.utils</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="workflow/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.workflow</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#package-contents">Package Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#attributes">Attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Example Notebooks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Librep</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../api.html">Programming Reference</a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/autoapi/librep/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="module-librep">
+<span id="librep"></span><h1><a class="reference internal" href="#module-librep" title="librep"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep</span></code></a><a class="headerlink" href="#module-librep" title="Permalink to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="base/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.base</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="base/data/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.base.data</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="base/estimator/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.base.estimator</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="base/parametrizable/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.base.parametrizable</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="base/transform/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.base.transform</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.config</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="config/type_definitions/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.config.type_definitions</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.datasets</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="datasets/kuhar/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.datasets.kuhar</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="datasets/motionsense/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.datasets.motionsense</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="estimators/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.estimators</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="estimators/sklearn/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.estimators.sklearn</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="losses/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.losses</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.metrics</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="metrics/report/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.metrics.report</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="transforms/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.transforms</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="transforms/autocorrelation/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.transforms.autocorrelation</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="transforms/fft/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.transforms.fft</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="transforms/resampler/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.transforms.resampler</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="transforms/spectrogram/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.transforms.spectrogram</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="transforms/stats/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.transforms.stats</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="transforms/umap/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.transforms.umap</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.utils</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="utils/visualization/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.utils.visualization</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="utils/visualization/graphs/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.utils.visualization.graphs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utils/dataset/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.utils.dataset</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils/file_ops/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.utils.file_ops</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils/module/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.utils.module</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils/transform/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.utils.transform</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="workflow/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.workflow</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="workflow/executor/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.workflow.executor</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow/workflow/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.workflow.workflow</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="package-contents">
+<h2>Package Contents<a class="headerlink" href="#package-contents" title="Permalink to this heading"></a></h2>
+<section id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#librep.import_submodules" title="librep.import_submodules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">import_submodules</span></code></a>(package_name)</p></td>
+<td><p>Import all submodules of a module, recursively</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="attributes">
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#librep.__all__" title="librep.__all__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__all__</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py data">
+<dt class="sig sig-object py" id="librep.__all__">
+<span class="sig-prename descclassname"><span class="pre">librep.</span></span><span class="sig-name descname"><span class="pre">__all__</span></span><a class="headerlink" href="#librep.__all__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="librep.import_submodules">
+<span class="sig-prename descclassname"><span class="pre">librep.</span></span><span class="sig-name descname"><span class="pre">import_submodules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/librep.html#import_submodules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.import_submodules" title="Permalink to this definition"></a></dt>
+<dd><p>Import all submodules of a module, recursively</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>package_name</strong> (<em>str</em>) – Package name</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>dict[types.ModuleType]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../../api.html" class="btn btn-neutral float-left" title="Programming Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="base/index.html" class="btn btn-neutral float-right" title="librep.base" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, H.IAAC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
