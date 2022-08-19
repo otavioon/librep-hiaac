@@ -58,7 +58,9 @@ class RawMotionSense:
         self.metadata_df: pd.DataFrame = self.__read_metadata()
 
     def __download_and_extract(self):
-        """Download and extract the MotionSense dataset (A only)."""
+        """Download and extract the MotionSense dataset (A only).
+
+        """
         # Create directories
         self.dataset_dir.mkdir(exist_ok=True, parents=True)
         file_path = self.dataset_dir / "motionsense.zip"
@@ -138,12 +140,7 @@ class RawMotionSense:
         Returns
         -------
         pd.DataFrame
-            Dataframe with the information of the oif the .
-
-        Raises
-        ------
-        ExceptionName
-            Why the exception is raised.
+            Dataframe with the information of the user.
 
         """
 
@@ -225,6 +222,7 @@ class RawMotionSenseIterator:
         Activities to select. If None, iterate over all activities.
     shuffle : bool
         If must iterate randomly.
+
     """
 
     def __init__(
@@ -253,6 +251,7 @@ class RawMotionSenseIterator:
         -------
         pd.DataFrame
             A dataframe for a user/activity.
+
         """
         selecteds = self.motionsense.metadata_df[
             (self.motionsense.metadata_df["user"].isin(self.users_to_select))
@@ -303,7 +302,9 @@ class MotionSenseDatasetGenerator:
         If None, a sample will be a single instant.
     window_overlap : int
         Number of samples to overlap over windows.
+
     """
+
     def __init__(
         self,
         motionsense_iterator: RawMotionSenseIterator,
@@ -332,7 +333,9 @@ class MotionSenseDatasetGenerator:
         -------
         pd.DataFrame
             Dataframe with time windows.
+
         """
+
         values = []
         column_names = []
 
@@ -407,6 +410,7 @@ class MotionSenseDatasetGenerator:
             A single dataframe, with all dataframe of windows, concatenated.
 
         """
+
         it = iter(self.motionsense_iterator)
         if use_tqdm:
             it = tqdm.tqdm(
@@ -534,6 +538,7 @@ class MotionSenseDatasetGenerator:
             A tuple with the train, validation and test dataframes.
 
         """
+
         assert np.isclose(
             sum([train_size, validation_size, test_size]), 1.0
         ), "The sizes must sum up to 1"
@@ -595,6 +600,10 @@ class MotionSenseDatasetGenerator:
 
 
 class MotionSenseDataset(PandasDataset):
+    """Dataset implementation for MotionSenseDataset.
+
+    """
+
     def __init__(
         self,
         dataframe: pd.DataFrame,
@@ -602,6 +611,39 @@ class MotionSenseDataset(PandasDataset):
         label_columns: Union[str, List[str]] = "activity code",
         as_array: bool = True,
     ):
+        """The MotionSense dataset, derived from Dataset.
+        The __getitem__ returns 2-element tuple where:
+        - The first element is the sample (from the indexed-row of the
+        dataframe with the selected sensors, as features); and
+        - The seconds element is the label (from the indexed-row of the
+        dataframe with the selected label_columns, as labels) .
+
+        Parameters
+        ----------
+        dataframe : pd.DataFrame
+            The dataframe with KuHar samples.
+        sensors : Optional[Union[str, List[str]]]
+            Which sensors from features must be selected. If None, select all
+            features.
+        label_columns : Union[str, List[str]]
+            The columns(s) that represents the label. If the value is an `str`,
+            a scalar will be returned, else, a list will be returned.
+        as_array : bool
+            If true, return a `np.ndarray`, else return a `pd.Series`, for each
+            sample.
+
+        Examples
+        ----------
+        >>> train_csv = pd.read_csv(my_filepath)
+        >>> # This will select the accelerometer (x, y, and z) from KuHar dataset
+        >>> train_dataset = MotionSenseDataset(sensors=["accel-x", "accel-y", "accel-z"], label_columns="activity code")
+        >>> len(train_dataset)
+        10
+        >>> train_dataset[0]
+        (np.ndarray(0.5, 0.6, 0.7), 0)
+
+        """
+
         if sensors is None:
             features = set(dataframe.columns) - set(label_columns)
         else:

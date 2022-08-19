@@ -18,6 +18,27 @@ class DatasetSplitError(Exception):
 
 
 class RawKuHar:
+    """This class handles raw files from KuHar Dataset.
+
+    Parameters
+    ----------
+    dataset_dir : PathLike
+        Path to the root of KuHar dataset.
+    download : bool
+        If the dataset must be downloaded before (the default is False).
+
+    Attributes
+    ----------
+    metadata_df : pd.DataFrame
+        Dataframe relating user and activities to the their respective files.
+    activity_names : Dict[int, str]
+        Dictionary relating activity codes to activity names
+    activity_codes : Dict[str, int]
+        Dictionary relating activity names to activity codes
+    dataset_dir: Path
+        Path to the root of motion sense dataset.
+
+    """
     # Version 5 KuHar Raw
     dataset_url = "https://data.mendeley.com/public-files/datasets/45f952y38r/files/d3126562-b795-4eba-8559-310a25859cc7/file_downloaded"
 
@@ -52,6 +73,9 @@ class RawKuHar:
         self.metadata_df = self.__read_metadata()
 
     def __download_and_extract(self):
+        """Download and  extract KuHar dataset.
+
+        """
         # Create directories
         self.dataset_dir.mkdir(exist_ok=True, parents=True)
         file_path = self.dataset_dir / "kuhar.zip"
@@ -62,6 +86,15 @@ class RawKuHar:
         )
 
     def __read_metadata(self) -> pd.DataFrame:
+        """Iterate over dataset files and create a metadata dataframe.
+            The metadata relates user and activities to their respective files.
+
+        Returns
+        -------
+        pd.DataFrame
+            Metadata relating users and activities to their respective CSV files.
+
+        """
         # Let's list all CSV files in the directory
         files = self.dataset_dir.rglob("*.csv")
         # files = glob.glob(os.path.join(self.dataset_dir, "*", "*.csv"))
@@ -110,6 +143,26 @@ class RawKuHar:
         user: int,
         serial: Optional[int] = None,
     ) -> pd.DataFrame:
+        """Read the information of an user/activity, based on the metadata.
+
+        Parameters
+        ----------
+        file : PathLike
+            Path to the CSV with from user and activity.
+            Can be retrieved from the metadata dataframe.
+        activity_code : int
+            The activity code.
+        user : int
+            The ID of the user.
+        serial : Optional[int]
+            The serial number (the default is None).
+
+        Returns
+        -------
+        pd.DataFrame
+            Dataframe with the information of the user.
+
+        """
         file = Path(file)
         # Default feature names from this dataset
         feature_dtypes = {
@@ -170,6 +223,22 @@ class TrimmedRawKuHar(RawKuHar):
 
 
 class RawKuHarIterator:
+    """Iterate over RawKuHar files.
+    Return a dataframe with samples from an user/activity.
+
+    Parameters
+    ----------
+    kuhar : RawKuHar
+        RawKuHar data files object.
+    users_to_select : List[str]
+        Users to select. If None, iterate over all users.
+    activities_to_select : List[str]
+        Activities to select. If None, iterate over all activities.
+    shuffle : bool
+        If must iterate randomly.
+
+    """
+
     def __init__(
         self,
         kuhar: RawKuHar,
@@ -186,6 +255,14 @@ class RawKuHarIterator:
         self.it = None
 
     def __get_data_iterator(self) -> Generator[pd.DataFrame, None, None]:
+        """Get an iterator to iterate over selected dataframes.
+
+        Returns
+        -------
+        pd.DataFrame
+            A dataframe for a user/activity.
+
+        """
         selecteds = self.kuhar.metadata_df[
             (self.kuhar.metadata_df["user"].isin(self.users_to_select))
             & (self.kuhar.metadata_df["activity code"].isin(self.activities_to_select))
@@ -220,6 +297,20 @@ class RawKuHarIterator:
 
 
 class KuHarDatasetGenerator:
+    """Generate a custom MotionSense dataset from Raw MotionSense data.
+
+    Parameters
+    ----------
+    kuhar_iterator : RawKuHarIterator
+        The iterator object to iterate over users/activities dataframes.
+    time_window : int
+        Number of samples that compose a window.
+        If None, a sample will be a single instant.
+    window_overlap : int
+        Number of samples to overlap over windows.
+
+    """
+
     def __init__(
         self,
         kuhar_iterator: RawKuHarIterator,
@@ -236,6 +327,21 @@ class KuHarDatasetGenerator:
             ), "Time window must be set when overlap is set"
 
     def __create_time_series(self, data: pd.DataFrame) -> pd.DataFrame:
+        """Create a time series with defined window size and overlap.
+
+        Parameters
+        ----------
+        data : pd.DataFrame
+            Data to be splitted to windows. Windows consist in consecutive
+            samples as features.
+
+        Returns
+        -------
+        pd.DataFrame
+            Dataframe with time windows.
+
+        """
+
         values = []
         column_names = []
         selected_features = [
@@ -299,11 +405,25 @@ class KuHarDatasetGenerator:
         return df
 
     def get_full_df(self, use_tqdm: bool = True) -> pd.DataFrame:
+        """Concatenate dataframe from windows.
+
+        Parameters
+        ----------
+        use_tqdm : bool
+            If must use tqdm as iterator (the default is True).
+
+        Returns
+        -------
+        pd.DataFrame
+            A single dataframe, with all dataframe of windows, concatenated.
+
+        """
+
         it = iter(self.kuhar_iterator)
         if use_tqdm:
             it = tqdm.tqdm(
                 it, desc="Generating full df over KuHar View",
-                position=0, 
+                position=0,
                 leave=True
             )
 
@@ -395,6 +515,37 @@ class KuHarDatasetGenerator:
         seed: int = None,
         use_tqdm: bool = True,
     ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+        """Create train/validation/test datasets.
+
+        Parameters
+        ----------
+        train_size : float
+            Fraction of samples to training dataset.
+        validation_size : float
+            Fraction of samples to validation dataset.
+        test_size : float
+            Fraction of samples to test dataset.
+        ensure_distinct_users_per_dataset : bool
+            If True, ensure that samples from an user do not belong to distinct
+            datasets (the default is True).
+        balance_samples : bool
+            If True, the datasets will have the same number of samples per
+            class. The number of samples will be reduced to the class with the
+            minor number of samples (the default is True).
+        activities_remap : Dict[int, int]
+            A dictionaty used to replace a label from one class to another.
+        seed : int
+            The random seed (the default is None).
+        use_tqdm : bool
+            If must use tqdm as iterator (the default is True).
+
+        Returns
+        -------
+        Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]
+            A tuple with the train, validation and test dataframes.
+
+        """
+
         assert np.isclose(
             sum([train_size, validation_size, test_size]), 1.0
         ), "The sizes must sum up to 1"
@@ -477,6 +628,10 @@ class KuHarDatasetGenerator:
 
 
 class KuHarDataset(PandasDataset):
+    """Dataset implementation for KuharDataset.
+
+    """
+
     def __init__(
         self,
         dataframe: pd.DataFrame,
@@ -484,6 +639,39 @@ class KuHarDataset(PandasDataset):
         label_columns: Union[str, List[str]] = "activity code",
         as_array: bool = True,
     ):
+        """The KuHar dataset, derived from Dataset.
+        The __getitem__ returns 2-element tuple where:
+        - The first element is the sample (from the indexed-row of the
+        dataframe with the selected sensors, as features); and
+        - The seconds element is the label (from the indexed-row of the
+        dataframe with the selected label_columns, as labels) .
+
+        Parameters
+        ----------
+        dataframe : pd.DataFrame
+            The dataframe with KuHar samples.
+        sensors : Optional[Union[str, List[str]]]
+            Which sensors from features must be selected. If None, select all
+            features.
+        label_columns : Union[str, List[str]]
+            The columns(s) that represents the label. If the value is an `str`,
+            a scalar will be returned, else, a list will be returned.
+        as_array : bool
+            If true, return a `np.ndarray`, else return a `pd.Series`, for each
+            sample.
+
+        Examples
+        ----------
+        >>> train_csv = pd.read_csv(my_filepath)
+        >>> # This will select the accelerometer (x, y, and z) from KuHar dataset
+        >>> train_dataset = KuHarDataset(sensors=["accel-x", "accel-y", "accel-z"], label_columns="activity code")
+        >>> len(train_dataset)
+        10
+        >>> train_dataset[0]
+        (np.ndarray(0.5, 0.6, 0.7), 0)
+
+        """
+
         if sensors is None:
             features = set(dataframe.columns) - set(label_columns)
         else:

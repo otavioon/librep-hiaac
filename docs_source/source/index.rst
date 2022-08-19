@@ -6,7 +6,12 @@ Welcome to LibRep Documentation!
 Introduction
 ---------------
 
-Pass
+LibRep is an open-source Pytorch-based toolkit used to explore HAR problems.
+Its ambitions and features includes.
+- Data loader and generators for HAR datasets.
+- Flexible pre-processing for multi-model signals
+- Domain-specific implementations for networks, losses, evaluation metrics and more.
+
 
 Contents
 ---------------

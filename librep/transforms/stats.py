@@ -7,15 +7,47 @@ from librep.base.transform import Transform
 
 
 class StatsTransform(Transform):
+    """Extract statistical information of a sample.
+
+    Parameters
+    ----------
+    keep_values : bool
+        If true, the statistical information is concatenated with the input
+        sample. (the default is False).
+    capture_statistical : bool
+        If True, extract statistical information about the sample.
+    capture_indices : bool
+        If True, extract statistical information about the indexes of the sample.
+
+    """
+
     def __init__(self, keep_values: bool = False, capture_statistical: bool = True, capture_indices: bool = True):
         self.keep_values = keep_values
         self.capture_statistical = capture_statistical
         self.capture_indices = capture_indices
 
     def fit(self, X, y):
-        pass
+        """Not used.
 
-    def transform(self, X: ArrayLike):
+        """
+
+    def transform(self, X: ArrayLike) -> ArrayLike:
+        """Extract statistical information of the sample.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            The sample used to extract the information.
+
+        Returns
+        -------
+        ArrayLike
+            An array with the statistical information about the sample. If 
+            `keep_values` parameter is set, the statistical information will be
+            concatenated along the input sample.
+
+        """
+
         values = []
         if self.capture_statistical:
             values += [

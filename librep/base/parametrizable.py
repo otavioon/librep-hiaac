@@ -15,6 +15,7 @@ class Parametrizable:
         -------
         params : dict
             Parameter names mapped to their values.
+
         """
 
         out = dict()
@@ -40,6 +41,7 @@ class Parametrizable:
         -------
         self : estimator instance
             Estimator instance.
+
         """
 
         if not params:

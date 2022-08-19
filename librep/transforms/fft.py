@@ -11,21 +11,20 @@ class FFT(InvertibleTransform):
     Parameters
     ----------
     transpose : bool
-        Description of parameter `transpose` (the default is False).
+        Return the transpose of the transformed sample (the default is False).
     absolute : bool
-        Description of parameter `absolute` (the default is True).
+        Return the absolute values instead of a complex number (the default is True).
     centered : bool
-        Description of parameter `centered` (the default is False).
+        If True, returns the only the first half of the transformed sample, as
+        FFT is symmetric (the default is False).
 
-    Attributes
+    Examples
     ----------
-    transpose
-    absolute
-    centered
-
-    Example
-    --------
-    >>> FFT()
+    >>> time_sample = np.arange(256)
+    >>> fft_transform = FFT(centered=True)
+    >>> fft_sample = fft_transform.fit_transform(time_sample)
+    >>> fft_sample.shape
+    (128, )
 
     """
 
@@ -43,27 +42,27 @@ class FFT(InvertibleTransform):
         self.centered = centered
 
     def fit(self, X: ArrayLike, y: ArrayLike = None):
-        pass
+        """Not used.
 
-    def transform(self, X: ArrayLike):
+        """
+
+        return X
+
+    def transform(self, X: ArrayLike) -> ArrayLike:
         """Transform a sample using FFT.
 
         Parameters
         ----------
         X : ArrayLike
-            Description of parameter `X`.
+            A single sample to be transfomed with shape (n_features, ).
 
         Returns
         -------
-        type
-            Description of returned object.
-
-        Raises
-        ------
-        ExceptionName
-            Why the exception is raised.
+        ArrayLike
+            The transformed sample.
 
         """
+
         data = fftpack.fft(X)
         if self.absolute:
             data = np.abs(data)
@@ -72,7 +71,21 @@ class FFT(InvertibleTransform):
 
         return data.T if self.transpose else data
 
-    def inverse_transform(self, X: ArrayLike):
+    def inverse_transform(self, X: ArrayLike) -> ArrayLike:
+        """Transform a sample with the inverse FFT.
+
+        Parameters
+        ----------
+        X : ArrayLike
+            A single sample to be transfomed with shape (n_features, ).
+
+        Returns
+        -------
+        ArrayLike
+            The transformed sample.
+
+        """
+
         data = X.T if self.transpose else X
         # TODO absolute?
         return fftpack.ifft(data)

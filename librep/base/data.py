@@ -19,6 +19,7 @@ class Dataset:
 
     All map-style datasets must be implement the len protocol which returns the
     number of samples in the dataset.
+
     """
 
 
@@ -41,6 +42,7 @@ class Subset(Dataset):
         The dataset.
     indices : Sequence[int]
         Indices selected for subset.
+
     """
 
     def __init__(self, dataset: Dataset, indices: Sequence[int]):
@@ -84,6 +86,7 @@ class ConcatDataset(Dataset):
     """Dataset as a concatenation of multiple datasets.
 
     This class is useful to assemble different existing datasets.
+
     """
     datasets: List[Dataset]
     cumulative_sizes: List[int]
@@ -130,6 +133,7 @@ class SimpleDataset(Dataset):
         An array-like data.
     y : ArrayLike
         An array-like set of labels.
+
     """
     def __init__(self, X: ArrayLike, y: ArrayLike):
         self.X = X

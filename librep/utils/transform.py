@@ -8,6 +8,33 @@ from librep.config.type_definitions import ArrayLike
 
 
 class WindowedTransform:
+    """Apply a transform to a sliding window of features. It is useful when a
+    single sample contains features from different natures. Each window of
+    features from the sample is divided, the transform is applyied individually,
+    and then merged using the collate_fn.
+    You can see this as an column selector from the input.
+
+    Parameters
+    ----------
+    transform : Transform
+        The transform to be applyied.
+    window_size : int
+        The sliding window size (in relation the the number of features).
+        The `window_size` amount of features from sample will be selected and
+        then the transform will be applyied. This is done until reaching the
+        total number of features.
+    overlap : int
+        If one sliding window must overlap with another (the default is 0).
+    start : int
+        Which feature the sliding window must start (the default is 0).
+    end : int
+        Which feature the sliding window must start end (the default is None).
+    collate_fn : callable
+        The function used to merge the features transformed from the sliding
+        windows (the default is np.concatenate).
+
+
+    """
     def __init__(
         self,
         transform: Transform,
@@ -39,6 +66,15 @@ class WindowedTransform:
 
 
 class TransformDataset:
+    """Apply a list of transforms into the whole dataset, generating a new
+    dataset.
+
+    Parameters
+    ----------
+    transforms : List[Transform]
+        List of transforms to be applyied, in order.
+
+    """
     def __init__(self, transforms: List[Transform]):
         self.transforms = transforms
 
