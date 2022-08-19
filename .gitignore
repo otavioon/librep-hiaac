@@ -17,8 +17,6 @@
 **/.keras/
 **/.vscode-server/
 **/old/
-data/*
-!data/.gitkeep
 **/results/**
 **/test/**
 !**/.gitkeep
@@ -30,3 +28,4 @@ docs/build
 *.run.xml
 .*
 !.gitignore
+!.gitmodules
