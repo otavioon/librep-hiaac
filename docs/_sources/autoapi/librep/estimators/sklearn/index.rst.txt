@@ -1,6 +1,0 @@
-:py:mod:`librep.estimators.sklearn`
-===================================
-
-.. py:module:: librep.estimators.sklearn
-
-

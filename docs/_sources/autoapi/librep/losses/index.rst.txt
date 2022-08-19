@@ -1,6 +1,0 @@
-:py:mod:`librep.losses`
-=======================
-
-.. py:module:: librep.losses
-
-

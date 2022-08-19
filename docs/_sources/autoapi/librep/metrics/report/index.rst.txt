@@ -1,6 +1,0 @@
-:py:mod:`librep.metrics.report`
-===============================
-
-.. py:module:: librep.metrics.report
-
-
