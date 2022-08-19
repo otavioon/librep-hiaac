@@ -5,8 +5,54 @@ from typing import Tuple, Any, List, Union
 import numpy as np
 import pandas as pd
 
-from librep.base.data import Dataset
+from librep.base.data import Dataset, IterableDataset
 from librep.config.type_definitions import ArrayLike, PathLike
+
+
+class PandasDatasetsIO:
+    def __init__(self, path: PathLike, train_filename: str = "train.csv", validation_filename: str = "validation.csv", test_filename: str = "test.csv"):
+        self.path = Path(path)
+        self.train_filename = train_filename
+        self.validation_filename = validation_filename
+        self.test_filename = test_filename
+
+    def save(self, train: pd.DataFrame, validation: pd.DataFrame, test: pd.DataFrame, description_file: str = "README.md", description: str = None):
+        self.path.mkdir(parents=True, exist_ok=True)
+        # Save train
+        if train is not None:
+            train_filename = self.path / self.train_filename
+            train.to_csv(train_filename)
+        # Save validation
+        if validation is not None:
+            validation_filename = self.path / self.validation_filename
+            validation.to_csv(validation_filename)
+        # Save test
+        if test is not None:
+            test_filename = self.path / self.test_filename
+            test.to_csv(test_filename)
+
+        if description is not None:
+            description_filename = self.path / description_file
+            with description_filename.open("w") as f:
+                f.write(description)
+
+    def __str__(self) -> str:
+        return f"PandasDatasetIO at '{self.path}'"
+
+    def __repr__(self) -> str:
+        return f"PandasDatasetIO at '{self.path}'"
+
+    def load(self, load_train: bool = True, load_validation: bool = True, load_test: bool = True) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+        # Load train file
+        train_filename = self.path / self.train_filename
+        train = pd.read_csv(train_filename) if load_train else None
+        # Load validation file
+        validation_filename = self.path / self.validation_filename
+        validation = pd.read_csv(validation_filename) if load_validation else None
+        # Load test file
+        test_filename = self.path / self.test_filename
+        test = pd.read_csv(test_filename) if load_test else None
+        return (train, validation, test)
 
 
 class PandasDataset(Dataset):
@@ -32,11 +78,6 @@ class PandasDataset(Dataset):
     def __len__(self):
         return len(self.data)
 
-    def save(self, filepath: PathLike):
-        filepath = Path(filepath)
-        filepath.mkdir(parents=True, exist_ok=True)
-        self.data.to_csv(filepath, compress="infer")
-
     def __str__(self) -> str:
         return f"PandasDataset: samples={len(self.data)}, features={len(self.feature_columns)}, label_column='{self.label_columns}'"
 
@@ -44,43 +85,43 @@ class PandasDataset(Dataset):
         return str(self)
 
 
-class MultiFeatureDataset(Dataset):
-    def __init__(self, dataframe: pd.DataFrame, features_columns: List[str],
-                 label_columns: Union[str, List[str]], as_array: bool = True,
-                 per_sample_transform = None, collate_fn: callable = None):
-        self.data = dataframe
-        self.feature_columns = features_columns
-        self.label_columns = label_columns
-        self.as_array = as_array
-        self.per_sample_transform = per_sample_transform
-        self.collate_fn = collate_fn
+# class MultiFeatureDataset(Dataset):
+#     def __init__(self, dataframe: pd.DataFrame, features_columns: List[str],
+#                  label_columns: Union[str, List[str]], as_array: bool = True,
+#                  per_sample_transform = None, collate_fn: callable = None):
+#         self.data = dataframe
+#         self.feature_columns = features_columns
+#         self.label_columns = label_columns
+#         self.as_array = as_array
+#         self.per_sample_transform = per_sample_transform
+#         self.collate_fn = collate_fn
 
-    def __getitem__(self, index: int) -> Tuple[ArrayLike, Any]:
-        datas = []
+#     def __getitem__(self, index: int) -> Tuple[ArrayLike, Any]:
+#         datas = []
 
-        for feature_prefix in self.feature_columns:
-            features = [c.startswith(feature_prefix) for c in self.data.columns]
-            data = self.data.loc[index, features]
-            if self.as_array:
-                data = data.values
-            if self.per_sample_transform is not None:
-                data = self.per_sample_transform.fit_transform(data)
-            datas.append(data)
+#         for feature_prefix in self.feature_columns:
+#             features = [c.startswith(feature_prefix) for c in self.data.columns]
+#             data = self.data.loc[index, features]
+#             if self.as_array:
+#                 data = data.values
+#             if self.per_sample_transform is not None:
+#                 data = self.per_sample_transform.fit_transform(data)
+#             datas.append(data)
 
-        label = self.data.loc[index, self.label_columns]
+#         label = self.data.loc[index, self.label_columns]
 
-        if self.as_array and isinstance(self.label_columns, list):
-            label = label.values
+#         if self.as_array and isinstance(self.label_columns, list):
+#             label = label.values
 
-        if self.collate_fn is not None:
-            data = self.collate_fn(datas)
-        else:
-            data = datas
+#         if self.collate_fn is not None:
+#             data = self.collate_fn(datas)
+#         else:
+#             data = datas
 
-        return (data, label)
+#         return (data, label)
 
-    def __len__(self):
-        return len(self.data)
+#     def __len__(self):
+#         return len(self.data)
 
 
 

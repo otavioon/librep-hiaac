@@ -22,6 +22,7 @@ data/*
 **/results/**
 **/test/**
 !**/.gitkeep
+docs/build
 
 # ignore these files
 *.pyc

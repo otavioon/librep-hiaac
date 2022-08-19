@@ -8,7 +8,7 @@ class Transform(Parametrizable):
     def fit(self, X: ArrayLike, y: ArrayLike = None, **fit_params) -> None:
         raise NotImplementedError
 
-    def transform(self, X: ArrayLike):
+    def transform(self, X: ArrayLike) -> ArrayLike:
         raise NotImplementedError
 
     def fit_transform(self, X: ArrayLike, y: ArrayLike = None, **fit_params):
@@ -26,9 +26,3 @@ class PartialTransform(Transform):
 
     def partial_fit(self, X: ArrayLike, y: ArrayLike = None, **fit_params):
         raise NotImplementedError
-
-
-class DifferentiableTransform(Transform):
-
-    def forward(self, *args, **kwargs):
-        pass

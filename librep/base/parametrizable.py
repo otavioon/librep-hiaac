@@ -16,6 +16,7 @@ class Parametrizable:
         params : dict
             Parameter names mapped to their values.
         """
+
         out = dict()
         for key in self._get_param_names():
             value = getattr(self, key)
@@ -40,6 +41,7 @@ class Parametrizable:
         self : estimator instance
             Estimator instance.
         """
+
         if not params:
             # Simple optimization to gain speed (inspect is slow)
             return self
