@@ -7,7 +7,6 @@ tensorflow_addons
 pydot
 nodejs
 tabulate
-git+https://github.com/IDSIA/sacred.git@0.8.3
 
 # Jupter lab extensions
 jupyterlab

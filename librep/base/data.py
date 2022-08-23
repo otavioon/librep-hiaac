@@ -111,6 +111,7 @@ class ConcatDataset(Dataset):
     def __len__(self):
         return self.cumulative_sizes[-1]
 
+    # TODO implemenation of slices in in __getitem__
     def __getitem__(self, idx):
         if idx < 0:
             if -idx > len(self):

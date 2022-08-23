@@ -21,6 +21,7 @@
 **/test/**
 !**/.gitkeep
 docs/build
+librep.egg-info/
 
 # ignore these files
 *.pyc
