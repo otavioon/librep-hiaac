@@ -11,6 +11,7 @@ from librep.utils.file_ops import download_unzip_check
 from librep.config.type_definitions import PathLike
 from librep.base.data import Dataset
 from librep.utils.dataset import PandasDataset
+from librep.datasets.common import HARDatasetGenerator
 
 
 class DatasetSplitError(Exception):
@@ -296,7 +297,7 @@ class RawKuHarIterator:
         return next(self.it)
 
 
-class KuHarDatasetGenerator:
+class KuHarDatasetGenerator(HARDatasetGenerator):
     """Generate a custom MotionSense dataset from Raw MotionSense data.
 
     Parameters

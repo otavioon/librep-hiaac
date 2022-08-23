@@ -11,6 +11,7 @@ import tqdm
 from librep.config.type_definitions import PathLike
 from librep.utils.dataset import PandasDataset
 from librep.utils.file_ops import download_unzip_check
+from librep.datasets.common import HARDatasetGenerator
 
 
 class DatasetSplitError(Exception):
@@ -290,7 +291,7 @@ class RawMotionSenseIterator:
         return next(self.it)
 
 
-class MotionSenseDatasetGenerator:
+class MotionSenseDatasetGenerator(HARDatasetGenerator):
     """Generate a custom MotionSense dataset from Raw MotionSense data.
 
     Parameters
