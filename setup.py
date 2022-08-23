@@ -34,6 +34,6 @@ setup(name='librep',
           "Operating System :: OS Independent",
           ],
       platforms='any',
-      packages=find_packages(include=['librep']),
+      packages=find_packages(),
       python_requires=">=3.7",
 )
