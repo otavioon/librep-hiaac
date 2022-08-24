@@ -22,7 +22,11 @@ Contents
 ..  toctree::
     :maxdepth: 2
 
+    overview
     installation
+    tutorials
+    howtos
+    contributing
     api
     examples
 
