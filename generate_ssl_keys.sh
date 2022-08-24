@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source vars.sh
+source ./vars.sh
 mkdir -p $CERT_DIR
 
 openssl req -newkey rsa:4096 \

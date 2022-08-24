@@ -9,7 +9,7 @@
 # keras         latest (pip)
 # ==================================================================
 
-FROM ubuntu20.04
+FROM nvidia/cuda:11.6.0-cudnn8-runtime-ubuntu20.04
 ENV LANG C.UTF-8
 RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
     PIP_INSTALL="python -m pip --no-cache-dir install --upgrade" && \
@@ -104,7 +104,7 @@ RUN APT_INSTALL="apt-get install -y --no-install-recommends" && \
 # ------------------------------------------------------------------
 
     $PIP_INSTALL \
-        tensorflow \
+        tensorflow-gpu \
         && \
 
 # ==================================================================

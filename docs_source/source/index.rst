@@ -22,8 +22,8 @@ Contents
 ..  toctree::
     :maxdepth: 2
 
-    overview
     installation
+    overview
     tutorials
     howtos
     contributing

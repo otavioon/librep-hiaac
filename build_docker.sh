@@ -1,2 +1,2 @@
-source vars.sh
+source ./vars.sh
 $CONTAINER_CMD build -t $IMAGE .
