@@ -59,12 +59,15 @@ class SimpleTrainEvalWorkflow:
         self.debug = debug
 
     def __call__(
-        self, train_dataset: MultiModalDataset, test_dataset: MultiModalDataset = None
+        self, train_dataset: MultiModalDataset, test_datasets: List[MultiModalDataset] = None
     ):
+        if test_datasets is not None and not isinstance(test_datasets, list):
+            test_datasets = [test_datasets]
+
         if self.transformer is not None:
             train_dataset = self.transformer(train_dataset)
-            if test_dataset is not None:
-                test_dataset = self.transformer(test_dataset)
+            if test_datasets is not None:
+                test_datasets = [self.transformer(d) for d in test_datasets] 
 
         if self.do_not_instantiate:
             estimator = self.estimator
@@ -78,21 +81,26 @@ class SimpleTrainEvalWorkflow:
                 estimator.fit(train_dataset[:][0])
 
         if self.evaluate:
-            if test_dataset:
-                y_pred = estimator.predict(test_dataset[:][0])
+            if test_datasets is not None:
+                y_preds = [estimator.predict(d[:][0]) for d in test_datasets]
             else:
-                y_pred = estimator.predict(train_dataset[:][0])
+                y_preds = [estimator.predict(train_dataset[:][0])]
 
         else:
-            y_pred = []
+            y_preds = []
 
         if self.evaluator is not None:
-            if test_dataset:
-                return self.evaluator.evaluate(y_pred, test_dataset[:][1])
+            if test_datasets is not None:
+                return [
+                    self.evaluator.evaluate(y_pred, d[:][1])
+                    for y_pred, d in zip(y_preds, test_datasets)
+                ]
             else:
-                return self.evaluator.evaluate(y_pred, train_dataset[:][1])
+                return [
+                    self.evaluator.evaluate(y_preds[0], train_dataset[:][1])
+                ]
         else:
-            return y_pred
+            return y_preds
 
 
 class MultiRunWorkflow:
@@ -107,20 +115,20 @@ class MultiRunWorkflow:
         self.debug = debug
 
     def __call__(
-        self, train_dataset: MultiModalDataset, test_dataset: MultiModalDataset = None
+        self, train_dataset: MultiModalDataset, test_datasets: List[MultiModalDataset] = None
     ):
         runs = []
         for i in range(self.num_runs):
             if self.debug:
-                print(f"----- Starting run {i} ------")
+                print(f"----- Starting run {i+1} / {self.num_runs} ------")
             start = time.time()
-            result = self.workflow(train_dataset, test_dataset)
+            result = self.workflow(train_dataset, test_datasets)
             end = time.time()
             if self.debug:
                 print(result)
-                print(f"----- Finished run {i}. It took: {end-start:.3f} seconds -----\n")
+                print(f"----- Finished run {i+1} / {self.num_runs}. It took: {end-start:.3f} seconds -----\n")
             runs.append({
-                "id": i,
+                "run id": i+1,
                 "start": start,
                 "end": end,
                 "time taken": end-start,

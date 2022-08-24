@@ -31,21 +31,21 @@ class ClassificationReport(SupervisedEvaluator):
 
         if self.use_accuracy:
             res = accuracy_score(y_true, y_pred)
-            result["accuracy"] = res
+            result["accuracy"] = float(res)
 
         if self.use_f1_score:
             res = f1_score(y_true, y_pred, average="weighted")
-            result["f1 score (weighted)"] = res
+            result["f1 score (weighted)"] = float(res)
 
             res = f1_score(y_true, y_pred, average="micro")
-            result["f1 score (micro)"] = res
+            result["f1 score (micro)"] = float(res)
 
             res = f1_score(y_true, y_pred, average="macro")
-            result["f1 score (macro)"] = res
+            result["f1 score (macro)"] = float(res)
 
         if self.use_confusion_matrix:
             res = confusion_matrix(y_true, y_pred)
-            result["confusion matrix"] = res
+            result["confusion matrix"] = res.tolist()
 
         if self.use_classification_report:
             res = classification_report(y_true, y_pred, output_dict=True)
