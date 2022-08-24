@@ -35,5 +35,3 @@ class SimpleAutoEncoder(nn.Module):
         activation = self.decoder_output_layer(activation)
         reconstructed = torch.sigmoid(activation)
         return reconstructed
-
-class 

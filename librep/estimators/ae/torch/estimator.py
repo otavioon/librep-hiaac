@@ -2,6 +2,8 @@ from librep.base.estimator import Estimator
 from librep.config.type_definitions import ArrayLike
 
 class TorchEstimator(Estimator):
+    def __init__(model, loss, n_epochs, batch_size, metrics):
+        pass
 
     def fit(self, X: ArrayLike, y: ArrayLike = None, **estimator_params) -> 'Estimator':
         """Fits the model function arround X. It takes some samples (X) and
