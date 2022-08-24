@@ -1,14 +1,16 @@
-from functools import partial
+from pathlib import Path
+
 from sklearn.metrics import (
     classification_report,
     accuracy_score,
     f1_score,
     confusion_matrix,
+    ConfusionMatrixDisplay
 )
-from librep.base.evaluators import SupervisedEvaluator
-from librep.config.type_definitions import ArrayLike
+import matplotlib.pyplot as plt
 
-classification_report_dict = partial(classification_report, output_dict=True)
+from librep.base.evaluators import SupervisedEvaluator
+from librep.config.type_definitions import ArrayLike, PathLike
 
 
 class ClassificationReport(SupervisedEvaluator):
@@ -18,11 +20,19 @@ class ClassificationReport(SupervisedEvaluator):
         use_f1_score: bool = True,
         use_confusion_matrix: bool = True,
         use_classification_report: bool = False,
+        plot_confusion_matrix: bool = True,
+        output_path: PathLike = None
     ):
         self.use_accuracy = use_accuracy
         self.use_f1_score = use_f1_score
         self.use_confusion_matrix = use_confusion_matrix
         self.use_classification_report = use_classification_report
+        self.plot_confusion_matrix = plot_confusion_matrix
+        self.output_path = Path(output_path) if output_path is not None else None 
+
+        # TODO Save
+        if output_path is not None:
+            output_path.mkdir(exist_ok=True, parents=True)
 
     def evaluate(
         self, y_true: ArrayLike, y_pred: ArrayLike, **evaluator_params
@@ -50,5 +60,9 @@ class ClassificationReport(SupervisedEvaluator):
         if self.use_classification_report:
             res = classification_report(y_true, y_pred, output_dict=True)
             result["classification report"] = res
+
+        if self.plot_confusion_matrix:
+            ConfusionMatrixDisplay.from_predictions(y_true, y_pred)
+            plt.show()
 
         return result

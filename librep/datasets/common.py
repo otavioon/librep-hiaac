@@ -259,11 +259,12 @@ class TransformMultiModalDataset:
             # Collate the windows into a single array
             new_X = [self.collate_fn(xs) for xs in new_X]
 
-            window_names = [f"{self.new_window_name_prefix}{name}" for name in new_dataset.window_names]
             # Create a new dataset
             new_dataset = ArrayMultiModalDataset(
-                new_X, np.array(new_y), window_slices, window_names
+                new_X, np.array(new_y), window_slices, new_dataset.window_names
             )
+        window_names = [f"{self.new_window_name_prefix}{name}" for name in new_dataset.window_names]
+        new_dataset._window_names = window_names
         return new_dataset
 
 

@@ -6,7 +6,7 @@ import warnings
 from librep.base.transform import Transform
 from librep.base.data import Dataset
 from librep.base.estimator import Estimator
-from librep.base.evaluators import Evaluators
+from librep.base.evaluators import SupervisedEvaluator, Evaluators
 from librep.config.type_definitions import ArrayLike
 from librep.datasets.common import TransformMultiModalDataset, MultiModalDataset
 
@@ -45,7 +45,7 @@ class SimpleTrainEvalWorkflow:
         do_fit: bool = True,
         is_supervised: bool = True,
         evaluate: bool = True,
-        evaluator: Evaluators = None,
+        evaluator: SupervisedEvaluator = None,
         debug: bool = False,
     ):
         self.transformer = transformer
