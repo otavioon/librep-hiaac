@@ -9,7 +9,6 @@ import pandas as pd
 import tqdm
 
 from librep.config.type_definitions import PathLike
-from librep.utils.dataset import PandasDataset
 from librep.utils.file_ops import download_unzip_check
 from librep.datasets.common import HARDatasetGenerator
 
@@ -595,71 +594,3 @@ class MotionSenseDatasetGenerator(HARDatasetGenerator):
 
     def __repr__(self) -> str:
         return str(self)
-
-
-# The MotionSense Dataset Class
-
-
-class MotionSenseDataset(PandasDataset):
-    """Dataset implementation for MotionSenseDataset.
-
-    """
-
-    def __init__(
-        self,
-        dataframe: pd.DataFrame,
-        sensors: Optional[Union[str, List[str]]] = None,
-        label_columns: Union[str, List[str]] = "activity code",
-        as_array: bool = True,
-    ):
-        """The MotionSense dataset, derived from Dataset.
-        The __getitem__ returns 2-element tuple where:
-        - The first element is the sample (from the indexed-row of the
-        dataframe with the selected sensors, as features); and
-        - The seconds element is the label (from the indexed-row of the
-        dataframe with the selected label_columns, as labels) .
-
-        Parameters
-        ----------
-        dataframe : pd.DataFrame
-            The dataframe with KuHar samples.
-        sensors : Optional[Union[str, List[str]]]
-            Which sensors from features must be selected. If None, select all
-            features.
-        label_columns : Union[str, List[str]]
-            The columns(s) that represents the label. If the value is an `str`,
-            a scalar will be returned, else, a list will be returned.
-        as_array : bool
-            If true, return a `np.ndarray`, else return a `pd.Series`, for each
-            sample.
-
-        Examples
-        ----------
-        >>> train_csv = pd.read_csv(my_filepath)
-        >>> # This will select the accelerometer (x, y, and z) from KuHar dataset
-        >>> train_dataset = MotionSenseDataset(sensors=["accel-x", "accel-y", "accel-z"], label_columns="activity code")
-        >>> len(train_dataset)
-        10
-        >>> train_dataset[0]
-        (np.ndarray(0.5, 0.6, 0.7), 0)
-
-        """
-
-        if sensors is None:
-            features = set(dataframe.columns) - set(label_columns)
-        else:
-            if isinstance(sensors, str):
-                sensors = [sensors]
-            features = [
-                col
-                for sensor in sensors
-                for col in dataframe.columns
-                if col.startswith(sensor)
-            ]
-
-        super().__init__(
-            dataframe,
-            features_columns=features,
-            label_columns=label_columns,
-            as_array=as_array,
-        )

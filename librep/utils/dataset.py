@@ -86,16 +86,16 @@ class PandasDataset(Dataset):
 
 
 # Must use DataLoader instead....
-def load_full_data(dataset: Dataset,
-                   return_X_y: bool = True,
-                   shuffle: bool = False):
-    indexes = list(range(len(dataset)))
-    if shuffle:
-        random.shuffle(indexes)
+# def load_full_data(dataset: Dataset,
+#                    return_X_y: bool = True,
+#                    shuffle: bool = False):
+#     indexes = list(range(len(dataset)))
+#     if shuffle:
+#         random.shuffle(indexes)
 
-    data = [dataset[index] for index in indexes]
+#     data = [dataset[index] for index in indexes]
 
-    if not return_X_y:
-        return np.array(data)
-    else:
-        return np.array([d[0] for d in data]), np.array([d[1] for d in data])
+#     if not return_X_y:
+#         return np.array(data)
+#     else:
+#         return np.array([d[0] for d in data]), np.array([d[1] for d in data])

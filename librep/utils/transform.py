@@ -66,7 +66,7 @@ class WindowedTransform:
         return self.collate_fn(datas)
 
 
-class TransformDataset:
+class TransformMultiModalDataset:
     """Apply a list of transforms into the whole dataset, generating a new
     dataset.
 
