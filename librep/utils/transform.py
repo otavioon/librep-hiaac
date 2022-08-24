@@ -35,6 +35,7 @@ class WindowedTransform:
 
 
     """
+
     def __init__(
         self,
         transform: Transform,
@@ -72,9 +73,10 @@ class TransformDataset:
     Parameters
     ----------
     transforms : List[Transform]
-        List of transforms to be applyied, in order.
+        List of transforms to be applyied to each sample, in order.
 
     """
+
     def __init__(self, transforms: List[Transform]):
         self.transforms = transforms
 

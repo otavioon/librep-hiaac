@@ -63,7 +63,7 @@ class PandasDataset(Dataset):
         self.feature_columns = features_columns
         self.label_columns = label_columns
         self.as_array = as_array
-
+        
     def __getitem__(self, index: int) -> Tuple[ArrayLike, Any]:
         data = self.data.loc[index, self.feature_columns]
         label = self.data.loc[index, self.label_columns]
