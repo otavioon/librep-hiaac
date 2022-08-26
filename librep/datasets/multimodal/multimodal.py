@@ -3,7 +3,7 @@ from typing import Tuple, Optional, Union, List
 import pandas as pd
 
 from librep.base.data import Dataset
-from librep.utils.datasets import PandasDataset
+from librep.datasets.common import PandasDataset
 from librep.config.type_definitions import ArrayLike
 
 
