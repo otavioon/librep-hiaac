@@ -8,7 +8,7 @@ from librep.base.data import Dataset
 from librep.base.estimator import Estimator
 from librep.base.evaluators import SupervisedEvaluator, Evaluators
 from librep.config.type_definitions import ArrayLike
-from librep.datasets.common import TransformMultiModalDataset, MultiModalDataset
+from librep.datasets.multimodal import TransformMultiModalDataset, MultiModalDataset
 
 
 @dataclass
