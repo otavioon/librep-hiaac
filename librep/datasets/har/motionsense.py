@@ -2,7 +2,7 @@ import glob
 import os
 import random
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union, Generator
+from typing import Dict, List, Optional, Tuple, Generator
 
 import numpy as np
 import pandas as pd
@@ -10,11 +10,7 @@ import tqdm
 
 from librep.config.type_definitions import PathLike
 from librep.utils.file_ops import download_unzip_check
-from librep.datasets.common import HARDatasetGenerator
-
-
-class DatasetSplitError(Exception):
-    pass
+from librep.datasets.har.generator import HARDatasetGenerator, DatasetSplitError
 
 
 ##### Raw data Handlers and time series generator

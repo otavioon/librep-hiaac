@@ -1,5 +1,5 @@
 import os
-from typing import Dict, List, Tuple, Union, Optional, Generator
+from typing import Dict, List, Tuple, Optional, Generator
 from pathlib import Path
 import random
 
@@ -9,13 +9,7 @@ import tqdm
 
 from librep.utils.file_ops import download_unzip_check
 from librep.config.type_definitions import PathLike
-from librep.base.data import Dataset
-from librep.utils.dataset import PandasDataset
-from librep.datasets.common import HARDatasetGenerator
-
-
-class DatasetSplitError(Exception):
-    pass
+from librep.datasets.har.generator import HARDatasetGenerator, DatasetSplitError
 
 
 class RawKuHar:
