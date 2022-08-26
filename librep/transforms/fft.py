@@ -54,7 +54,7 @@ class FFT(InvertibleTransform):
         Parameters
         ----------
         X : ArrayLike
-            A single sample to be transfomed with shape (n_features, ).
+            The samples to be transfomed with shape (n_features, n_features, ).
 
         Returns
         -------
@@ -63,12 +63,16 @@ class FFT(InvertibleTransform):
 
         """
 
-        data = fftpack.fft(X)
-        if self.absolute:
-            data = np.abs(data)
-        if self.centered:
-            data = data[:len(data)//2]
+        datas = []
+        for data in X:
+            data = fftpack.fft(data)
+            if self.absolute:
+                data = np.abs(data)
+            if self.centered:
+                data = data[:len(data)//2]
+            datas.append(data)
 
+        data = np.array(datas)
         return data.T if self.transpose else data
 
     def inverse_transform(self, X: ArrayLike) -> ArrayLike:
@@ -77,7 +81,7 @@ class FFT(InvertibleTransform):
         Parameters
         ----------
         X : ArrayLike
-            A single sample to be transfomed with shape (n_features, ).
+            The samples to be transfomed with shape (n_features, ).
 
         Returns
         -------
@@ -86,6 +90,7 @@ class FFT(InvertibleTransform):
 
         """
 
-        data = X.T if self.transpose else X
-        # TODO absolute?
-        return fftpack.ifft(data)
+        raise NotImplementedError
+#         data = X.T if self.transpose else X
+#         # TODO absolute?
+#         return fftpack.ifft(data)

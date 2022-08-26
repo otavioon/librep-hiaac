@@ -34,17 +34,17 @@ class Transform(Parametrizable):
         raise NotImplementedError
 
     def transform(self, X: ArrayLike) -> ArrayLike:
-        """Transforms a single sample.
+        """Transforms the dataset.
 
         Parameters
         ----------
         X : ArrayLike
-            An array-like of sample with shape (n_features, ).
+            An array-like of sample with shape (n_samples, n_features, ).
 
         Returns
         -------
         ArrayLike
-            An array-like with the transformed sample.
+            An array-like with the transformed samples.
 
         """
         raise NotImplementedError
@@ -63,12 +63,12 @@ class InvertibleTransform(Transform):
         Parameters
         ----------
         X : ArrayLike
-            An array-like of sample with shape (n_features, ).
+            An array-like of sample with shape (n_samples, n_features, ).
 
         Returns
         -------
         ArrayLike
-            An array-like with the transformed sample.
+            An array-like with the transformed samples.
 
         """
         raise NotImplementedError
