@@ -24,12 +24,12 @@ class AutoCorrelation(Transform):
         pass
 
     def transform(self, X: ArrayLike) -> ArrayLike:
-        """Returns the autocorrelation of a sample.
+        """Returns the autocorrelation of the samples.
 
         Parameters
         ----------
         X : ArrayLike
-            A single sample to be transfomed with shape (n_features, ).
+            Samples to be transfomed with shape (n_samples, n_features, ).
 
         Returns
         -------
@@ -37,7 +37,10 @@ class AutoCorrelation(Transform):
             The transformed sample.
 
         """
+        datas = []
 
-        data = np.correlate(X, X, mode=self.mode)
-        data = data[data.size // 2:]
-        return data
+        for data in X:
+            data = np.correlate(data, data, mode=self.mode)
+            data = data[data.size // 2:]
+            datas.append(data)
+        return np.array(datas)

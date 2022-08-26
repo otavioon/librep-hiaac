@@ -18,6 +18,7 @@ class Spectrogram(Transform):
     def fit(self, X: ArrayLike, y: ArrayLike = None):
         pass
 
+    # TODO
     def transform(self, X: ArrayLike):
         Sxx, f, t = signal.spectrogram(X,
                                        fs=self.fs,

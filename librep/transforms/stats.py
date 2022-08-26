@@ -32,51 +32,55 @@ class StatsTransform(Transform):
         """
 
     def transform(self, X: ArrayLike) -> ArrayLike:
-        """Extract statistical information of the sample.
+        """Extract statistical information of samples.
 
         Parameters
         ----------
         X : ArrayLike
-            The sample used to extract the information.
+            The sample used to extract the information, with shape (n_samples, n_features, ).
 
         Returns
         -------
         ArrayLike
-            An array with the statistical information about the sample. If 
+            An array with the statistical information about the samples. If 
             `keep_values` parameter is set, the statistical information will be
             concatenated along the input sample.
 
         """
 
-        values = []
-        if self.capture_statistical:
-            values += [
-                np.mean(X),
-                np.std(X),
-                np.mean(np.absolute(X - np.mean(X))),
-                np.min(X),
-                np.max(X),
-                np.max(X)-np.min(X),
-                np.median(X),
-                np.median(np.absolute(X - np.median(X))),
-                np.percentile(X, 75) - np.percentile(X, 25),
-                np.sum(X < 0),
-                np.sum(X > 0),
-                np.sum(X > np.mean(X)),
-                len(find_peaks(X)[0]),
-                stats.skew(X),
-                stats.kurtosis(X),
-                np.sum(X**2)/100,
-            ]
-        if self.capture_indices:
-            values += [
-                np.argmax(X),
-                np.argmin(X),
-                np.argmax(X)-np.argmin(X)
-            ]
+        datas = []
 
-        values = np.array(values)
-        if self.keep_values:
-            return np.concatenate([X, values])
-        else:
-            return values
+        for data in X:
+            values = []
+            if self.capture_statistical:
+                values += [
+                    np.mean(data),
+                    np.std(data),
+                    np.mean(np.absolute(data - np.mean(data))),
+                    np.min(data),
+                    np.max(data),
+                    np.max(data)-np.min(data),
+                    np.median(data),
+                    np.median(np.absolute(data - np.median(data))),
+                    np.percentile(data, 75) - np.percentile(data, 25),
+                    np.sum(data < 0),
+                    np.sum(data > 0),
+                    np.sum(data > np.mean(data)),
+                    len(find_peaks(data)[0]),
+                    stats.skew(data),
+                    stats.kurtosis(data),
+                    np.sum(data**2)/100,
+                ]
+            if self.capture_indices:
+                values += [
+                    np.argmax(data),
+                    np.argmin(data),
+                    np.argmax(data)-np.argmin(data)
+                ]
+
+            values = np.array(values)
+            if self.keep_values:
+                values = np.concatenate([data, values])
+            datas.append(values)
+
+        return np.array(datas)

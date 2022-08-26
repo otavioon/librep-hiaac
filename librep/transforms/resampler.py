@@ -24,18 +24,21 @@ class SimpleResampler(Transform):
         """
 
     def transform(self, X: ArrayLike) -> ArrayLike:
-        """Resample a single signal sample.
+        """Resample signal samples.
 
         Parameters
         ----------
         X : ArrayLike
-            The signal sample with shape: (n_features, )
+            The signal samples with shape: (n_samples, n_features, )
 
         Returns
         -------
         ArrayLike
-            The resampled sample with shape: (new_sample_size, ).
+            The resampled samples with shape: (n_samples, new_sample_size, ).
 
         """
-        
-        return signal.resample(X, self.new_sample_size)
+        datas = []
+        for data in X:
+            data = signal.resample(data, self.new_sample_size)
+            datas.append(data)
+        return np.array(datas)
