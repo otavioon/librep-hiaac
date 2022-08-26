@@ -224,46 +224,58 @@ class TransformMultiModalDataset:
     """
 
     def __init__(
-        self, transforms: List[Transform], collate_fn: callable = np.concatenate,
-        new_window_name_prefix: str = ""
+        self,
+        transforms: List[Transform],
+        collate_fn: callable = np.hstack,
+        new_window_name_prefix: str = "",
     ):
         self.transforms = transforms
         self.collate_fn = collate_fn
         self.new_window_name_prefix = new_window_name_prefix
 
     def __transform_sample(
-        self, transform: Transform, x: ArrayLike, slices: List[Tuple[int, int]]
+        self,
+        transform: Transform,
+        X: ArrayLike,
+        y: ArrayLike,
+        slices: List[Tuple[int, int]],
     ):
-        return [transform.transform(x[start:end]) for start, end in slices]
+        return [
+            transform.fit_transform(X[..., start:end], y)
+            for start, end in slices
+        ]
 
     def __call__(self, dataset: MultiModalDataset):
         new_dataset = dataset
         for transform in self.transforms:
-            new_X, new_y = [], []
-            # Transform each sample window
-            for i in range(len(new_dataset)):
-                x, y = new_dataset[i]
-                new_X.append(
-                    self.__transform_sample(transform, x, new_dataset.window_slices)
-                )
-                new_y.append(y)
+            X = new_dataset[:][0]
+            y = new_dataset[:][1]
+            new_X = self.__transform_sample(
+                transform=transform,
+                X=X,
+                y=y,
+                slices=new_dataset.window_slices,
+            )
+            new_y = y
 
             # Calculate new slices
             window_slices = []
             start = 0
-            for x in new_X[0]:
-                end = start + len(x)
+            for x in new_X:
+                end = start + len(x[0])
                 window_slices.append((start, end))
                 start = end
 
             # Collate the windows into a single array
-            new_X = [self.collate_fn(xs) for xs in new_X]
+            new_X = self.collate_fn(new_X)
 
             # Create a new dataset
             new_dataset = ArrayMultiModalDataset(
                 new_X, np.array(new_y), window_slices, new_dataset.window_names
             )
-        window_names = [f"{self.new_window_name_prefix}{name}" for name in new_dataset.window_names]
+        window_names = [
+            f"{self.new_window_name_prefix}{name}" for name in new_dataset.window_names
+        ]
         new_dataset._window_names = window_names
         return new_dataset
 
@@ -271,12 +283,21 @@ class TransformMultiModalDataset:
 def __label_selector(a, b):
     return a
 
-def combine_multi_modal_datasets(d1: MultiModalDataset, d2: MultiModalDataset, collate_fn: callable = np.hstack, labels_combine: callable = __label_selector):
+
+def combine_multi_modal_datasets(
+    d1: MultiModalDataset,
+    d2: MultiModalDataset,
+    collate_fn: callable = np.hstack,
+    labels_combine: callable = __label_selector,
+):
     new_X = collate_fn([d1[:][0], d2[:][0]])
     new_y = [labels_combine(y1, y2) for y1, y2 in zip(d1[:][1], d2[:][1])]
 
     last_slice_index = d1.window_slices[-1][1]
-    window_slices = d1.window_slices + [(start+last_slice_index, end+last_slice_index) for start, end in d2.window_slices]
+    window_slices = d1.window_slices + [
+        (start + last_slice_index, end + last_slice_index)
+        for start, end in d2.window_slices
+    ]
     window_names = d1.window_names + d2.window_names
 
     return ArrayMultiModalDataset(new_X, new_y, window_slices, window_names)
