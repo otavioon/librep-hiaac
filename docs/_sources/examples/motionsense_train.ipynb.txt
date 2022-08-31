@@ -1,0 +1,1233 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "faa25327-6b2c-491a-9ed6-718312880e28",
+   "metadata": {},
+   "source": [
+    "# Example of Training with MotionSense"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "e9820ad5-a563-4ba9-912b-aa75f35b67bc",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:10.191099Z",
+     "iopub.status.busy": "2022-08-26T13:39:10.190909Z",
+     "iopub.status.idle": "2022-08-26T13:39:10.204883Z",
+     "shell.execute_reply": "2022-08-26T13:39:10.204379Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:10.191077Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "%load_ext autoreload\n",
+    "%autoreload 2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "c837fe5a-d359-46c1-8aa8-9a5043ae37f9",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:10.205695Z",
+     "iopub.status.busy": "2022-08-26T13:39:10.205552Z",
+     "iopub.status.idle": "2022-08-26T13:39:10.452680Z",
+     "shell.execute_reply": "2022-08-26T13:39:10.452268Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:10.205675Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import sys\n",
+    "import pandas as pd\n",
+    "from pathlib import Path\n",
+    "\n",
+    "sys.path.append(\"..\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "72fc160c-b7c7-4e15-bf79-6e8d97d9fb50",
+   "metadata": {},
+   "source": [
+    "## Read Processed Data"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "e690c5cf-fa42-43b0-ac01-8fbef4a99498",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:10.453445Z",
+     "iopub.status.busy": "2022-08-26T13:39:10.453300Z",
+     "iopub.status.idle": "2022-08-26T13:39:15.643045Z",
+     "shell.execute_reply": "2022-08-26T13:39:15.642637Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:10.453428Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "from librep.utils.dataset import PandasDatasetsIO"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "f999085a-ddf5-477d-8f89-e609519e74fe",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:15.643749Z",
+     "iopub.status.busy": "2022-08-26T13:39:15.643605Z",
+     "iopub.status.idle": "2022-08-26T13:39:17.008574Z",
+     "shell.execute_reply": "2022-08-26T13:39:17.008137Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:15.643735Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "dataset_path = Path(\"../data/views/MotionSense/balanced_view\")\n",
+    "train, validation, test = PandasDatasetsIO(dataset_path).load()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "e75aaf02-e570-4fe8-89f7-272af288d0c8",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:17.009208Z",
+     "iopub.status.busy": "2022-08-26T13:39:17.009104Z",
+     "iopub.status.idle": "2022-08-26T13:39:17.076351Z",
+     "shell.execute_reply": "2022-08-26T13:39:17.075849Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:17.009194Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Unnamed: 0</th>\n",
+       "      <th>attitude.roll-0</th>\n",
+       "      <th>attitude.roll-1</th>\n",
+       "      <th>attitude.roll-2</th>\n",
+       "      <th>attitude.roll-3</th>\n",
+       "      <th>attitude.roll-4</th>\n",
+       "      <th>attitude.roll-5</th>\n",
+       "      <th>attitude.roll-6</th>\n",
+       "      <th>attitude.roll-7</th>\n",
+       "      <th>attitude.roll-8</th>\n",
+       "      <th>...</th>\n",
+       "      <th>userAcceleration.z-295</th>\n",
+       "      <th>userAcceleration.z-296</th>\n",
+       "      <th>userAcceleration.z-297</th>\n",
+       "      <th>userAcceleration.z-298</th>\n",
+       "      <th>userAcceleration.z-299</th>\n",
+       "      <th>activity code</th>\n",
+       "      <th>length</th>\n",
+       "      <th>trial_code</th>\n",
+       "      <th>index</th>\n",
+       "      <th>user</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>0</td>\n",
+       "      <td>1.093387</td>\n",
+       "      <td>1.129419</td>\n",
+       "      <td>1.166286</td>\n",
+       "      <td>1.176539</td>\n",
+       "      <td>1.218638</td>\n",
+       "      <td>1.218076</td>\n",
+       "      <td>1.169095</td>\n",
+       "      <td>1.104227</td>\n",
+       "      <td>1.041327</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.025803</td>\n",
+       "      <td>0.015770</td>\n",
+       "      <td>0.109555</td>\n",
+       "      <td>0.172113</td>\n",
+       "      <td>0.248941</td>\n",
+       "      <td>0</td>\n",
+       "      <td>300</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1200</td>\n",
+       "      <td>16</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>1</td>\n",
+       "      <td>1.528132</td>\n",
+       "      <td>1.527992</td>\n",
+       "      <td>1.527765</td>\n",
+       "      <td>1.516768</td>\n",
+       "      <td>1.493941</td>\n",
+       "      <td>1.476302</td>\n",
+       "      <td>1.455153</td>\n",
+       "      <td>1.441702</td>\n",
+       "      <td>1.443440</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.578416</td>\n",
+       "      <td>0.572674</td>\n",
+       "      <td>0.490945</td>\n",
+       "      <td>0.345010</td>\n",
+       "      <td>0.129649</td>\n",
+       "      <td>0</td>\n",
+       "      <td>300</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>2</td>\n",
+       "      <td>-1.331274</td>\n",
+       "      <td>-1.315688</td>\n",
+       "      <td>-1.315034</td>\n",
+       "      <td>-1.315621</td>\n",
+       "      <td>-1.287623</td>\n",
+       "      <td>-1.218232</td>\n",
+       "      <td>-1.139884</td>\n",
+       "      <td>-1.054611</td>\n",
+       "      <td>-0.970854</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.102089</td>\n",
+       "      <td>0.124263</td>\n",
+       "      <td>0.122183</td>\n",
+       "      <td>0.125418</td>\n",
+       "      <td>0.230901</td>\n",
+       "      <td>0</td>\n",
+       "      <td>300</td>\n",
+       "      <td>2</td>\n",
+       "      <td>600</td>\n",
+       "      <td>21</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>3</td>\n",
+       "      <td>0.715184</td>\n",
+       "      <td>0.679044</td>\n",
+       "      <td>0.662668</td>\n",
+       "      <td>0.662928</td>\n",
+       "      <td>0.670537</td>\n",
+       "      <td>0.666622</td>\n",
+       "      <td>0.652839</td>\n",
+       "      <td>0.662879</td>\n",
+       "      <td>0.723967</td>\n",
+       "      <td>...</td>\n",
+       "      <td>-0.033105</td>\n",
+       "      <td>0.119528</td>\n",
+       "      <td>0.057709</td>\n",
+       "      <td>-0.057865</td>\n",
+       "      <td>-0.097547</td>\n",
+       "      <td>0</td>\n",
+       "      <td>300</td>\n",
+       "      <td>11</td>\n",
+       "      <td>0</td>\n",
+       "      <td>7</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>4</td>\n",
+       "      <td>-2.004835</td>\n",
+       "      <td>-2.041697</td>\n",
+       "      <td>-2.044302</td>\n",
+       "      <td>-2.038474</td>\n",
+       "      <td>-2.055756</td>\n",
+       "      <td>-2.102689</td>\n",
+       "      <td>-2.158746</td>\n",
+       "      <td>-2.202283</td>\n",
+       "      <td>-2.232511</td>\n",
+       "      <td>...</td>\n",
+       "      <td>0.072444</td>\n",
+       "      <td>0.005214</td>\n",
+       "      <td>-0.231522</td>\n",
+       "      <td>-0.560348</td>\n",
+       "      <td>-0.678777</td>\n",
+       "      <td>0</td>\n",
+       "      <td>300</td>\n",
+       "      <td>2</td>\n",
+       "      <td>1800</td>\n",
+       "      <td>19</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>...</th>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1909</th>\n",
+       "      <td>325</td>\n",
+       "      <td>-0.809114</td>\n",
+       "      <td>-0.504596</td>\n",
+       "      <td>-0.200415</td>\n",
+       "      <td>-0.069472</td>\n",
+       "      <td>-0.009363</td>\n",
+       "      <td>-0.019789</td>\n",
+       "      <td>-0.084377</td>\n",
+       "      <td>-0.162347</td>\n",
+       "      <td>-0.184036</td>\n",
+       "      <td>...</td>\n",
+       "      <td>-0.754819</td>\n",
+       "      <td>-0.570919</td>\n",
+       "      <td>-1.006368</td>\n",
+       "      <td>-1.232031</td>\n",
+       "      <td>-0.321935</td>\n",
+       "      <td>5</td>\n",
+       "      <td>300</td>\n",
+       "      <td>16</td>\n",
+       "      <td>0</td>\n",
+       "      <td>6</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1910</th>\n",
+       "      <td>326</td>\n",
+       "      <td>1.225254</td>\n",
+       "      <td>1.219554</td>\n",
+       "      <td>1.262265</td>\n",
+       "      <td>1.213586</td>\n",
+       "      <td>1.229215</td>\n",
+       "      <td>1.309294</td>\n",
+       "      <td>1.371141</td>\n",
+       "      <td>1.403459</td>\n",
+       "      <td>1.491145</td>\n",
+       "      <td>...</td>\n",
+       "      <td>1.737598</td>\n",
+       "      <td>1.105376</td>\n",
+       "      <td>-0.184008</td>\n",
+       "      <td>-1.426659</td>\n",
+       "      <td>-1.711004</td>\n",
+       "      <td>5</td>\n",
+       "      <td>300</td>\n",
+       "      <td>9</td>\n",
+       "      <td>4500</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1911</th>\n",
+       "      <td>327</td>\n",
+       "      <td>3.138105</td>\n",
+       "      <td>-3.105622</td>\n",
+       "      <td>-3.073557</td>\n",
+       "      <td>-3.034694</td>\n",
+       "      <td>-2.983038</td>\n",
+       "      <td>-2.938967</td>\n",
+       "      <td>-2.891639</td>\n",
+       "      <td>-2.733605</td>\n",
+       "      <td>-1.150408</td>\n",
+       "      <td>...</td>\n",
+       "      <td>-1.048692</td>\n",
+       "      <td>-0.806513</td>\n",
+       "      <td>-0.533924</td>\n",
+       "      <td>1.383309</td>\n",
+       "      <td>-0.669395</td>\n",
+       "      <td>5</td>\n",
+       "      <td>300</td>\n",
+       "      <td>9</td>\n",
+       "      <td>0</td>\n",
+       "      <td>6</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1912</th>\n",
+       "      <td>328</td>\n",
+       "      <td>1.476984</td>\n",
+       "      <td>1.582842</td>\n",
+       "      <td>1.692089</td>\n",
+       "      <td>1.797948</td>\n",
+       "      <td>1.852740</td>\n",
+       "      <td>1.886674</td>\n",
+       "      <td>1.885654</td>\n",
+       "      <td>1.810233</td>\n",
+       "      <td>1.708376</td>\n",
+       "      <td>...</td>\n",
+       "      <td>-0.326163</td>\n",
+       "      <td>-0.657696</td>\n",
+       "      <td>-0.787899</td>\n",
+       "      <td>0.421130</td>\n",
+       "      <td>0.055916</td>\n",
+       "      <td>5</td>\n",
+       "      <td>300</td>\n",
+       "      <td>9</td>\n",
+       "      <td>600</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1913</th>\n",
+       "      <td>329</td>\n",
+       "      <td>1.080556</td>\n",
+       "      <td>1.184144</td>\n",
+       "      <td>1.290674</td>\n",
+       "      <td>1.377341</td>\n",
+       "      <td>1.504204</td>\n",
+       "      <td>1.603406</td>\n",
+       "      <td>1.656496</td>\n",
+       "      <td>1.690602</td>\n",
+       "      <td>1.661182</td>\n",
+       "      <td>...</td>\n",
+       "      <td>1.386765</td>\n",
+       "      <td>1.357538</td>\n",
+       "      <td>0.993484</td>\n",
+       "      <td>-0.389625</td>\n",
+       "      <td>0.076809</td>\n",
+       "      <td>5</td>\n",
+       "      <td>300</td>\n",
+       "      <td>9</td>\n",
+       "      <td>1500</td>\n",
+       "      <td>2</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>1914 rows × 3606 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "      Unnamed: 0  attitude.roll-0  attitude.roll-1  attitude.roll-2  \\\n",
+       "0              0         1.093387         1.129419         1.166286   \n",
+       "1              1         1.528132         1.527992         1.527765   \n",
+       "2              2        -1.331274        -1.315688        -1.315034   \n",
+       "3              3         0.715184         0.679044         0.662668   \n",
+       "4              4        -2.004835        -2.041697        -2.044302   \n",
+       "...          ...              ...              ...              ...   \n",
+       "1909         325        -0.809114        -0.504596        -0.200415   \n",
+       "1910         326         1.225254         1.219554         1.262265   \n",
+       "1911         327         3.138105        -3.105622        -3.073557   \n",
+       "1912         328         1.476984         1.582842         1.692089   \n",
+       "1913         329         1.080556         1.184144         1.290674   \n",
+       "\n",
+       "      attitude.roll-3  attitude.roll-4  attitude.roll-5  attitude.roll-6  \\\n",
+       "0            1.176539         1.218638         1.218076         1.169095   \n",
+       "1            1.516768         1.493941         1.476302         1.455153   \n",
+       "2           -1.315621        -1.287623        -1.218232        -1.139884   \n",
+       "3            0.662928         0.670537         0.666622         0.652839   \n",
+       "4           -2.038474        -2.055756        -2.102689        -2.158746   \n",
+       "...               ...              ...              ...              ...   \n",
+       "1909        -0.069472        -0.009363        -0.019789        -0.084377   \n",
+       "1910         1.213586         1.229215         1.309294         1.371141   \n",
+       "1911        -3.034694        -2.983038        -2.938967        -2.891639   \n",
+       "1912         1.797948         1.852740         1.886674         1.885654   \n",
+       "1913         1.377341         1.504204         1.603406         1.656496   \n",
+       "\n",
+       "      attitude.roll-7  attitude.roll-8  ...  userAcceleration.z-295  \\\n",
+       "0            1.104227         1.041327  ...                0.025803   \n",
+       "1            1.441702         1.443440  ...                0.578416   \n",
+       "2           -1.054611        -0.970854  ...                0.102089   \n",
+       "3            0.662879         0.723967  ...               -0.033105   \n",
+       "4           -2.202283        -2.232511  ...                0.072444   \n",
+       "...               ...              ...  ...                     ...   \n",
+       "1909        -0.162347        -0.184036  ...               -0.754819   \n",
+       "1910         1.403459         1.491145  ...                1.737598   \n",
+       "1911        -2.733605        -1.150408  ...               -1.048692   \n",
+       "1912         1.810233         1.708376  ...               -0.326163   \n",
+       "1913         1.690602         1.661182  ...                1.386765   \n",
+       "\n",
+       "      userAcceleration.z-296  userAcceleration.z-297  userAcceleration.z-298  \\\n",
+       "0                   0.015770                0.109555                0.172113   \n",
+       "1                   0.572674                0.490945                0.345010   \n",
+       "2                   0.124263                0.122183                0.125418   \n",
+       "3                   0.119528                0.057709               -0.057865   \n",
+       "4                   0.005214               -0.231522               -0.560348   \n",
+       "...                      ...                     ...                     ...   \n",
+       "1909               -0.570919               -1.006368               -1.232031   \n",
+       "1910                1.105376               -0.184008               -1.426659   \n",
+       "1911               -0.806513               -0.533924                1.383309   \n",
+       "1912               -0.657696               -0.787899                0.421130   \n",
+       "1913                1.357538                0.993484               -0.389625   \n",
+       "\n",
+       "      userAcceleration.z-299  activity code  length  trial_code  index  user  \n",
+       "0                   0.248941              0     300           1   1200    16  \n",
+       "1                   0.129649              0     300           1      0     1  \n",
+       "2                   0.230901              0     300           2    600    21  \n",
+       "3                  -0.097547              0     300          11      0     7  \n",
+       "4                  -0.678777              0     300           2   1800    19  \n",
+       "...                      ...            ...     ...         ...    ...   ...  \n",
+       "1909               -0.321935              5     300          16      0     6  \n",
+       "1910               -1.711004              5     300           9   4500     2  \n",
+       "1911               -0.669395              5     300           9      0     6  \n",
+       "1912                0.055916              5     300           9    600     2  \n",
+       "1913                0.076809              5     300           9   1500     2  \n",
+       "\n",
+       "[1914 rows x 3606 columns]"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "train = pd.concat([train, validation], ignore_index=True)\n",
+    "train"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ea02b41b-6fb3-4e95-89fd-4c9e4fff921d",
+   "metadata": {},
+   "source": [
+    "## Create the MotionSense Dataset"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "38f8f00f-3c51-47a6-9d1d-84866a5d844d",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:17.077061Z",
+     "iopub.status.busy": "2022-08-26T13:39:17.076939Z",
+     "iopub.status.idle": "2022-08-26T13:39:17.109646Z",
+     "shell.execute_reply": "2022-08-26T13:39:17.109208Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:17.077045Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "from librep.datasets.multimodal import PandasMultiModalDataset"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "8ab3ea14-32e5-4b29-aacc-674209c7a933",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:17.111211Z",
+     "iopub.status.busy": "2022-08-26T13:39:17.111052Z",
+     "iopub.status.idle": "2022-08-26T13:39:17.157665Z",
+     "shell.execute_reply": "2022-08-26T13:39:17.157182Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:17.111196Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "features = [\n",
+    "    \"userAcceleration.x\",\n",
+    "    \"userAcceleration.y\",\n",
+    "    \"userAcceleration.z\",\n",
+    "    \"rotationRate.x\",\n",
+    "    \"rotationRate.y\",\n",
+    "    \"rotationRate.z\"\n",
+    "]\n",
+    "\n",
+    "train_dataset = PandasMultiModalDataset(\n",
+    "    train,\n",
+    "    feature_prefixes=features,\n",
+    "    label_columns=\"activity code\",\n",
+    "    as_array=True\n",
+    ")\n",
+    "validation_dataset = PandasMultiModalDataset(\n",
+    "    validation,\n",
+    "    feature_prefixes=features,\n",
+    "    label_columns=\"activity code\",\n",
+    "    as_array=True\n",
+    ")\n",
+    "test_dataset = PandasMultiModalDataset(\n",
+    "    test,\n",
+    "    feature_prefixes=features,\n",
+    "    label_columns=\"activity code\",\n",
+    "    as_array=True\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "f14c259f-7800-4ab9-8890-9f2da8feca99",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:17.158453Z",
+     "iopub.status.busy": "2022-08-26T13:39:17.158310Z",
+     "iopub.status.idle": "2022-08-26T13:39:17.196404Z",
+     "shell.execute_reply": "2022-08-26T13:39:17.196027Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:17.158431Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(array([-0.120843,  0.470622,  0.269861, ..., -0.046833, -0.283947,\n",
+       "        -0.521564]),\n",
+       " 0)"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "train_dataset[0]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "57b6f02d-e0e2-438b-9547-9740ca05d3d1",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:17.197195Z",
+     "iopub.status.busy": "2022-08-26T13:39:17.196993Z",
+     "iopub.status.idle": "2022-08-26T13:39:17.230504Z",
+     "shell.execute_reply": "2022-08-26T13:39:17.230113Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:17.197173Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "([(0, 300), (300, 600), (600, 900), (900, 1200), (1200, 1500), (1500, 1800)],\n",
+       " ['userAcceleration.x',\n",
+       "  'userAcceleration.y',\n",
+       "  'userAcceleration.z',\n",
+       "  'rotationRate.x',\n",
+       "  'rotationRate.y',\n",
+       "  'rotationRate.z'],\n",
+       " 6)"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "train_dataset.window_slices, train_dataset.window_names, train_dataset.num_windows"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "91462ee9-e382-4267-b2d6-4ac2308ca961",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:17.231373Z",
+     "iopub.status.busy": "2022-08-26T13:39:17.231199Z",
+     "iopub.status.idle": "2022-08-26T13:39:17.261782Z",
+     "shell.execute_reply": "2022-08-26T13:39:17.261413Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:17.231350Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "from librep.datasets.multimodal import TransformMultiModalDataset\n",
+    "from librep.transforms.fft import FFT"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "efc39e40-e26b-4898-8b3b-e130c9c798ea",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:17.262465Z",
+     "iopub.status.busy": "2022-08-26T13:39:17.262317Z",
+     "iopub.status.idle": "2022-08-26T13:39:17.597413Z",
+     "shell.execute_reply": "2022-08-26T13:39:17.597056Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:17.262450Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "([(0, 300), (300, 600), (600, 900), (900, 1200), (1200, 1500), (1500, 1800)],\n",
+       " ['fft.userAcceleration.x',\n",
+       "  'fft.userAcceleration.y',\n",
+       "  'fft.userAcceleration.z',\n",
+       "  'fft.rotationRate.x',\n",
+       "  'fft.rotationRate.y',\n",
+       "  'fft.rotationRate.z'],\n",
+       " 6)"
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "fft_transform = FFT()\n",
+    "transformer = TransformMultiModalDataset(transforms=[fft_transform], new_window_name_prefix=\"fft.\")\n",
+    "train_dataset_fft = transformer(train_dataset)\n",
+    "validation_dataset_fft = transformer(validation_dataset)\n",
+    "test_dataset_fft = transformer(test_dataset)\n",
+    "train_dataset_fft.window_slices, train_dataset_fft.window_names, train_dataset_fft.num_windows"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "b47ac3ca-a4c1-46b0-a81e-07a374bc2216",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:17.598125Z",
+     "iopub.status.busy": "2022-08-26T13:39:17.597963Z",
+     "iopub.status.idle": "2022-08-26T13:39:28.019727Z",
+     "shell.execute_reply": "2022-08-26T13:39:28.019251Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:17.598110Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "([(0, 19), (19, 38), (38, 57), (57, 76), (76, 95), (95, 114)],\n",
+       " ['fft-stats.userAcceleration.x',\n",
+       "  'fft-stats.userAcceleration.y',\n",
+       "  'fft-stats.userAcceleration.z',\n",
+       "  'fft-stats.rotationRate.x',\n",
+       "  'fft-stats.rotationRate.y',\n",
+       "  'fft-stats.rotationRate.z'],\n",
+       " 6)"
+      ]
+     },
+     "execution_count": 12,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "from librep.datasets.multimodal import TransformMultiModalDataset\n",
+    "from librep.transforms.fft import FFT\n",
+    "from librep.transforms.stats import StatsTransform\n",
+    "\n",
+    "fft_transform = FFT()\n",
+    "stats_transform = StatsTransform()\n",
+    "transformer = TransformMultiModalDataset(transforms=[fft_transform, stats_transform], new_window_name_prefix=\"fft-stats.\")\n",
+    "train_dataset_fft_stats = transformer(train_dataset)\n",
+    "validation_dataset_fft_stats = transformer(validation_dataset)\n",
+    "test_dataset_fft_stats = transformer(test_dataset)\n",
+    "train_dataset_fft_stats.window_slices, train_dataset_fft_stats.window_names, train_dataset_fft_stats.num_windows"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "08b702cd-6940-4bad-a5cb-c47d290efd8e",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:28.020669Z",
+     "iopub.status.busy": "2022-08-26T13:39:28.020532Z",
+     "iopub.status.idle": "2022-08-26T13:39:28.062965Z",
+     "shell.execute_reply": "2022-08-26T13:39:28.062598Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:28.020652Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "([(0, 300),\n",
+       "  (300, 600),\n",
+       "  (600, 900),\n",
+       "  (900, 1200),\n",
+       "  (1200, 1500),\n",
+       "  (1500, 1800),\n",
+       "  (1800, 1819),\n",
+       "  (1819, 1838),\n",
+       "  (1838, 1857),\n",
+       "  (1857, 1876),\n",
+       "  (1876, 1895),\n",
+       "  (1895, 1914)],\n",
+       " ['fft.userAcceleration.x',\n",
+       "  'fft.userAcceleration.y',\n",
+       "  'fft.userAcceleration.z',\n",
+       "  'fft.rotationRate.x',\n",
+       "  'fft.rotationRate.y',\n",
+       "  'fft.rotationRate.z',\n",
+       "  'fft-stats.userAcceleration.x',\n",
+       "  'fft-stats.userAcceleration.y',\n",
+       "  'fft-stats.userAcceleration.z',\n",
+       "  'fft-stats.rotationRate.x',\n",
+       "  'fft-stats.rotationRate.y',\n",
+       "  'fft-stats.rotationRate.z'],\n",
+       " 12)"
+      ]
+     },
+     "execution_count": 13,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "from librep.datasets.multimodal import combine_multi_modal_datasets\n",
+    "combined_train_dset = combine_multi_modal_datasets(train_dataset_fft, train_dataset_fft_stats)\n",
+    "combined_test_dset = combine_multi_modal_datasets(test_dataset_fft, test_dataset_fft_stats)\n",
+    "combined_train_dset.window_slices, combined_train_dset.window_names, combined_train_dset.num_windows"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "b92962e8-9144-4c90-b2ba-7c973d64daf9",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:28.063698Z",
+     "iopub.status.busy": "2022-08-26T13:39:28.063553Z",
+     "iopub.status.idle": "2022-08-26T13:39:28.808541Z",
+     "shell.execute_reply": "2022-08-26T13:39:28.808082Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:28.063683Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "([(0, 100), (100, 200), (200, 300), (300, 400), (400, 500), (500, 600)],\n",
+       " ['resample-100-fft.userAcceleration.x',\n",
+       "  'resample-100-fft.userAcceleration.y',\n",
+       "  'resample-100-fft.userAcceleration.z',\n",
+       "  'resample-100-fft.rotationRate.x',\n",
+       "  'resample-100-fft.rotationRate.y',\n",
+       "  'resample-100-fft.rotationRate.z'],\n",
+       " 6)"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "from librep.datasets.multimodal import TransformMultiModalDataset\n",
+    "from librep.transforms.fft import FFT\n",
+    "from librep.transforms.resampler import SimpleResampler\n",
+    "from librep.transforms.stats import StatsTransform\n",
+    "\n",
+    "resampler = SimpleResampler(new_sample_size=100)\n",
+    "fft_transform = FFT()\n",
+    "stats_transform = StatsTransform()\n",
+    "transformer = TransformMultiModalDataset(transforms=[resampler, fft_transform], new_window_name_prefix=\"resample-100-fft.\")\n",
+    "resampled_train_dataset_fft_stats = transformer(train_dataset)\n",
+    "resampled_validation_dataset_fft_stats = transformer(validation_dataset)\n",
+    "resampled_test_dataset_fft_stats = transformer(test_dataset)\n",
+    "resampled_train_dataset_fft_stats.window_slices, resampled_train_dataset_fft_stats.window_names, resampled_train_dataset_fft_stats.num_windows"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "202ae715-f2bb-4dc4-84dc-383ec009776f",
+   "metadata": {},
+   "source": [
+    "## Train"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "cd4dd9da-6371-4c2f-b921-8886f64526ab",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:28.809222Z",
+     "iopub.status.busy": "2022-08-26T13:39:28.809085Z",
+     "iopub.status.idle": "2022-08-26T13:39:28.839812Z",
+     "shell.execute_reply": "2022-08-26T13:39:28.839452Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:28.809207Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "from librep.utils.workflow import SimpleTrainEvalWorkflow, MultiRunWorkflow\n",
+    "from librep.estimators import RandomForestClassifier\n",
+    "from librep.metrics.report import ClassificationReport\n",
+    "import yaml\n",
+    "\n",
+    "reporter = ClassificationReport(use_accuracy=True, use_f1_score=True, use_classification_report=False, use_confusion_matrix=False, plot_confusion_matrix=False)\n",
+    "experiment = SimpleTrainEvalWorkflow(estimator=RandomForestClassifier, do_not_instantiate=False, do_fit=True, evaluator=reporter)\n",
+    "multi_run_experiment = MultiRunWorkflow(workflow=experiment, num_runs=3, debug=False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "12670662-e649-4a6f-8574-2c1d39e19b34",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:28.840649Z",
+     "iopub.status.busy": "2022-08-26T13:39:28.840507Z",
+     "iopub.status.idle": "2022-08-26T13:39:39.896899Z",
+     "shell.execute_reply": "2022-08-26T13:39:39.896450Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:28.840630Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "runs:\n",
+      "-   end: 1661521172.5447426\n",
+      "    result:\n",
+      "    -   accuracy: 0.8130081300813008\n",
+      "        f1 score (macro): 0.8092680932493684\n",
+      "        f1 score (micro): 0.8130081300813008\n",
+      "        f1 score (weighted): 0.8167481669132332\n",
+      "    -   accuracy: 1.0\n",
+      "        f1 score (macro): 1.0\n",
+      "        f1 score (micro): 1.0\n",
+      "        f1 score (weighted): 1.0\n",
+      "    -   accuracy: 0.8130081300813008\n",
+      "        f1 score (macro): 0.8092680932493684\n",
+      "        f1 score (micro): 0.8130081300813008\n",
+      "        f1 score (weighted): 0.8167481669132332\n",
+      "    run id: 1\n",
+      "    start: 1661521168.8678403\n",
+      "    time taken: 3.6769022941589355\n",
+      "-   end: 1661521176.151799\n",
+      "    result:\n",
+      "    -   accuracy: 0.8130081300813008\n",
+      "        f1 score (macro): 0.8102555596277834\n",
+      "        f1 score (micro): 0.8130081300813008\n",
+      "        f1 score (weighted): 0.8157607005348183\n",
+      "    -   accuracy: 1.0\n",
+      "        f1 score (macro): 1.0\n",
+      "        f1 score (micro): 1.0\n",
+      "        f1 score (weighted): 1.0\n",
+      "    -   accuracy: 0.8130081300813008\n",
+      "        f1 score (macro): 0.8102555596277834\n",
+      "        f1 score (micro): 0.8130081300813008\n",
+      "        f1 score (weighted): 0.8157607005348183\n",
+      "    run id: 2\n",
+      "    start: 1661521172.5447452\n",
+      "    time taken: 3.607053756713867\n",
+      "-   end: 1661521179.8909266\n",
+      "    result:\n",
+      "    -   accuracy: 0.8089430894308943\n",
+      "        f1 score (macro): 0.806810759538533\n",
+      "        f1 score (micro): 0.8089430894308943\n",
+      "        f1 score (weighted): 0.8110754193232558\n",
+      "    -   accuracy: 1.0\n",
+      "        f1 score (macro): 1.0\n",
+      "        f1 score (micro): 1.0\n",
+      "        f1 score (weighted): 1.0\n",
+      "    -   accuracy: 0.8089430894308943\n",
+      "        f1 score (macro): 0.806810759538533\n",
+      "        f1 score (micro): 0.8089430894308943\n",
+      "        f1 score (weighted): 0.8110754193232558\n",
+      "    run id: 3\n",
+      "    start: 1661521176.1518009\n",
+      "    time taken: 3.7391257286071777\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "result = multi_run_experiment(train_dataset, [test_dataset, validation_dataset, test_dataset])\n",
+    "print(yaml.dump(result, sort_keys=True, indent=4))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "504f4a90-b09b-4903-9f64-068bd1b6ed6e",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:39.897646Z",
+     "iopub.status.busy": "2022-08-26T13:39:39.897497Z",
+     "iopub.status.idle": "2022-08-26T13:39:50.386583Z",
+     "shell.execute_reply": "2022-08-26T13:39:50.386094Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:39.897630Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "runs:\n",
+      "-   end: 1661521183.436638\n",
+      "    result:\n",
+      "    -   accuracy: 0.8760162601626016\n",
+      "        f1 score (macro): 0.8765569104130136\n",
+      "        f1 score (micro): 0.8760162601626016\n",
+      "        f1 score (weighted): 0.8754756099121896\n",
+      "    run id: 1\n",
+      "    start: 1661521179.9263184\n",
+      "    time taken: 3.510319709777832\n",
+      "-   end: 1661521186.9227378\n",
+      "    result:\n",
+      "    -   accuracy: 0.8658536585365854\n",
+      "        f1 score (macro): 0.8666690005075058\n",
+      "        f1 score (micro): 0.8658536585365854\n",
+      "        f1 score (weighted): 0.8650383165656649\n",
+      "    run id: 2\n",
+      "    start: 1661521183.4366405\n",
+      "    time taken: 3.4860973358154297\n",
+      "-   end: 1661521190.3803427\n",
+      "    result:\n",
+      "    -   accuracy: 0.8943089430894309\n",
+      "        f1 score (macro): 0.8941618301001911\n",
+      "        f1 score (micro): 0.8943089430894309\n",
+      "        f1 score (weighted): 0.8944560560786708\n",
+      "    run id: 3\n",
+      "    start: 1661521186.9227395\n",
+      "    time taken: 3.4576032161712646\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "result = multi_run_experiment(train_dataset_fft, test_dataset_fft)\n",
+    "print(yaml.dump(result, sort_keys=True, indent=4))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "63dc4d32-c02b-44e0-9d65-bfb0ba7ce39e",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:50.387357Z",
+     "iopub.status.busy": "2022-08-26T13:39:50.387238Z",
+     "iopub.status.idle": "2022-08-26T13:39:52.339695Z",
+     "shell.execute_reply": "2022-08-26T13:39:52.339257Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:50.387342Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "runs:\n",
+      "-   end: 1661521191.0847623\n",
+      "    result:\n",
+      "    -   accuracy: 0.8943089430894309\n",
+      "        f1 score (macro): 0.8937127699882125\n",
+      "        f1 score (micro): 0.8943089430894309\n",
+      "        f1 score (weighted): 0.8949051161906492\n",
+      "    run id: 1\n",
+      "    start: 1661521190.4232392\n",
+      "    time taken: 0.6615231037139893\n",
+      "-   end: 1661521191.7009072\n",
+      "    result:\n",
+      "    -   accuracy: 0.9004065040650406\n",
+      "        f1 score (macro): 0.9000678710507787\n",
+      "        f1 score (micro): 0.9004065040650406\n",
+      "        f1 score (weighted): 0.9007451370793025\n",
+      "    run id: 2\n",
+      "    start: 1661521191.0847642\n",
+      "    time taken: 0.616142988204956\n",
+      "-   end: 1661521192.3351443\n",
+      "    result:\n",
+      "    -   accuracy: 0.8841463414634146\n",
+      "        f1 score (macro): 0.8837109387805689\n",
+      "        f1 score (micro): 0.8841463414634146\n",
+      "        f1 score (weighted): 0.8845817441462605\n",
+      "    run id: 3\n",
+      "    start: 1661521191.7009094\n",
+      "    time taken: 0.6342349052429199\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "result = multi_run_experiment(train_dataset_fft_stats, test_dataset_fft_stats)\n",
+    "print(yaml.dump(result, sort_keys=True, indent=4))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "37934d68-4f04-46ef-ad6e-47f1e84f43cb",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:39:52.340423Z",
+     "iopub.status.busy": "2022-08-26T13:39:52.340287Z",
+     "iopub.status.idle": "2022-08-26T13:40:02.578306Z",
+     "shell.execute_reply": "2022-08-26T13:40:02.577837Z",
+     "shell.execute_reply.started": "2022-08-26T13:39:52.340402Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "runs:\n",
+      "-   end: 1661521195.8505778\n",
+      "    result:\n",
+      "    -   accuracy: 0.9044715447154471\n",
+      "        f1 score (macro): 0.904232049221894\n",
+      "        f1 score (micro): 0.9044715447154471\n",
+      "        f1 score (weighted): 0.9047110402090002\n",
+      "    run id: 1\n",
+      "    start: 1661521192.3657854\n",
+      "    time taken: 3.484792470932007\n",
+      "-   end: 1661521199.1955597\n",
+      "    result:\n",
+      "    -   accuracy: 0.9085365853658537\n",
+      "        f1 score (macro): 0.908267561416983\n",
+      "        f1 score (micro): 0.9085365853658537\n",
+      "        f1 score (weighted): 0.9088056093147245\n",
+      "    run id: 2\n",
+      "    start: 1661521195.8505816\n",
+      "    time taken: 3.344978094100952\n",
+      "-   end: 1661521202.5747433\n",
+      "    result:\n",
+      "    -   accuracy: 0.9065040650406504\n",
+      "        f1 score (macro): 0.9061505000525356\n",
+      "        f1 score (micro): 0.9065040650406504\n",
+      "        f1 score (weighted): 0.9068576300287653\n",
+      "    run id: 3\n",
+      "    start: 1661521199.1955621\n",
+      "    time taken: 3.379181146621704\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "result = multi_run_experiment(combined_train_dset, combined_test_dset)\n",
+    "print(yaml.dump(result, sort_keys=True, indent=4))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "0ed10449-10b9-4ae9-abb6-aec6cedc32d1",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-26T13:40:02.579116Z",
+     "iopub.status.busy": "2022-08-26T13:40:02.578853Z",
+     "iopub.status.idle": "2022-08-26T13:40:08.141150Z",
+     "shell.execute_reply": "2022-08-26T13:40:08.140699Z",
+     "shell.execute_reply.started": "2022-08-26T13:40:02.579101Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "runs:\n",
+      "-   end: 1661521204.4945023\n",
+      "    result:\n",
+      "    -   accuracy: 0.9024390243902439\n",
+      "        f1 score (macro): 0.902794602054917\n",
+      "        f1 score (micro): 0.9024390243902439\n",
+      "        f1 score (weighted): 0.9020834467255708\n",
+      "    run id: 1\n",
+      "    start: 1661521202.6028843\n",
+      "    time taken: 1.891618013381958\n",
+      "-   end: 1661521206.3323886\n",
+      "    result:\n",
+      "    -   accuracy: 0.9024390243902439\n",
+      "        f1 score (macro): 0.9030608426902083\n",
+      "        f1 score (micro): 0.9024390243902439\n",
+      "        f1 score (weighted): 0.9018172060902796\n",
+      "    run id: 2\n",
+      "    start: 1661521204.4945047\n",
+      "    time taken: 1.8378839492797852\n",
+      "-   end: 1661521208.1375136\n",
+      "    result:\n",
+      "    -   accuracy: 0.8943089430894309\n",
+      "        f1 score (macro): 0.8955127741729566\n",
+      "        f1 score (micro): 0.8943089430894309\n",
+      "        f1 score (weighted): 0.893105112005905\n",
+      "    run id: 3\n",
+      "    start: 1661521206.3323903\n",
+      "    time taken: 1.8051233291625977\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "result = multi_run_experiment(resampled_train_dataset_fft_stats, resampled_test_dataset_fft_stats)\n",
+    "print(yaml.dump(result, sort_keys=True, indent=4))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "34407f64-d71c-46bb-995e-bde1e5cfcf9a",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.10"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

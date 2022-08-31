@@ -1,0 +1,129 @@
+:py:mod:`librep.datasets.har.extrasensory`
+==========================================
+
+.. py:module:: librep.datasets.har.extrasensory
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.datasets.har.extrasensory.RawExtraSensory
+   librep.datasets.har.extrasensory.RawExtraSensoryPreprocessor
+   librep.datasets.har.extrasensory.User
+
+
+
+
+.. py:class:: RawExtraSensory(labels_dir, accelerometer_dir, gyroscope_dir, gravity_dir = None, store_raw_df = False, default_dtype = 'float32')
+
+   .. py:method:: __repr__()
+
+      Return repr(self).
+
+
+   .. py:method:: __str__()
+
+      Return str(self).
+
+
+   .. py:method:: _read_users()
+
+
+   .. py:method:: user_ids()
+      :property:
+
+
+   .. py:method:: user_labels(userid)
+
+
+   .. py:method:: user_processed_features(userid)
+
+
+   .. py:method:: user_raw_measurements(userid)
+
+
+   .. py:method:: users()
+      :property:
+
+
+
+.. py:class:: RawExtraSensoryPreprocessor(raw_es, output_dir)
+
+   Split dataset into raw, labels and feateurs
+
+   .. py:method:: convert(user_ids = None, save_raw = True, save_labels = True, save_features = True)
+
+
+
+.. py:class:: User(uuid, feature_file, user_accelerometer_dir, user_gyroscope_dir, user_gravity_dir = None, store_raw_df = False, default_dtype = 'float64')
+
+   Class representing an User in the Extrasensory dataset
+
+   Parameters
+   ----------
+   uuid : str
+       Unique user identifier.
+   feature_file : Path
+       Path from the user's feature file.
+   user_accelerometer_dir : Path
+       Path from the user's accelerometer directory.
+   user_gyroscope_dir : Path
+       Path from the user's gyroscope directory.
+   user_gravity_dir : Path, optional
+       Path from the user's gravity directory.
+   store_raw_df : bool
+       Boolean indicating if the user's dataframe must be cached to be
+       accessed quickly, once read. Thus, when calling `raw_measurements`
+       method, the cached version will be returned, instead of
+       constructing the dataframe again, which may be slow.
+       Note that dataframe may be quite large.
+
+   .. py:method:: _parse_features()
+
+      Parse user's feature file. Store at `feature_df`.
+      - `feature_names` member will store all features that is not label,
+      that is, which does not start with 'label' string.
+      - `label_names` member will store the name of all labels.
+
+
+   .. py:method:: labels()
+      :property:
+
+
+   .. py:method:: num_samples()
+      :property:
+
+      Number of samples attached to this user
+
+      Returns
+      -------
+      int
+          Numbe of sampes from this user.
+
+
+   .. py:method:: processed_features()
+      :property:
+
+
+   .. py:method:: raw_measurements()
+      :property:
+
+      Returns a dataframe with raw mesaurements of an User from all
+      timestamps files.
+
+      Note
+      ----
+      If `store_raw_df` member is set to true, this dataframe will be cached.
+
+      Returns
+      -------
+      pd.DataFrame
+          A dataframe with the user's measurements from all timestamps files.
+
+
+

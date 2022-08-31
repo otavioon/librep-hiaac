@@ -1,0 +1,88 @@
+:py:mod:`librep.utils.workflow`
+===============================
+
+.. py:module:: librep.utils.workflow
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.utils.workflow.MultiRunWorkflow
+   librep.utils.workflow.NamedDataset
+   librep.utils.workflow.NamedEstimator
+   librep.utils.workflow.NamedEvaluator
+   librep.utils.workflow.NamedTransform
+   librep.utils.workflow.SimpleTrainEvalWorkflow
+
+
+
+
+.. py:class:: MultiRunWorkflow(workflow, num_runs = 1, debug = False)
+
+   .. py:method:: __call__(train_dataset, test_datasets = None)
+
+
+
+.. py:class:: NamedDataset
+
+   .. py:attribute:: dataset
+      :annotation: :librep.base.data.Dataset
+
+      
+
+   .. py:attribute:: name
+      :annotation: :str
+
+      
+
+
+.. py:class:: NamedEstimator
+
+   .. py:attribute:: estimator
+      :annotation: :librep.base.estimator.Estimator
+
+      
+
+   .. py:attribute:: name
+      :annotation: :str
+
+      
+
+
+.. py:class:: NamedEvaluator
+
+   .. py:attribute:: evaluator
+      :annotation: :librep.base.evaluators.Evaluators
+
+      
+
+   .. py:attribute:: name
+      :annotation: :str
+
+      
+
+
+.. py:class:: NamedTransform
+
+   .. py:attribute:: name
+      :annotation: :str
+
+      
+
+   .. py:attribute:: transform
+      :annotation: :librep.base.transform.Transform
+
+      
+
+
+.. py:class:: SimpleTrainEvalWorkflow(estimator, estimator_creation_kwags = None, do_not_instantiate = False, transformer = None, do_fit = True, is_supervised = True, evaluate = True, evaluator = None, debug = False)
+
+   .. py:method:: __call__(train_dataset, test_datasets = None)
+
+
+

@@ -1,0 +1,85 @@
+:py:mod:`librep.transforms.fft`
+===============================
+
+.. py:module:: librep.transforms.fft
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.transforms.fft.FFT
+
+
+
+
+.. py:class:: FFT(transpose = False, absolute = True, centered = False)
+
+   Bases: :py:obj:`librep.base.transform.InvertibleTransform`
+
+   Performs the DFT at one sample.
+
+   Parameters
+   ----------
+   transpose : bool
+       Return the transpose of the transformed sample (the default is False).
+   absolute : bool
+       Return the absolute values instead of a complex number (the default is True).
+   centered : bool
+       If True, returns the only the first half of the transformed sample, as
+       FFT is symmetric (the default is False).
+
+   Examples
+   ----------
+   >>> time_sample = np.arange(256)
+   >>> fft_transform = FFT(centered=True)
+   >>> fft_sample = fft_transform.fit_transform(time_sample)
+   >>> fft_sample.shape
+   (128, )
+
+
+   .. py:method:: fit(X, y = None)
+
+      Not used.
+
+              
+
+
+   .. py:method:: inverse_transform(X)
+      :abstractmethod:
+
+      Transform a sample with the inverse FFT.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          The samples to be transfomed with shape (n_features, ).
+
+      Returns
+      -------
+      ArrayLike
+          The transformed sample.
+
+
+
+   .. py:method:: transform(X)
+
+      Transform a sample using FFT.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          The samples to be transfomed with shape (n_features, n_features, ).
+
+      Returns
+      -------
+      ArrayLike
+          The transformed sample.
+
+
+
+

@@ -1,0 +1,15 @@
+:py:mod:`librep.estimators`
+===========================
+
+.. py:module:: librep.estimators
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   sklearn/index.rst
+
+

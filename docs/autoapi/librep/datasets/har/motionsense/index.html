@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>librep.datasets.har.motionsense &mdash; Librep 0.0.1-dev
+ documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="librep.datasets.multimodal" href="../../multimodal/index.html" />
+    <link rel="prev" title="librep.datasets.har.kuhar" href="../kuhar/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> Librep
+          </a>
+              <div class="version">
+                0.0.1-dev
+
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../howtos.html">How-To Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../api.html">Programming Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../../base/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.base</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.config</span></code></a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.datasets</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../estimators/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.estimators</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../losses/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.losses</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../metrics/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.metrics</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../transforms/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.transforms</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Librep</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../../api.html">Programming Reference</a> &raquo;</li>
+          <li><a href="../../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep</span></code></a> &raquo;</li>
+          <li><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.datasets</span></code></a> &raquo;</li>
+          <li><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.datasets.har</span></code></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.datasets.har.motionsense</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/autoapi/librep/datasets/har/motionsense/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="module-librep.datasets.har.motionsense">
+<span id="librep-datasets-har-motionsense"></span><h1><a class="reference internal" href="#module-librep.datasets.har.motionsense" title="librep.datasets.har.motionsense"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.datasets.har.motionsense</span></code></a><a class="headerlink" href="#module-librep.datasets.har.motionsense" title="Permalink to this heading"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#librep.datasets.har.motionsense.MotionSenseDatasetGenerator" title="librep.datasets.har.motionsense.MotionSenseDatasetGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MotionSenseDatasetGenerator</span></code></a></p></td>
+<td><p>Generate a custom MotionSense dataset from Raw MotionSense data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#librep.datasets.har.motionsense.RawMotionSense" title="librep.datasets.har.motionsense.RawMotionSense"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RawMotionSense</span></code></a></p></td>
+<td><p>This class handles raw files from MotionSense Dataset.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#librep.datasets.har.motionsense.RawMotionSenseIterator" title="librep.datasets.har.motionsense.RawMotionSenseIterator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RawMotionSenseIterator</span></code></a></p></td>
+<td><p>Iterate over RawMotionSense files.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.MotionSenseDatasetGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">librep.datasets.har.motionsense.</span></span><span class="sig-name descname"><span class="pre">MotionSenseDatasetGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motionsense_iterator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_overlap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.MotionSenseDatasetGenerator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../generator/index.html#librep.datasets.har.generator.HARDatasetGenerator" title="librep.datasets.har.generator.HARDatasetGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">librep.datasets.har.generator.HARDatasetGenerator</span></code></a></p>
+<p>Generate a custom MotionSense dataset from Raw MotionSense data.</p>
+<dl class="simple">
+<dt>motionsense_iterator<span class="classifier">RawMotionSenseIterator</span></dt><dd><p>The iterator object to iterate over users/activities dataframes.</p>
+</dd>
+<dt>time_window<span class="classifier">int</span></dt><dd><p>Number of samples that compose a window.
+If None, a sample will be a single instant.</p>
+</dd>
+<dt>window_overlap<span class="classifier">int</span></dt><dd><p>Number of samples to overlap over windows.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>motionsense_iterator</strong> (<a class="reference internal" href="#librep.datasets.har.motionsense.RawMotionSenseIterator" title="librep.datasets.har.motionsense.RawMotionSenseIterator"><em>RawMotionSenseIterator</em></a>) – </p></li>
+<li><p><strong>time_window</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+<li><p><strong>window_overlap</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.MotionSenseDatasetGenerator.__create_time_series">
+<span class="sig-name descname"><span class="pre">__create_time_series</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.MotionSenseDatasetGenerator.__create_time_series" title="Permalink to this definition"></a></dt>
+<dd><p>Create a time series with defined window size and overlap.</p>
+<dl class="simple">
+<dt>data<span class="classifier">pd.DataFrame</span></dt><dd><p>Data to be splitted to windows. Windows consist in consecutive
+samples as features.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>pd.DataFrame</dt><dd><p>Dataframe with time windows.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>pandas.DataFrame</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.MotionSenseDatasetGenerator.__repr__">
+<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.MotionSenseDatasetGenerator.__repr__" title="Permalink to this definition"></a></dt>
+<dd><p>Return repr(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.MotionSenseDatasetGenerator.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.MotionSenseDatasetGenerator.__str__" title="Permalink to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.MotionSenseDatasetGenerator.balance_dataset_to_minimum">
+<span class="sig-name descname"><span class="pre">balance_dataset_to_minimum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'activity</span> <span class="pre">code'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.MotionSenseDatasetGenerator.balance_dataset_to_minimum" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframe</strong> (<em>pandas.DataFrame</em>) – </p></li>
+<li><p><strong>column</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.MotionSenseDatasetGenerator.check_if_unique_per_df">
+<span class="sig-name descname"><span class="pre">check_if_unique_per_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_to_check</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datasets_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'user'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.MotionSenseDatasetGenerator.check_if_unique_per_df" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset_to_check</strong> (<em>pandas.DataFrame</em>) – </p></li>
+<li><p><strong>datasets_list</strong> (<em>List</em><em>[</em><em>pandas.DataFrame</em><em>]</em>) – </p></li>
+<li><p><strong>column</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.MotionSenseDatasetGenerator.create_datasets">
+<span class="sig-name descname"><span class="pre">create_datasets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensure_distinct_users_per_dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">balance_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activities_remap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_tqdm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.MotionSenseDatasetGenerator.create_datasets" title="Permalink to this definition"></a></dt>
+<dd><p>Create train/validation/test datasets.</p>
+<dl class="simple">
+<dt>train_size<span class="classifier">float</span></dt><dd><p>Fraction of samples to training dataset.</p>
+</dd>
+<dt>validation_size<span class="classifier">float</span></dt><dd><p>Fraction of samples to validation dataset.</p>
+</dd>
+<dt>test_size<span class="classifier">float</span></dt><dd><p>Fraction of samples to test dataset.</p>
+</dd>
+<dt>ensure_distinct_users_per_dataset<span class="classifier">bool</span></dt><dd><p>If True, ensure that samples from an user do not belong to distinct
+datasets (the default is True).</p>
+</dd>
+<dt>balance_samples<span class="classifier">bool</span></dt><dd><p>If True, the datasets will have the same number of samples per
+class. The number of samples will be reduced to the class with the
+minor number of samples (the default is True).</p>
+</dd>
+<dt>activities_remap<span class="classifier">Dict[int, int]</span></dt><dd><p>A dictionaty used to replace a label from one class to another.</p>
+</dd>
+<dt>seed<span class="classifier">int</span></dt><dd><p>The random seed (the default is None).</p>
+</dd>
+<dt>use_tqdm<span class="classifier">bool</span></dt><dd><p>If must use tqdm as iterator (the default is True).</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]</dt><dd><p>A tuple with the train, validation and test dataframes.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_size</strong> (<em>float</em>) – </p></li>
+<li><p><strong>validation_size</strong> (<em>float</em>) – </p></li>
+<li><p><strong>test_size</strong> (<em>float</em>) – </p></li>
+<li><p><strong>ensure_distinct_users_per_dataset</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>balance_samples</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>activities_remap</strong> (<em>Dict</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em>) – </p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – </p></li>
+<li><p><strong>use_tqdm</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Tuple[pandas.DataFrame, pandas.DataFrame, pandas.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.MotionSenseDatasetGenerator.get_full_df">
+<span class="sig-name descname"><span class="pre">get_full_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_tqdm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.MotionSenseDatasetGenerator.get_full_df" title="Permalink to this definition"></a></dt>
+<dd><p>Concatenate dataframe from windows.</p>
+<dl class="simple">
+<dt>use_tqdm<span class="classifier">bool</span></dt><dd><p>If must use tqdm as iterator (the default is True).</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>pd.DataFrame</dt><dd><p>A single dataframe, with all dataframe of windows, concatenated.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>use_tqdm</strong> (<em>bool</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.MotionSenseDatasetGenerator.train_test_split">
+<span class="sig-name descname"><span class="pre">train_test_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">users</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">retries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensure_distinct_users_per_dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.MotionSenseDatasetGenerator.train_test_split" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – </p></li>
+<li><p><strong>users</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+<li><p><strong>activities</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+<li><p><strong>train_size</strong> (<em>float</em>) – </p></li>
+<li><p><strong>validation_size</strong> (<em>float</em>) – </p></li>
+<li><p><strong>test_size</strong> (<em>float</em>) – </p></li>
+<li><p><strong>retries</strong> (<em>int</em>) – </p></li>
+<li><p><strong>ensure_distinct_users_per_dataset</strong> (<em>bool</em>) – </p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSense">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">librep.datasets.har.motionsense.</span></span><span class="sig-name descname"><span class="pre">RawMotionSense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSense" title="Permalink to this definition"></a></dt>
+<dd><p>This class handles raw files from MotionSense Dataset.</p>
+<dl class="simple">
+<dt>dataset_dir<span class="classifier">PathLike</span></dt><dd><p>Path to the root of motion sense dataset.</p>
+</dd>
+<dt>download<span class="classifier">bool</span></dt><dd><p>If the dataset must be downloaded before (the default is False).</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>metadata_df<span class="classifier">pd.DataFrame</span></dt><dd><p>Dataframe relating user and activities to the their respective files.</p>
+</dd>
+<dt>activity_names<span class="classifier">Dict[int, str]</span></dt><dd><p>Dictionary relating activity codes to activity names</p>
+</dd>
+<dt>activity_codes<span class="classifier">Dict[str, int]</span></dt><dd><p>Dictionary relating activity names to activity codes</p>
+</dd>
+<dt>dataset_dir: Path</dt><dd><p>Path to the root of motion sense dataset.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset_dir</strong> (<em>librep.config.type_definitions.PathLike</em>) – </p></li>
+<li><p><strong>download</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSense.activity_codes">
+<span class="sig-name descname"><span class="pre">activity_codes</span></span><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSense.activity_codes" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSense.activity_names">
+<span class="sig-name descname"><span class="pre">activity_names</span></span><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSense.activity_names" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSense.dataset_url">
+<span class="sig-name descname"><span class="pre">dataset_url</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">https://github.com/mmalekzadeh/motion-sense/raw/master/data/A_DeviceMotion_data.zip</span></em><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSense.dataset_url" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSense.__download_and_extract">
+<span class="sig-name descname"><span class="pre">__download_and_extract</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSense.__download_and_extract" title="Permalink to this definition"></a></dt>
+<dd><p>Download and extract the MotionSense dataset (A only).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSense.__read_metadata">
+<span class="sig-name descname"><span class="pre">__read_metadata</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSense.__read_metadata" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Iterate over dataset files and create a metadata dataframe.</dt><dd><p>The metadata relates user and activities to their respective files.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>pd.DataFrame</dt><dd><p>Metadata relating users and activities to their respective CSV files.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSense.__repr__">
+<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSense.__repr__" title="Permalink to this definition"></a></dt>
+<dd><p>Return repr(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSense.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSense.__str__" title="Permalink to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSense.activities">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">activities</span></span><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSense.activities" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSense.read_information">
+<span class="sig-name descname"><span class="pre">read_information</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activity_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trail</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSense.read_information" title="Permalink to this definition"></a></dt>
+<dd><p>Read the information of an user/activity, based on the metadata.</p>
+<dl class="simple">
+<dt>file<span class="classifier">PathLike</span></dt><dd><p>Path to the CSV with from user and activity.
+Can be retrieved from the metadata dataframe.</p>
+</dd>
+<dt>activity_code<span class="classifier">int</span></dt><dd><p>The activity code.</p>
+</dd>
+<dt>user<span class="classifier">int</span></dt><dd><p>The ID of the user.</p>
+</dd>
+<dt>trail<span class="classifier">Optional[int]</span></dt><dd><p>The trial number.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>pd.DataFrame</dt><dd><p>Dataframe with the information of the user.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> (<em>librep.config.type_definitions.PathLike</em>) – </p></li>
+<li><p><strong>activity_code</strong> (<em>int</em>) – </p></li>
+<li><p><strong>user</strong> (<em>int</em>) – </p></li>
+<li><p><strong>trail</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSense.users">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">users</span></span><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSense.users" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSenseIterator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">librep.datasets.har.motionsense.</span></span><span class="sig-name descname"><span class="pre">RawMotionSenseIterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">motionsense</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">users_to_select</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activities_to_select</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSenseIterator" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Iterate over RawMotionSense files.</dt><dd><p>Return a dataframe with samples from an user/activity.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>motionsense<span class="classifier">RawMotionSense</span></dt><dd><p>RawMotionSense data files object.</p>
+</dd>
+<dt>users_to_select<span class="classifier">List[str]</span></dt><dd><p>Users to select. If None, iterate over all users.</p>
+</dd>
+<dt>activities_to_select<span class="classifier">List[str]</span></dt><dd><p>Activities to select. If None, iterate over all activities.</p>
+</dd>
+<dt>shuffle<span class="classifier">bool</span></dt><dd><p>If must iterate randomly.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>motionsense</strong> (<a class="reference internal" href="#librep.datasets.har.motionsense.RawMotionSense" title="librep.datasets.har.motionsense.RawMotionSense"><em>RawMotionSense</em></a>) – </p></li>
+<li><p><strong>users_to_select</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>int</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>activities_to_select</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>shuffle</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSenseIterator.__get_data_iterator">
+<span class="sig-name descname"><span class="pre">__get_data_iterator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSenseIterator.__get_data_iterator" title="Permalink to this definition"></a></dt>
+<dd><p>Get an iterator to iterate over selected dataframes.</p>
+<dl class="simple">
+<dt>pd.DataFrame</dt><dd><p>A dataframe for a user/activity.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Generator[pandas.DataFrame, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSenseIterator.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSenseIterator.__iter__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSenseIterator.__next__">
+<span class="sig-name descname"><span class="pre">__next__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSenseIterator.__next__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSenseIterator.__repr__">
+<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSenseIterator.__repr__" title="Permalink to this definition"></a></dt>
+<dd><p>Return repr(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.har.motionsense.RawMotionSenseIterator.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#librep.datasets.har.motionsense.RawMotionSenseIterator.__str__" title="Permalink to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../kuhar/index.html" class="btn btn-neutral float-left" title="librep.datasets.har.kuhar" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../multimodal/index.html" class="btn btn-neutral float-right" title="librep.datasets.multimodal" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, H.IAAC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

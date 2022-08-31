@@ -1,0 +1,63 @@
+:py:mod:`librep.base.evaluators`
+================================
+
+.. py:module:: librep.base.evaluators
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.base.evaluators.CustomMultiEvaluator
+   librep.base.evaluators.CustomSimpleEvaluator
+   librep.base.evaluators.SupervisedEvaluator
+   librep.base.evaluators.UnsupervisedEvaluator
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   librep.base.evaluators.Evaluators
+
+
+.. py:class:: CustomMultiEvaluator
+
+   .. py:method:: evalutate(model, Xs, y)
+      :abstractmethod:
+
+
+
+.. py:class:: CustomSimpleEvaluator
+
+   .. py:method:: evalutate(model, X, y)
+      :abstractmethod:
+
+
+
+.. py:data:: Evaluators
+   
+
+   
+
+.. py:class:: SupervisedEvaluator
+
+   .. py:method:: evaluate(y_true, y_pred, **evaluator_params)
+      :abstractmethod:
+
+
+
+.. py:class:: UnsupervisedEvaluator
+
+   .. py:method:: evaluate(y_true, y_pred, **evaluator_params)
+      :abstractmethod:
+
+
+

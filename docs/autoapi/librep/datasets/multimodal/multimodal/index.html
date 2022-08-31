@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>librep.datasets.multimodal.multimodal &mdash; Librep 0.0.1-dev
+ documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+    <link rel="next" title="librep.datasets.multimodal.transformer" href="../transformer/index.html" />
+    <link rel="prev" title="librep.datasets.multimodal" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> Librep
+          </a>
+              <div class="version">
+                0.0.1-dev
+
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../howtos.html">How-To Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../../api.html">Programming Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../../base/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.base</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.config</span></code></a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.datasets</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../estimators/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.estimators</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../losses/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.losses</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../metrics/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.metrics</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../transforms/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.transforms</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../index.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Librep</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../../api.html">Programming Reference</a> &raquo;</li>
+          <li><a href="../../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep</span></code></a> &raquo;</li>
+          <li><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.datasets</span></code></a> &raquo;</li>
+          <li><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.datasets.multimodal</span></code></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.datasets.multimodal.multimodal</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../../_sources/autoapi/librep/datasets/multimodal/multimodal/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="module-librep.datasets.multimodal.multimodal">
+<span id="librep-datasets-multimodal-multimodal"></span><h1><a class="reference internal" href="#module-librep.datasets.multimodal.multimodal" title="librep.datasets.multimodal.multimodal"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.datasets.multimodal.multimodal</span></code></a><a class="headerlink" href="#module-librep.datasets.multimodal.multimodal" title="Permalink to this heading"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#librep.datasets.multimodal.multimodal.ArrayMultiModalDataset" title="librep.datasets.multimodal.multimodal.ArrayMultiModalDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArrayMultiModalDataset</span></code></a></p></td>
+<td><p>An abstract class representing a generic map-style dataset which</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#librep.datasets.multimodal.multimodal.MultiModalDataset" title="librep.datasets.multimodal.multimodal.MultiModalDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiModalDataset</span></code></a></p></td>
+<td><p>An abstract class representing a generic map-style dataset which</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#librep.datasets.multimodal.multimodal.PandasMultiModalDataset" title="librep.datasets.multimodal.multimodal.PandasMultiModalDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PandasMultiModalDataset</span></code></a></p></td>
+<td><p>Dataset implementation for multi modal PandasDataset.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="librep.datasets.multimodal.multimodal.ArrayMultiModalDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">librep.datasets.multimodal.multimodal.</span></span><span class="sig-name descname"><span class="pre">ArrayMultiModalDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_slices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/librep/datasets/multimodal/multimodal.html#ArrayMultiModalDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.datasets.multimodal.multimodal.ArrayMultiModalDataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#librep.datasets.multimodal.multimodal.MultiModalDataset" title="librep.datasets.multimodal.multimodal.MultiModalDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiModalDataset</span></code></a></p>
+<p>An abstract class representing a generic map-style dataset which
+implement the getitem and len protocols. All datasets that represent a map
+from keys to data samples should subclass it.</p>
+<p>Datasets subclassed from this class can be acessed using the subscription
+syntax, such as <cite>dataset[index]</cite>. It usually return a tuple where the first
+element represent the sample and the second, the label.</p>
+<p>All map-style datasets must be implement the len protocol which returns the
+number of samples in the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>librep.config.type_definitions.ArrayLike</em>) – </p></li>
+<li><p><strong>y</strong> (<em>librep.config.type_definitions.ArrayLike</em>) – </p></li>
+<li><p><strong>window_slices</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>window_names</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.multimodal.multimodal.ArrayMultiModalDataset.__getitem__">
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/librep/datasets/multimodal/multimodal.html#ArrayMultiModalDataset.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.datasets.multimodal.multimodal.ArrayMultiModalDataset.__getitem__" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.multimodal.multimodal.ArrayMultiModalDataset.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/librep/datasets/multimodal/multimodal.html#ArrayMultiModalDataset.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.datasets.multimodal.multimodal.ArrayMultiModalDataset.__len__" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.multimodal.multimodal.ArrayMultiModalDataset.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/librep/datasets/multimodal/multimodal.html#ArrayMultiModalDataset.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.datasets.multimodal.multimodal.ArrayMultiModalDataset.__str__" title="Permalink to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.multimodal.multimodal.ArrayMultiModalDataset.num_windows">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_windows</span></span><a class="headerlink" href="#librep.datasets.multimodal.multimodal.ArrayMultiModalDataset.num_windows" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.multimodal.multimodal.ArrayMultiModalDataset.window_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">window_names</span></span><a class="headerlink" href="#librep.datasets.multimodal.multimodal.ArrayMultiModalDataset.window_names" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.multimodal.multimodal.ArrayMultiModalDataset.window_slices">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">window_slices</span></span><a class="headerlink" href="#librep.datasets.multimodal.multimodal.ArrayMultiModalDataset.window_slices" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[Tuple[int, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="librep.datasets.multimodal.multimodal.MultiModalDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">librep.datasets.multimodal.multimodal.</span></span><span class="sig-name descname"><span class="pre">MultiModalDataset</span></span><a class="reference internal" href="../../../../../_modules/librep/datasets/multimodal/multimodal.html#MultiModalDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.datasets.multimodal.multimodal.MultiModalDataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../../../base/data/index.html#librep.base.data.Dataset" title="librep.base.data.Dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">librep.base.data.Dataset</span></code></a></p>
+<p>An abstract class representing a generic map-style dataset which
+implement the getitem and len protocols. All datasets that represent a map
+from keys to data samples should subclass it.</p>
+<p>Datasets subclassed from this class can be acessed using the subscription
+syntax, such as <cite>dataset[index]</cite>. It usually return a tuple where the first
+element represent the sample and the second, the label.</p>
+<p>All map-style datasets must be implement the len protocol which returns the
+number of samples in the dataset.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.multimodal.multimodal.MultiModalDataset.num_windows">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_windows</span></span><a class="headerlink" href="#librep.datasets.multimodal.multimodal.MultiModalDataset.num_windows" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.multimodal.multimodal.MultiModalDataset.window_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">window_names</span></span><a class="headerlink" href="#librep.datasets.multimodal.multimodal.MultiModalDataset.window_names" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.multimodal.multimodal.MultiModalDataset.window_slices">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">window_slices</span></span><a class="headerlink" href="#librep.datasets.multimodal.multimodal.MultiModalDataset.window_slices" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[Tuple[int, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="librep.datasets.multimodal.multimodal.PandasMultiModalDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">librep.datasets.multimodal.multimodal.</span></span><span class="sig-name descname"><span class="pre">PandasMultiModalDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_prefixes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'activity</span> <span class="pre">code'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_array</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/librep/datasets/multimodal/multimodal.html#PandasMultiModalDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.datasets.multimodal.multimodal.PandasMultiModalDataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../../common/index.html#librep.datasets.common.PandasDataset" title="librep.datasets.common.PandasDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">librep.datasets.common.PandasDataset</span></code></a>, <a class="reference internal" href="#librep.datasets.multimodal.multimodal.MultiModalDataset" title="librep.datasets.multimodal.multimodal.MultiModalDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiModalDataset</span></code></a></p>
+<p>Dataset implementation for multi modal PandasDataset.
+It assumes that each sample is composed is a feature vector where
+parts of this vector comes from different natures.
+For instance, a sample with 900 features where features:
+- 0-299: correspond to acelerometer x
+- 300-599: correspond to accelerometer y
+- 600-899: correspond to accelerometer z</p>
+<p>The MultiModalHAR dataset, derived from Dataset.
+The __getitem__ returns 2-element tuple where:
+- The first element is the sample (from the indexed-row of the
+dataframe with the selected features, as features); and
+- The seconds element is the label (from the indexed-row of the
+dataframe with the selected label_columns, as labels) .</p>
+<dl class="simple">
+<dt>dataframe<span class="classifier">pd.DataFrame</span></dt><dd><p>The dataframe with KuHar samples.</p>
+</dd>
+<dt>feature_prefixes<span class="classifier">Optional[Union[str, List[str]]]</span></dt><dd><p>Which features from features must be selected. Features will be
+selected based on these prefixes. If None, select all features.</p>
+</dd>
+<dt>label_columns<span class="classifier">Union[str, List[str]]</span></dt><dd><p>The columns(s) that represents the label. If the value is an <cite>str</cite>,
+a scalar will be returned, else, a list will be returned.</p>
+</dd>
+<dt>as_array<span class="classifier">bool</span></dt><dd><p>If true, return a <cite>np.ndarray</cite>, else return a <cite>pd.Series</cite>, for each
+sample.</p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">train_csv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">my_filepath</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># This will select the accelerometer (x, y, and z) from HAR dataset</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">train_dataset</span> <span class="o">=</span> <span class="n">MultiModalHARDataset</span><span class="p">(</span><span class="n">feature_prefixes</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;accel-x&quot;</span><span class="p">,</span> <span class="s2">&quot;accel-y&quot;</span><span class="p">,</span> <span class="s2">&quot;accel-z&quot;</span><span class="p">],</span> <span class="n">label_columns</span><span class="o">=</span><span class="s2">&quot;activity code&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">)</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">train_dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="go">(np.ndarray(0.5, 0.6, 0.7), 0)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataframe</strong> (<em>pandas.DataFrame</em>) – </p></li>
+<li><p><strong>feature_prefixes</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>label_columns</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>as_array</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.multimodal.multimodal.PandasMultiModalDataset.__str__">
+<span class="sig-name descname"><span class="pre">__str__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/librep/datasets/multimodal/multimodal.html#PandasMultiModalDataset.__str__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.datasets.multimodal.multimodal.PandasMultiModalDataset.__str__" title="Permalink to this definition"></a></dt>
+<dd><p>Return str(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.multimodal.multimodal.PandasMultiModalDataset.num_windows">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">num_windows</span></span><a class="headerlink" href="#librep.datasets.multimodal.multimodal.PandasMultiModalDataset.num_windows" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.multimodal.multimodal.PandasMultiModalDataset.window_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">window_names</span></span><a class="headerlink" href="#librep.datasets.multimodal.multimodal.PandasMultiModalDataset.window_names" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.datasets.multimodal.multimodal.PandasMultiModalDataset.window_slices">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">window_slices</span></span><a class="headerlink" href="#librep.datasets.multimodal.multimodal.PandasMultiModalDataset.window_slices" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[Tuple[int, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="librep.datasets.multimodal" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../transformer/index.html" class="btn btn-neutral float-right" title="librep.datasets.multimodal.transformer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, H.IAAC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+:py:mod:`librep.datasets.multimodal.transformer`
+================================================
+
+.. py:module:: librep.datasets.multimodal.transformer
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.datasets.multimodal.transformer.TransformMultiModalDataset
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   librep.datasets.multimodal.transformer.__label_selector
+   librep.datasets.multimodal.transformer.combine_multi_modal_datasets
+
+
+
+.. py:class:: TransformMultiModalDataset(transforms, collate_fn = np.hstack, new_window_name_prefix = '')
+
+   Apply a list of transforms into the whole dataset, generating a new
+   dataset.
+
+   Parameters
+   ----------
+   transforms : List[Transform]
+       List of transforms to be applyied to each sample, in order.
+
+   Note: It supposes the number of windows will remain the same
+
+   TODO: it not using fit. fit should be called over whole dataset.
+
+   .. py:method:: __call__(dataset)
+
+
+   .. py:method:: __transform_sample(transform, X, y, slices)
+
+
+
+.. py:function:: __label_selector(a, b)
+
+
+.. py:function:: combine_multi_modal_datasets(d1, d2, collate_fn = np.hstack, labels_combine = __label_selector)
+
+

@@ -1,0 +1,62 @@
+:py:mod:`librep.transforms.stats`
+=================================
+
+.. py:module:: librep.transforms.stats
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.transforms.stats.StatsTransform
+
+
+
+
+.. py:class:: StatsTransform(keep_values = False, capture_statistical = True, capture_indices = True)
+
+   Bases: :py:obj:`librep.base.transform.Transform`
+
+   Extract statistical information of a sample.
+
+   Parameters
+   ----------
+   keep_values : bool
+       If true, the statistical information is concatenated with the input
+       sample. (the default is False).
+   capture_statistical : bool
+       If True, extract statistical information about the sample.
+   capture_indices : bool
+       If True, extract statistical information about the indexes of the sample.
+
+
+   .. py:method:: fit(X, y)
+
+      Not used.
+
+              
+
+
+   .. py:method:: transform(X)
+
+      Extract statistical information of samples.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          The sample used to extract the information, with shape (n_samples, n_features, ).
+
+      Returns
+      -------
+      ArrayLike
+          An array with the statistical information about the samples. If 
+          `keep_values` parameter is set, the statistical information will be
+          concatenated along the input sample.
+
+
+
+

@@ -1,0 +1,95 @@
+:py:mod:`librep.base.transform`
+===============================
+
+.. py:module:: librep.base.transform
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.base.transform.InvertibleTransform
+   librep.base.transform.Transform
+
+
+
+
+.. py:class:: InvertibleTransform
+
+   Bases: :py:obj:`Transform`
+
+   Denotes a invertible transform.
+
+   .. py:method:: inverse_transform(X)
+      :abstractmethod:
+
+      Perform the inverse transform on data.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          An array-like of sample with shape (n_samples, n_features, ).
+
+      Returns
+      -------
+      ArrayLike
+          An array-like with the transformed samples.
+
+
+
+
+.. py:class:: Transform
+
+   Bases: :py:obj:`librep.base.parametrizable.Parametrizable`
+
+   For filtering or modifying the data, in a supervised or unsupervised way.
+   `fit` allows implementing parametrizable transforms. This method sees the
+   whole dataset. `transform` allows transforming each sample.
+
+   .. py:method:: fit(X, y = None, **fit_params)
+
+      Fit the transformation with information of the whole dataset.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          An array-like representing the whole dataset with shape:
+          (n_samples, n_features).
+      y : ArrayLike
+          The respective labels, with shape: (n_samples, ). This parameter is
+          optional and may be used if needed.
+      **fit_params : type
+          Optional data-dependent parameters.
+
+      Returns
+      -------
+      'Transform'
+          The transform (self).
+
+
+
+   .. py:method:: fit_transform(X, y = None, **fit_params)
+
+
+   .. py:method:: transform(X)
+      :abstractmethod:
+
+      Transforms the dataset.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          An array-like of sample with shape (n_samples, n_features, ).
+
+      Returns
+      -------
+      ArrayLike
+          An array-like with the transformed samples.
+
+
+
+

@@ -1,0 +1,2280 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "a1dc800d-c0a1-405c-88d0-641335dff962",
+   "metadata": {},
+   "source": [
+    "# Using data sets\n",
+    "\n",
+    "A data set is a collection of data samples and labels used to train a model. For instance, HAR datasets are usually represented as a dataframe, where each row represent a sample and have another value representing the correspoing activity.\n",
+    "`librep` provides an abstract class in order to represent a dataset, being `librep.base.Dataset`, based on Pytorch.\n",
+    "\n",
+    "The `librep.base.Dataset` provides an interface to implement a map-style dataset. Map-styles datasets have two properties:\n",
+    "\n",
+    "1. It can be accessed by subscription, like a vector, for instance: dataset[0]. `librep.base.Dataset` must implement the `__getitem__` interface.\n",
+    "2. It is measurable, and return the number of samples when using `len()` function, such as `len(dataset)`. `librep.base.Dataset` must implement the `__len__` interface.\n",
+    "\n",
+    "Map-style datasets provide random-access capbilities, give you their size ahead of time, are easier to shuffle, allow for easy parallel loading, and allows lazy loading of data.\n",
+    "\n",
+    "When an element retrieved from a class inherited from `librep.base.Dataset`, using the subscript operator, a 2 element tuple must be returned, where:\n",
+    "\n",
+    "- The first element is the sample itself\n",
+    "- The second element is the label of this sample. If the dataset is unlabeled, it must return `None`."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "68df0f01-2b86-492c-bb55-476f01c158a3",
+   "metadata": {},
+   "source": [
+    "## Implementing a simple dataset\n",
+    "\n",
+    "In order to implement a dataset, we must first derive from `librep.base.Dataset` and implement the `__getitem__` and `__len__` interfaces. The `__getitem__` receives an index as parameter and must return a 2-element tuple.\n",
+    "\n",
+    "Let's implement a `dataset` which takes a list of samples `X` and the respective labels `y` as parameters and returns a 2-element tuple when accessed."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "fbb8703e-bc1d-4be8-b7c2-58535b62a1ae",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:46.377604Z",
+     "iopub.status.busy": "2022-08-31T18:09:46.377418Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.170066Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.169398Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:46.377588Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "\n",
+    "from librep.base.data import Dataset, SimpleDataset\n",
+    "from librep.datasets.common import PandasDataset"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "bd197bee-f070-463c-8730-b8caf3e449a9",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.171349Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.170912Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.175408Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.174825Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.171331Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "class MyDataset(Dataset):\n",
+    "    def __init__(self, X: list, y: list):\n",
+    "        self.X = X\n",
+    "        self.y = y\n",
+    "\n",
+    "    def __len__(self):\n",
+    "        return len(self.X)\n",
+    "\n",
+    "    def __getitem__(self, index):\n",
+    "        return (self.X[index], self.y[index])\n",
+    "\n",
+    "    # (optional) Simple interface to describe the object as string\n",
+    "    def __str__(self) -> str:\n",
+    "        return f\"MyDataset: {len(self)} samples; {len(set(self.y))} classes\"\n",
+    "\n",
+    "    def __repr__(self) -> str:\n",
+    "        return str(self)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6eca2791-2218-40a1-af63-668013e06307",
+   "metadata": {},
+   "source": [
+    "### Using lists"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "562939fb-0a18-4ed8-9e8b-209e4f10469f",
+   "metadata": {},
+   "source": [
+    "Let's create a list of 3-feature sample (`samples`) and the respective labels (`labels`) and wrap arround the `MyDataset` class."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "7ae0daf6-c989-46f9-ba97-daee58f38027",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.176265Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.176059Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.185707Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.185289Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.176250Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "MyDataset: 4 samples; 2 classes"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "samples = [[1, 2, 3], [3, 2, 1], [0.5, 0.5, 0.5], [0, 0, 0]]\n",
+    "labels = [0, 0, 1, 1]\n",
+    "\n",
+    "dataset = MyDataset(X=samples, y=labels)\n",
+    "dataset"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2331f2b4-f49f-4d24-b3f4-e90cc5d79f4a",
+   "metadata": {},
+   "source": [
+    "We can check the length of the dataset, that is, the number of samples, using python's `len()` function"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "128f4c4a-a540-43de-bc1d-774890ce7a7f",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.186422Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.186264Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.189654Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.189157Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.186407Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "4"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "len(dataset)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c4b25f8f-72ff-4219-9800-08342015b5aa",
+   "metadata": {},
+   "source": [
+    "We can access the elements of the dataset using the subscritable operato. It will return a 2-element tuple where: first element is the sample and second is the label."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "a6ce377d-4783-4964-9ec4-7116ad64e5d5",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.190479Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.190306Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.194054Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.193580Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.190463Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "([1, 2, 3], 0)"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# It will return a tuple: first element is the first sample and \n",
+    "# second the label correspoding to this sample\n",
+    "dataset[0]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "4041a37b-180d-440f-9fd9-62a8daf633ad",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.196242Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.196030Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.199288Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.198791Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.196227Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "First sample: [1, 2, 3]\n",
+      "First label: 0\n"
+     ]
+    }
+   ],
+   "source": [
+    "first_sample = dataset[0][0]\n",
+    "first_label = dataset[0][1]\n",
+    "print(f\"First sample: {first_sample}\")\n",
+    "print(f\"First label: {first_label}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4b82d877-740f-4ac9-994f-d90e358d20b5",
+   "metadata": {},
+   "source": [
+    "We can iterate over the samples, by its index"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "3752807f-2e61-4806-a27e-115cdd1dba63",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.200109Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.199917Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.203392Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.202871Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.200094Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Index: 0. Sample: [1, 2, 3]. Label: 0\n",
+      "Index: 1. Sample: [3, 2, 1]. Label: 0\n",
+      "Index: 2. Sample: [0.5, 0.5, 0.5]. Label: 1\n",
+      "Index: 3. Sample: [0, 0, 0]. Label: 1\n"
+     ]
+    }
+   ],
+   "source": [
+    "for index in range(len(dataset)):\n",
+    "    sample, label = dataset[index]\n",
+    "    print(f\"Index: {index}. Sample: {sample}. Label: {label}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3e151205-3981-4cf5-8c15-d63719de9ab0",
+   "metadata": {},
+   "source": [
+    "Slices are also allowed to get itens from dataset, using python's slice notation.\n",
+    "\n",
+    "Let's select the samples from index \\[0,  2)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "1195f8e5-c65c-4366-9b23-b6438921b95c",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.204240Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.204045Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.206896Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.206528Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.204225Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The samples from [0, 2): [[1, 2, 3], [3, 2, 1]]\n",
+      "The labels from [0, 2): [0, 0]\n"
+     ]
+    }
+   ],
+   "source": [
+    "samples, labels = dataset[0:2]\n",
+    "print(f\"The samples from [0, 2): {samples}\")\n",
+    "print(f\"The labels from [0, 2): {labels}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2ee55340-1887-4b20-b2a3-704e46ff7b0a",
+   "metadata": {},
+   "source": [
+    "We can also select all samples, using python's slice notation (blank `:`)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "3a5ce607-2ec4-424f-a0a4-7508b3fc99ba",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.207707Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.207396Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.210414Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.209935Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.207692Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "All samples: [[1, 2, 3], [3, 2, 1], [0.5, 0.5, 0.5], [0, 0, 0]]\n",
+      "All labels: [0, 0, 1, 1]\n"
+     ]
+    }
+   ],
+   "source": [
+    "samples, labels = dataset[:]\n",
+    "print(f\"All samples: {samples}\")\n",
+    "print(f\"All labels: {labels}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "cfdc8cba-8c7a-4fd7-867d-79a593638029",
+   "metadata": {},
+   "source": [
+    "We can select all samples (without labels), using python's slice notation and select the index 0 from the returned tuple"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "46e7404f-5c83-46db-9b27-25de68a806ab",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.211234Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.210938Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.213914Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.213526Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.211219Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "All samples: [[1, 2, 3], [3, 2, 1], [0.5, 0.5, 0.5], [0, 0, 0]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "samples = dataset[:][0]\n",
+    "print(f\"All samples: {samples}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6170a698-5bea-4f65-8cd7-4fe347764a3b",
+   "metadata": {},
+   "source": [
+    "Also to labels"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "c6e69a71-a21b-4daa-b49a-61860ac69f5f",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.214603Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.214426Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.217247Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.216737Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.214588Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "All labels: [0, 0, 1, 1]\n"
+     ]
+    }
+   ],
+   "source": [
+    "labels = dataset[:][1]\n",
+    "print(f\"All labels: {labels}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3eb8cacb-b4c9-416c-b108-c2b22ef369d7",
+   "metadata": {},
+   "source": [
+    "### Using numpy"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3d056c29-3d57-4a64-8683-4af6f1ad8fc3",
+   "metadata": {},
+   "source": [
+    "The same class can also be used to numpy arrays, instead of python's lists, as numpy implement `__getitem__` and slices"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "d8b8a9aa-5c30-4316-877f-aba2c5a9ece5",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.218068Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.217866Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.221775Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.221231Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.218052Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Samples:\n",
+      "[[ 0  1  2]\n",
+      " [ 3  4  5]\n",
+      " [ 6  7  8]\n",
+      " [ 9 10 11]]\n",
+      "Shape of array:\n",
+      "(4, 3)\n"
+     ]
+    }
+   ],
+   "source": [
+    "samples = np.arange(12).reshape(4, 3)\n",
+    "labels = np.array([0, 0, 1, 1])\n",
+    "\n",
+    "print(f\"Samples:\\n{samples}\")\n",
+    "print(f\"Shape of array:\\n{samples.shape}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3d4f28cc-ac33-46c7-b028-2be89277c01b",
+   "metadata": {},
+   "source": [
+    "Wrapping numpy arrays arround `MyDataset` class will iterate by array's rows"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "14c40992-8e63-4e91-b40b-eb9b61396f18",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.222886Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.222385Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.226277Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.225767Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.222865Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "MyDataset: 4 samples; 2 classes"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "dataset = MyDataset(X=samples, y=labels)\n",
+    "dataset"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "a25dd80c-4912-4c72-aad6-3bfdbe51faae",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.227482Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.227176Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.231289Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.230624Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.227458Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The samples from [0, 2):\n",
+      "[[0 1 2]\n",
+      " [3 4 5]]\n",
+      "The labels from [0, 2):\n",
+      "[0 0]\n"
+     ]
+    }
+   ],
+   "source": [
+    "samples, labels = dataset[0:2]\n",
+    "print(f\"The samples from [0, 2):\\n{samples}\")\n",
+    "print(f\"The labels from [0, 2):\\n{labels}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2f84de40-acfb-4613-aa2c-8410598b30a7",
+   "metadata": {},
+   "source": [
+    "### The SimpleDataset class"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e9a149d5-9583-48ba-9b92-a606eb860989",
+   "metadata": {},
+   "source": [
+    "An analogy from `MyDataset` is implemented in `librep.base.data.SimpleDataset` and can be used in the same way as the `MyDataset`"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "02117958-31c2-44a7-8752-2d81332fca9c",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.232643Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.232167Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.237463Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.236760Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.232619Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(array([0, 1, 2]), 0)"
+      ]
+     },
+     "execution_count": 16,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "samples = np.arange(12).reshape(4, 3)\n",
+    "labels = np.array([0, 0, 1, 1])\n",
+    "dataset = SimpleDataset(X=samples, y=labels)\n",
+    "dataset[0]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "235fc8d5-5b46-49aa-aebf-628301fd6c17",
+   "metadata": {},
+   "source": [
+    "### Using Pandas dataframes\n",
+    "\n",
+    "We can also create a dataset interface from a Pandas Dataframe, iterating over the rows.\n",
+    "A simple implementation is provided from `librep.datasets.common.PandasDataset` class.\n",
+    "Given a dataframe, the columns that compose the features of the sample must be informed and also the columns that represent the features, by the `features_columns` and `label_columns` variables.\n",
+    "\n",
+    "Let's create a simple dataframe with 5 columns (`a`, `b`, `c`, `d` and `label`) and 4 rows."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "6137a932-281b-44a8-8de7-36b75d0c5e63",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.238821Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.238488Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.247909Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.247384Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.238796Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>a</th>\n",
+       "      <th>b</th>\n",
+       "      <th>c</th>\n",
+       "      <th>d</th>\n",
+       "      <th>label</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>3</td>\n",
+       "      <td>4</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>5</td>\n",
+       "      <td>6</td>\n",
+       "      <td>7</td>\n",
+       "      <td>8</td>\n",
+       "      <td>9</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>10</td>\n",
+       "      <td>11</td>\n",
+       "      <td>12</td>\n",
+       "      <td>13</td>\n",
+       "      <td>14</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>15</td>\n",
+       "      <td>16</td>\n",
+       "      <td>17</td>\n",
+       "      <td>18</td>\n",
+       "      <td>19</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "    a   b   c   d  label\n",
+       "0   0   1   2   3      4\n",
+       "1   5   6   7   8      9\n",
+       "2  10  11  12  13     14\n",
+       "3  15  16  17  18     19"
+      ]
+     },
+     "execution_count": 17,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "dataframe = pd.DataFrame(\n",
+    "    np.arange(20).reshape(4, 5), \n",
+    "    columns=[\"a\", \"b\", \"c\", \"d\", \"label\"]\n",
+    ")\n",
+    "dataframe"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7f28545f-2b9c-4dc9-b6f9-64841548bcbd",
+   "metadata": {},
+   "source": [
+    "Lets wrap arround `librep.datasets.common.PandasDataset`, specifying the columns `a`, `b`, `c`, and `d` to compose the features of a sample and specifying the `label` column to be the respective label."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "5838ed75-547f-4b43-9acd-ce7728bf86e7",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.248914Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.248663Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.253556Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.252950Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.248894Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "PandasDataset: samples=4, features=4, label_column='label'"
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "dataset = PandasDataset(\n",
+    "    dataframe,\n",
+    "    features_columns=[\"a\", \"b\", \"c\", \"d\"],\n",
+    "    label_columns=\"label\", # can be a list of strings (multi-label per sample)\n",
+    "    as_array=False  # If true, when the sample will be converted to a numpy array\n",
+    "                    # before returned. Default is true\n",
+    ")\n",
+    "\n",
+    "dataset"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "bca9a45b-91ce-49d8-9fa0-7fe2097f731a",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.254785Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.254513Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.257861Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.257316Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.254763Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The dataset has 4 samples\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(f\"The dataset has {len(dataset)} samples\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5a1b8283-9595-4066-9859-bb6e7d88ec0c",
+   "metadata": {},
+   "source": [
+    "Similarly, we can retrieve a sample using the python's subscription operator, that will return a 2-element tuple with sample and label.\n",
+    "\n",
+    "> **_NOTE:_** If the `as_array` option is set the sample and label will be returned as an numpy array instead of a dataframe (or Pandas Series)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "38c09765-de82-4128-a706-8ce8e90750bf",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.259042Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.258640Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.264154Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.263652Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.259017Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(a    0\n",
+       " b    1\n",
+       " c    2\n",
+       " d    3\n",
+       " Name: 0, dtype: int64,\n",
+       " 4)"
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "dataset[0]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "d2d5386b-43aa-44a2-8764-c6123fc13b90",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.265217Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.264903Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.270462Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.269988Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.265194Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "First sample:\n",
+      "a    0\n",
+      "b    1\n",
+      "c    2\n",
+      "d    3\n",
+      "Name: 0, dtype: int64\n",
+      "First label:\n",
+      "4\n"
+     ]
+    }
+   ],
+   "source": [
+    "first_sample = dataset[0][0]\n",
+    "first_label = dataset[0][1]\n",
+    "print(f\"First sample:\\n{first_sample}\")\n",
+    "print(f\"First label:\\n{first_label}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ef895c18-d623-4f1d-a102-73e667fc43aa",
+   "metadata": {},
+   "source": [
+    "Slices are also allowed to get itens from dataset, using python's slice notation.\n",
+    "\n",
+    "Let's select the samples from index \\[0,  1]."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "9c9fcced-b0bd-4957-8719-ce0301371768",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.271322Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.271092Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.276325Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.275817Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.271302Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The samples from [0, 1]:\n",
+      "   a  b  c  d\n",
+      "0  0  1  2  3\n",
+      "1  5  6  7  8\n",
+      "The labels from [0, 1]:\n",
+      "0    4\n",
+      "1    9\n",
+      "Name: label, dtype: int64\n"
+     ]
+    }
+   ],
+   "source": [
+    "samples, labels = dataset[0:1]\n",
+    "print(f\"The samples from [0, 1]:\\n{samples}\")\n",
+    "print(f\"The labels from [0, 1]:\\n{labels}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "540cdc20-7cac-4eca-82f4-525d85bad7ce",
+   "metadata": {},
+   "source": [
+    "We can also select all samples, using python's slice notation (blank `:`)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "80c8b6f3-a5f2-4da4-9bd2-22f335722c6d",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.277177Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.276967Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.282174Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.281647Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.277161Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "All samples:\n",
+      "    a   b   c   d\n",
+      "0   0   1   2   3\n",
+      "1   5   6   7   8\n",
+      "2  10  11  12  13\n",
+      "3  15  16  17  18\n",
+      "All labels:\n",
+      "0     4\n",
+      "1     9\n",
+      "2    14\n",
+      "3    19\n",
+      "Name: label, dtype: int64\n"
+     ]
+    }
+   ],
+   "source": [
+    "samples, labels = dataset[:]\n",
+    "print(f\"All samples:\\n{samples}\")\n",
+    "print(f\"All labels:\\n{labels}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "9de097eb-a532-4aac-a247-b4a1c7a1b60d",
+   "metadata": {},
+   "source": [
+    "If `as_array` is not set, the returned value will be a Dataframe (or Series) and we can access labeled columns"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "5df7856d-cf04-42b7-b7bd-ddd7d2c97190",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.283069Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.282845Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.287167Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.286609Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.283053Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "All samples (column a):\n",
+      "0     0\n",
+      "1     5\n",
+      "2    10\n",
+      "3    15\n",
+      "Name: a, dtype: int64\n"
+     ]
+    }
+   ],
+   "source": [
+    "samples, labels = dataset[:]\n",
+    "print(f\"All samples (column a):\\n{samples['a']}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "7ee801ac-d3e3-461f-a68f-29f402a84b42",
+   "metadata": {},
+   "source": [
+    "We can select only samples or only labels"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "id": "3e74d43e-cdb5-4e8b-908e-4f80d417f463",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.288511Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.288033Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.295762Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.295266Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.288488Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>a</th>\n",
+       "      <th>b</th>\n",
+       "      <th>c</th>\n",
+       "      <th>d</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>3</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>5</td>\n",
+       "      <td>6</td>\n",
+       "      <td>7</td>\n",
+       "      <td>8</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>10</td>\n",
+       "      <td>11</td>\n",
+       "      <td>12</td>\n",
+       "      <td>13</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>15</td>\n",
+       "      <td>16</td>\n",
+       "      <td>17</td>\n",
+       "      <td>18</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "    a   b   c   d\n",
+       "0   0   1   2   3\n",
+       "1   5   6   7   8\n",
+       "2  10  11  12  13\n",
+       "3  15  16  17  18"
+      ]
+     },
+     "execution_count": 25,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "samples = dataset[:][0]\n",
+    "samples"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "id": "d15471d1-0f95-4f10-9e4f-31bb270d6c04",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.300913Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.300549Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.306647Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.306049Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.300889Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0     4\n",
+       "1     9\n",
+       "2    14\n",
+       "3    19\n",
+       "Name: label, dtype: int64"
+      ]
+     },
+     "execution_count": 26,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "labels = dataset[:][1]\n",
+    "labels"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "99f493ee-e445-4ce9-a4f4-f4313bb5a745",
+   "metadata": {},
+   "source": [
+    "If we set `as_array` to True, the returned samples will be arrays, not dataframes. The features will be selected in order of the features columns indicated. \n",
+    "\n",
+    "Let's create a Dataset from dataframe using the columns: `d`, `c` and `b` and label as column `label`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "id": "e6e334ca-1061-4228-b16c-10b2792c6a7e",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.307997Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.307558Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.312385Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.311880Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.307970Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "PandasDataset: samples=4, features=3, label_column='label'"
+      ]
+     },
+     "execution_count": 27,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "dataset = PandasDataset(\n",
+    "    dataframe,\n",
+    "    features_columns=[\"d\", \"c\", \"b\"],\n",
+    "    label_columns=\"label\", # can be a list of strings (multi-label per sample)\n",
+    "    as_array=True # If true, when the sample will be converted to a numpy array\n",
+    "                  # before returned. Default is true\n",
+    ")\n",
+    "\n",
+    "dataset"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "id": "c909d683-1cdd-4304-8144-14d4d668c5f1",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.313487Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.313209Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.318291Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.317803Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.313464Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(array([3, 2, 1]), 4)"
+      ]
+     },
+     "execution_count": 28,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "dataset[0]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "id": "2917fdcc-9521-4086-8960-b77ef8dcb44e",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.319449Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.319047Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.323230Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.322706Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.319428Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "All samples:\n",
+      "[[ 3  2  1]\n",
+      " [ 8  7  6]\n",
+      " [13 12 11]\n",
+      " [18 17 16]]\n",
+      "All labels:\n",
+      "0     4\n",
+      "1     9\n",
+      "2    14\n",
+      "3    19\n",
+      "Name: label, dtype: int64\n"
+     ]
+    }
+   ],
+   "source": [
+    "samples, labels = dataset[:]\n",
+    "print(f\"All samples:\\n{samples}\")\n",
+    "print(f\"All labels:\\n{labels}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "89c5f639-1ea2-4485-a2c5-b9d55e38ddaa",
+   "metadata": {},
+   "source": [
+    "## Multi Modal Datasets\n",
+    "\n",
+    "Several datasets are composed by multi-modal samples. A multi modal sample is a sample where features come from different natures (e.g., different capture devices, configurations, axes, *etc.*). \n",
+    "For instance, in HAR datasets, a sample may be composed by features coming from 6 different natures (6-column vector): accelerometer axis x, accelerometer axis y, accelerometer axis z, gyroscope axis x, gyroscope axis y, gyroscope axis z.\n",
+    "Or a sample may be composed by $n$ instants of time data coming from different natures, such as: 300 instants of time of accelerometer axis x, 300 instants of time of accelerometer axis y, 300 instants of time of accelerometer axis z, 300 instants of time of gyroscope axis x, 300 instants of time of gyroscope axis y, 300 instants of time of gyroscope axis z.\n",
+    "\n",
+    "Librep provides an interface to create multi-modal datasets, which is a dataset where the samples are composed by collection of features comming from different natures. This is illustrated at Figure below.\n",
+    "\n",
+    "![A windowed dataset figure](./images/windowed-dataset.svg \"Windowed dataset\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "700a4273-f037-4027-9afa-466159344422",
+   "metadata": {},
+   "source": [
+    "### MultiModal Numpy Arrays\n",
+    "\n",
+    "A simple array is composed by samples (rows) and features (columns). The samples are composed by features form different natures (the colors). We will call a collection of features (in sequence) from one specific nature as **window**. \n",
+    "For instance, a window can be an axis of the accelerometer or an axis of the gyroscope data.\n",
+    "\n",
+    "A window is a slice of features (columns) and have a `start` and `end` column indexes. As in the feature, the Window 0 is composed by columns 0 to 2, the Window 1 is composed by columns 3 to 5, and so on.\n",
+    "\n",
+    "Librep provides a `librep.datasets.multimodal.ArrayMultiModalDataset` class to describe multi-modal datasets. The `__getitem__` works normally, as `Dataset`, and will return the whole sample and accessed, as well as, `__len__`, that will return the number of samples.\n",
+    "\n",
+    "An mandatory parameter is `window_slices` that describe the windows slices. `window_slices` must be a list of 2-element tuples. Each tuple is composed by the index of the start column and the index of the end column."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "id": "5fb544b6-586c-4142-8905-5eeb40c8e0db",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.324161Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.323922Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.328718Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.328225Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.324139Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[[ 0  1  2  3]\n",
+      " [ 4  5  6  7]\n",
+      " [ 8  9 10 11]\n",
+      " [12 13 14 15]]\n",
+      "[0 0 1 1]\n"
+     ]
+    }
+   ],
+   "source": [
+    "from librep.datasets.multimodal import ArrayMultiModalDataset\n",
+    "\n",
+    "samples = np.arange(16).reshape(4, 4)\n",
+    "labels = np.array([0, 0, 1, 1])\n",
+    "\n",
+    "print(samples)\n",
+    "print(labels)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "id": "b2c906f9-d074-4407-affb-ffe1b43b9b9b",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.329530Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.329315Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.333310Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.332653Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.329514Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "There are 4 samples\n"
+     ]
+    }
+   ],
+   "source": [
+    "multi_modal_dataset = ArrayMultiModalDataset(\n",
+    "    X=samples, y=labels, \n",
+    "    window_slices=[(0, 2), (2, 4)], # window 0 are composed by columns 0 and 1\n",
+    "                                    # window 2 are composed by columns 2 and 3\n",
+    "    window_names=[\"a\", \"b\"]         # Optional parameter informing the name \n",
+    "                                    # of each window\n",
+    ")\n",
+    "\n",
+    "print(f\"There are {len(multi_modal_dataset)} samples\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "646904f2-42d2-4fc1-b466-78d04205b98e",
+   "metadata": {},
+   "source": [
+    "The subscription operation will return a tuple with the whole sample and the label, as in `Dataset`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "id": "6a76e427-d89f-4959-9325-bd84c2d01920",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.334532Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.334239Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.339190Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.338536Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.334507Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(array([0, 1, 2, 3]), 0)"
+      ]
+     },
+     "execution_count": 32,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "multi_modal_dataset[0]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "f4d291ac-0e4e-4022-814f-4c517a410fdf",
+   "metadata": {},
+   "source": [
+    "Some additional properties of `MultiModalDataset` are:\n",
+    "\n",
+    "- `num_windows`: returns the number of windows slices, that is, the length of `window_slices`\n",
+    "- `window_slices`: return the list of window slices (tuple with start and end columns)\n",
+    "- `window_names`: Optional the name of each window."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 33,
+   "id": "94501b46-4c71-40c9-8146-3e2f2d800b45",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.340321Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.340056Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.343533Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.342779Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.340301Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Number of windows: 2\n",
+      "The window slices: [(0, 2), (2, 4)]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(f\"Number of windows: {multi_modal_dataset.num_windows}\")\n",
+    "print(f\"The window slices: {multi_modal_dataset.window_slices}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "8a11721b-d591-4f0a-b79c-feca6cfa94f2",
+   "metadata": {},
+   "source": [
+    "### Multimodal dataframes\n",
+    "\n",
+    "Similarly to numpy arrays, we can also have multimodal dataframe datasets using the `librep.datasets.multimodal.PandasMultiModalDataset` class. \n",
+    "Differently from `ArrayMultiModalDataset`, the `__getitem__` will return a sample with only the features from the slices, and the respective label.\n",
+    "\n",
+    "The windows are dataframe columns and must be informed at object's instantiation, using the `feature_prefixes`.\n",
+    "The `feature_prefixes`is a list of strings and each string is the prefix of the column name. The window slices will be generated automatically based on each prefix.\n",
+    "\n",
+    "For instance, let's generate a dataframe with 5 columns `accel-0`, `accel-1`, `gyro-0`, `gyro-1`, and `label`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 34,
+   "id": "013a7c66-e549-4a1e-8bf6-6a4f80a7a1a9",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.344912Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.344425Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.353368Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.352814Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.344888Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>accel-0</th>\n",
+       "      <th>accel-1</th>\n",
+       "      <th>gyro-0</th>\n",
+       "      <th>gyro-1</th>\n",
+       "      <th>label</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>2</td>\n",
+       "      <td>3</td>\n",
+       "      <td>4</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>5</td>\n",
+       "      <td>6</td>\n",
+       "      <td>7</td>\n",
+       "      <td>8</td>\n",
+       "      <td>9</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>10</td>\n",
+       "      <td>11</td>\n",
+       "      <td>12</td>\n",
+       "      <td>13</td>\n",
+       "      <td>14</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>15</td>\n",
+       "      <td>16</td>\n",
+       "      <td>17</td>\n",
+       "      <td>18</td>\n",
+       "      <td>19</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   accel-0  accel-1  gyro-0  gyro-1  label\n",
+       "0        0        1       2       3      4\n",
+       "1        5        6       7       8      9\n",
+       "2       10       11      12      13     14\n",
+       "3       15       16      17      18     19"
+      ]
+     },
+     "execution_count": 34,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "from librep.datasets.multimodal import PandasMultiModalDataset\n",
+    "\n",
+    "dataframe = pd.DataFrame(\n",
+    "    np.arange(20).reshape(4, 5), \n",
+    "    columns=[\"accel-0\", \"accel-1\", \"gyro-0\", \"gyro-1\", \"label\"]\n",
+    ")\n",
+    "dataframe"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "b738c6b6-22a3-4778-a5f6-d1b03912b55c",
+   "metadata": {},
+   "source": [
+    "The `feature_prefixes` is a list of strings that are prefixes of column names that must compose each slice. Specifying `accel` and `gryo` prefixes will create 2 slices, the first slice are columns starting with `accel` (`accel-0` and `accel-1` columns) and the second slice are columns starting with `gyro`(`gyro-0` and `gyro-1` columns). Windows may each other."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 35,
+   "id": "edacd4f4-3634-42ff-bf75-4d878f5d0dd1",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.354541Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.354278Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.359144Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.358618Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.354518Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "PandasMultiModalDataset: samples=4, features=4, no. window=2"
+      ]
+     },
+     "execution_count": 35,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "multi_modal_dataset = PandasMultiModalDataset(\n",
+    "    dataframe,\n",
+    "    feature_prefixes=[\"accel\", \"gyro\"],\n",
+    "    label_columns=\"label\",\n",
+    "    as_array=False\n",
+    ")\n",
+    "\n",
+    "multi_modal_dataset"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5b987279-e201-493e-bf06-e8defb1fc045",
+   "metadata": {},
+   "source": [
+    "Get item will return a tuple with the sample (the column of all slices) and the label."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 36,
+   "id": "855d40d5-3457-4fb7-a7dc-63e111983c89",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.360434Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.359995Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.366083Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.365300Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.360409Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(accel-0    0\n",
+       " accel-1    1\n",
+       " gyro-0     2\n",
+       " gyro-1     3\n",
+       " Name: 0, dtype: int64,\n",
+       " 4)"
+      ]
+     },
+     "execution_count": 36,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "multi_modal_dataset[0]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "id": "0b154a7b-c008-4b1b-8118-fb1c3039fd1d",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.366943Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.366732Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.370013Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.369334Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.366926Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Number of windows: 2\n",
+      "The window slices: [(0, 2), (2, 4)]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(f\"Number of windows: {multi_modal_dataset.num_windows}\")\n",
+    "print(f\"The window slices: {multi_modal_dataset.window_slices}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "c5126f13-e056-4386-8ba0-4a401573caf3",
+   "metadata": {},
+   "source": [
+    "The `window_names` parameter will be set according to the prefixes."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "id": "c51a8e78-fab3-4ed0-b807-178c43e0eff4",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.371486Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.370871Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.375867Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.375141Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.371460Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "['accel', 'gyro']"
+      ]
+     },
+     "execution_count": 38,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "multi_modal_dataset.window_names"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "bd51773e-c494-4c8c-8772-ca8cc1047462",
+   "metadata": {},
+   "source": [
+    "The example below will consider a dataset with two prefixes `gyro` and `accel-0`. So `gyro-0` and `gyro-1` columns will be select for first slice and `accel-0` column for second slice."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 39,
+   "id": "55c50d24-955b-4f0b-ab6f-cc6aa837443e",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.376746Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.376537Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.380339Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.379823Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.376730Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "PandasMultiModalDataset: samples=4, features=3, no. window=2"
+      ]
+     },
+     "execution_count": 39,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "multi_modal_dataset = PandasMultiModalDataset(\n",
+    "    dataframe,\n",
+    "    feature_prefixes=[\"gyro\", \"accel-0\"],\n",
+    "    label_columns=\"label\",\n",
+    "    as_array=False\n",
+    ")\n",
+    "\n",
+    "multi_modal_dataset"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "152ce9c1-a456-41a5-a6dc-eb50dec00eba",
+   "metadata": {},
+   "source": [
+    "Getting an item will return a sample with the features `gyro-0`, `gyro-1` and `accel-0` only, and the respective label.\n",
+    "\n",
+    "> **_NOTE_**: The behaviour of `__getitem__` is different from `ArrayMultiModalDataset` and `PandasMultiModalDataset`. The first, returns the whole sample (as first element of the tuple) and the later return only the columns from all slices from a sample."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 40,
+   "id": "8d6e1eb6-ffae-41d9-a531-07fdcd43c920",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.381591Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.381148Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.386654Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.386134Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.381569Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(gyro-0     2\n",
+       " gyro-1     3\n",
+       " accel-0    0\n",
+       " Name: 0, dtype: int64,\n",
+       " 4)"
+      ]
+     },
+     "execution_count": 40,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "multi_modal_dataset[0]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "688cf2d6-4f56-45f5-a3a2-ea75954d70c1",
+   "metadata": {},
+   "source": [
+    "Slicing operations are supported, as well. For instanace,to select only itens 0 and 1, we can use python's slice notation."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "id": "e6a22bb5-5f31-4172-9937-7cd435e5d26f",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.387856Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.387417Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.395105Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.394698Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.387833Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>gyro-0</th>\n",
+       "      <th>gyro-1</th>\n",
+       "      <th>accel-0</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>2</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>7</td>\n",
+       "      <td>8</td>\n",
+       "      <td>5</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   gyro-0  gyro-1  accel-0\n",
+       "0       2       3        0\n",
+       "1       7       8        5"
+      ]
+     },
+     "execution_count": 41,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "samples, labels = multi_modal_dataset[0:1]\n",
+    "samples"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 42,
+   "id": "0690aee0-6e9c-4568-ae28-656ec96e4996",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.395917Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.395679Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.399369Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.398985Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.395901Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0    4\n",
+       "1    9\n",
+       "Name: label, dtype: int64"
+      ]
+     },
+     "execution_count": 42,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "labels"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "76e60050-a539-4014-b98c-5b8ea1bb4604",
+   "metadata": {},
+   "source": [
+    "And we can select the whole dataset using the blank slice(`:`)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 43,
+   "id": "375809e8-156a-4e09-b510-66d037e3bd8f",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.400123Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.399921Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.406033Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.405391Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.400107Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>gyro-0</th>\n",
+       "      <th>gyro-1</th>\n",
+       "      <th>accel-0</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>2</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>7</td>\n",
+       "      <td>8</td>\n",
+       "      <td>5</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>12</td>\n",
+       "      <td>13</td>\n",
+       "      <td>10</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>17</td>\n",
+       "      <td>18</td>\n",
+       "      <td>15</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   gyro-0  gyro-1  accel-0\n",
+       "0       2       3        0\n",
+       "1       7       8        5\n",
+       "2      12      13       10\n",
+       "3      17      18       15"
+      ]
+     },
+     "execution_count": 43,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "all_samples, all_labels = multi_modal_dataset[:]\n",
+    "all_samples"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5094fd79-a3b1-43d0-aa70-3fba299c8c70",
+   "metadata": {},
+   "source": [
+    "If the parameter `as_array` was not set, a dataframe will be returned. It can be accesed/indexed as any other pandas dataframe.\n",
+    "\n",
+    "For instance to select the `accel-0` from samples 1 and 2, we can:\n",
+    "\n",
+    "- Select sample [1:2], using slice notation. This will return a tuple where: the first element are 2 samples and the second element are 2 labels\n",
+    "- As we do not want label, we will select only the samples (tuple at index 0)\n",
+    "- We can select only the `accel-0` from the samples"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 44,
+   "id": "4d90145b-4bcd-4c61-8079-2a78f80581c7",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.407283Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.407048Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.412529Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.411972Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.407265Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "1     5\n",
+       "2    10\n",
+       "Name: accel-0, dtype: int64"
+      ]
+     },
+     "execution_count": 44,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "multi_modal_dataset[1:2][0][\"accel-0\"]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "be0d98f0-7f49-4213-999a-12ada96751ed",
+   "metadata": {},
+   "source": [
+    "## Combining MultiModal Datasets\n",
+    "\n",
+    "We can combine two multi modal dataset and generate a new multi modal dataset. Given two multi modal datasets `d1` and `d2` the function `librep.datasets.multimodal.combine_multi_modal_datasets` will combine both, generating a new `ArrayMultiModalDataset` dataset. The columns will be concatenated along column axis (axis 1) and the `window_slices` and `window_names` will be concatenated.\n",
+    "\n",
+    "> **_NOTE_**: The dataset must have the same number of samples"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "id": "30279afc-b816-4cf3-8b58-a523a313bdd1",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.413394Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.413137Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.417533Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.417074Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.413378Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "There are 4 samples\n",
+      "Number of windows: 2\n",
+      "The window slices: [(0, 3), (3, 6)]\n",
+      "Samples:\n",
+      "[[ 0  1  2  3  4  5]\n",
+      " [ 6  7  8  9 10 11]\n",
+      " [12 13 14 15 16 17]\n",
+      " [18 19 20 21 22 23]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "from librep.datasets.multimodal import combine_multi_modal_datasets\n",
+    "\n",
+    "# Create first dataset (d1)\n",
+    "samples = np.arange(24).reshape(4,  6)\n",
+    "labels = np.array([0, 0, 1, 1])\n",
+    "\n",
+    "d1 = ArrayMultiModalDataset(\n",
+    "    X=samples, y=labels, \n",
+    "    window_slices=[(0, 3), (3, 6)], # window 0 are composed by columns 0 and 1\n",
+    "                                    # window 2 are composed by columns 2 and 3\n",
+    "    window_names=[\"a\", \"b\"]         # Optional parameter informing the name \n",
+    "                                    # of each window\n",
+    ")\n",
+    "\n",
+    "samples, labels = d1[:]\n",
+    "\n",
+    "print(f\"There are {len(d1)} samples\")\n",
+    "print(f\"Number of windows: {d1.num_windows}\")\n",
+    "print(f\"The window slices: {d1.window_slices}\")\n",
+    "print(f\"Samples:\\n{samples}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 46,
+   "id": "3c384831-b9dc-4b80-bfc4-91182f5af8cd",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.418627Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.418336Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.424337Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.423711Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.418604Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "There are 4 samples\n",
+      "Number of windows: 2\n",
+      "The window slices: [(0, 2), (2, 4)]\n",
+      "Samples:\n",
+      "[[0.58895787 0.5643091  0.8976771  0.02313373]\n",
+      " [0.35787806 0.80059999 0.73337245 0.69527011]\n",
+      " [0.87865971 0.56032394 0.05731238 0.04009845]\n",
+      " [0.93522439 0.67061756 0.45800757 0.61601819]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Create first dataset (d2)\n",
+    "samples = np.random.rand(16).reshape(4,  4)\n",
+    "labels = np.array([0, 0, 1, 1])\n",
+    "\n",
+    "d2 = ArrayMultiModalDataset(\n",
+    "    X=samples, y=labels, \n",
+    "    window_slices=[(0, 2), (2, 4)], # window 0 are composed by columns 0 and 1\n",
+    "                                    # window 2 are composed by columns 2 and 3\n",
+    "    window_names=[\"a\", \"b\"]         # Optional parameter informing the name \n",
+    "                                    # of each window\n",
+    ")\n",
+    "\n",
+    "samples, labels = d2[:]\n",
+    "\n",
+    "print(f\"There are {len(d2)} samples\")\n",
+    "print(f\"Number of windows: {d2.num_windows}\")\n",
+    "print(f\"The window slices: {d2.window_slices}\")\n",
+    "print(f\"Samples:\\n{samples}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 47,
+   "id": "aeb41797-a886-42c2-ad5a-01c02039ba72",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:52.425534Z",
+     "iopub.status.busy": "2022-08-31T18:09:52.425071Z",
+     "iopub.status.idle": "2022-08-31T18:09:52.429446Z",
+     "shell.execute_reply": "2022-08-31T18:09:52.428940Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:52.425517Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "There are 4 samples\n",
+      "Number of windows: 4\n",
+      "The window slices: [(0, 3), (3, 6), (6, 8), (8, 10)]\n",
+      "Samples:\n",
+      "[[ 0.          1.          2.          3.          4.          5.\n",
+      "   0.58895787  0.5643091   0.8976771   0.02313373]\n",
+      " [ 6.          7.          8.          9.         10.         11.\n",
+      "   0.35787806  0.80059999  0.73337245  0.69527011]\n",
+      " [12.         13.         14.         15.         16.         17.\n",
+      "   0.87865971  0.56032394  0.05731238  0.04009845]\n",
+      " [18.         19.         20.         21.         22.         23.\n",
+      "   0.93522439  0.67061756  0.45800757  0.61601819]]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Combining d1 and d2 \n",
+    "resultant_dataset = combine_multi_modal_datasets(d1, d2)\n",
+    "\n",
+    "samples, labels = resultant_dataset[:]\n",
+    "\n",
+    "print(f\"There are {len(resultant_dataset)} samples\")\n",
+    "print(f\"Number of windows: {resultant_dataset.num_windows}\")\n",
+    "print(f\"The window slices: {resultant_dataset.window_slices}\")\n",
+    "print(f\"Samples:\\n{samples}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "ce976b42-a77b-43ac-9fd4-7aef192c7bad",
+   "metadata": {},
+   "source": [
+    "> **_TODO_**: Accessing windows "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "9669542a-871e-48f1-807b-6aabdea7543a",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.10"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

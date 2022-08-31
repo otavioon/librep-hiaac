@@ -1,0 +1,416 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "bc2b655f-4fde-4fb0-84e7-d064bb9ae1ee",
+   "metadata": {},
+   "source": [
+    "# Transforming datasets\n",
+    "\n",
+    "Transforms can be applyied to datasets, obtaining a new dataset. Here we show how to apply a sequence of transformation to a multi modal dataset, generating a new multi modal dataset.\n",
+    "All transformations implements the `librep.base.transform.Transform` interface.\n",
+    "\n",
+    "## Transforming MultiModal Datasets\n",
+    "\n",
+    "MultiModal datasets allow features to be partitionated in windows.\n",
+    "Librep provides the `librep.dataset.multimodal.TransformMultiModalDataset` allowing the same transformation to be applyied to all windows of the dataset. Also, it allows transformations to be chained, causing the transformations to be applied in sequence, and generating a new multi modal `ArrayMultiModalDataset` dataset. The window slices will be automatically recalculated if the transformation adds or remove features from windows.\n",
+    "\n",
+    "\n",
+    "The operation of `librep.dataset.multimodal.TransformMultiModalDataset` is illustrated in the Figure below. \n",
+    "Supposing, we have 2 transforms (`Transform 1` and `Transform 2`) that implements the `librep.base.transform.Transform` interface, and a MultiModal dataset (*e.g.* `ArrayMultiModalDataset`,  `PandasMultiModalDataset` or any other inheriting from `librep.datasets.multimodal.MultiModalDataset`).\n",
+    "Using `librep.dataset.multimodal.TransformMultiModalDataset` the `Transform 1` will be applyied to each window of the input dataset, generating a new dataset. The `Transform 2` will then be applyed to each window of the resulting dataset.\n",
+    "\n",
+    "![A windowed dataset transformation figure](./images/windowed-dataset-transform.svg \"Windowed dataset transform\")\n",
+    "\n",
+    "> **_NOTE 1_**: `librep.datasets.multimodal.MultiModalDataset` assumes that the transformation can be applied in parallel to each window and will not overwrite the contents, that is, will generate a new dataset.\n",
+    "\n",
+    "> **_NOTE 2_**: For now `librep.datasets.multimodal.MultiModalDataset` will result in a `ArrayMultiModalDataset`, independent of the type of the input dataset.\n",
+    "\n",
+    "> **_NOTE 3_**: For now `librep.datasets.multimodal.MultiModalDataset` will apply each transformation to all windows of the multi modal dataset. Other options of controlling the transforms application is not supported yet.\n",
+    "\n",
+    "> **_NOTE 4_**: For now the transforms must receive a numpy arrays. If you are using `PandasMultiModalDataset` set the `as_array` parameter to `True`."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "31ec000e-c010-4e6c-9f85-5360e3992891",
+   "metadata": {},
+   "source": [
+    "Let's create two transforms: \n",
+    "\n",
+    "- `SumTransform` will sum `value` (passed as parameter) to every element of the `dataset` (or window, if using a MultiModal dataset). This will not change the number of features per window.\n",
+    "- `MeanTransform` will select calculate the mean value of each sample from the dataset. For each sample of the dataset (or window, if using a MultiModal dataset) the mean value will be returned, generating recuding the features to 1 feature (per window).\n",
+    "\n",
+    "> **_NOTE_**: Transforms can add or remove number of features/sampels per window. The number of samples generated must be the same for all windows, when applying a single transform."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "a4c3ba45-a27b-4c7d-867a-7d14e8694b9e",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:49.439985Z",
+     "iopub.status.busy": "2022-08-31T18:09:49.439610Z",
+     "iopub.status.idle": "2022-08-31T18:09:55.315838Z",
+     "shell.execute_reply": "2022-08-31T18:09:55.315362Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:49.439969Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "\n",
+    "from librep.base.transform import Transform\n",
+    "from librep.datasets.multimodal import ArrayMultiModalDataset, TransformMultiModalDataset"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "26a2370d-f07e-47f7-908a-a79eb8687453",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:55.316869Z",
+     "iopub.status.busy": "2022-08-31T18:09:55.316430Z",
+     "iopub.status.idle": "2022-08-31T18:09:55.320513Z",
+     "shell.execute_reply": "2022-08-31T18:09:55.319988Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:55.316853Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# This transform will sum value into all elements of the array X\n",
+    "class SumTransform(Transform):\n",
+    "    def __init__(self, value: int):\n",
+    "        self.value = value\n",
+    "\n",
+    "    def transform(self, X):\n",
+    "        return X + self.value\n",
+    "\n",
+    "\n",
+    "# This transform will iterate over each sample of X and calculates the mean\n",
+    "# It returns a array of (n_samples, 1) -- this is why expand_dims at the end\n",
+    "class MeanTransform(Transform):\n",
+    "    def transform(self, X):\n",
+    "        samples = []\n",
+    "        for x in X:\n",
+    "            samples.append(np.mean(x))\n",
+    "        return np.expand_dims(np.array(samples), axis=1)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "4560365d-f8c7-4e4b-9821-25ddeb330219",
+   "metadata": {},
+   "source": [
+    "Let's create an `ArrayMultiModalDataset` dataset with 4 samples and 4 features. Columns 0 and 1 will be window 0 and columns 2 and 3 will be window 1."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "74a34ec3-1b10-421b-a8f4-1a3591b810c9",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:55.321421Z",
+     "iopub.status.busy": "2022-08-31T18:09:55.321187Z",
+     "iopub.status.idle": "2022-08-31T18:09:55.325493Z",
+     "shell.execute_reply": "2022-08-31T18:09:55.325011Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:55.321405Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "There are 4 samples\n",
+      "Number of windows: 2\n",
+      "The window slices: [(0, 2), (2, 4)]\n"
+     ]
+    }
+   ],
+   "source": [
+    "samples = np.arange(16).reshape(4, 4)\n",
+    "labels = np.array([0, 0, 1, 1])\n",
+    "\n",
+    "multi_modal_dataset = ArrayMultiModalDataset(\n",
+    "    X=samples, y=labels, \n",
+    "    window_slices=[(0, 2), (2, 4)], # window 0 are composed by columns 0 and 1\n",
+    "                                    # window 2 are composed by columns 2 and 3\n",
+    "    window_names=[\"a\", \"b\"]         # Optional parameter informing the name\n",
+    "                                    # of each window\n",
+    ")\n",
+    "\n",
+    "print(f\"There are {len(multi_modal_dataset)} samples\")\n",
+    "print(f\"Number of windows: {multi_modal_dataset.num_windows}\")\n",
+    "print(f\"The window slices: {multi_modal_dataset.window_slices}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "196f26c3-fdbc-42e6-80ec-765bb9fa63e6",
+   "metadata": {},
+   "source": [
+    "Now, we will instantiate the transform objects and create a transform chain. \n",
+    "To create a chain, we must instantiate an `TransformMultiModalDataset` object and pass a list of transform objects for parameter `transforms`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "734c6983-d934-4e94-babb-ce3c7319044e",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:55.326287Z",
+     "iopub.status.busy": "2022-08-31T18:09:55.326091Z",
+     "iopub.status.idle": "2022-08-31T18:09:55.329091Z",
+     "shell.execute_reply": "2022-08-31T18:09:55.328626Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:55.326272Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# Instantiate the SumTransform with value = 10\n",
+    "# So 10 will be summed to the each window\n",
+    "sum_transform = SumTransform(value=10)\n",
+    "# Instatiate the MeanTransform object\n",
+    "mean_tranform = MeanTransform()\n",
+    "\n",
+    "# Create a transformer that transform a dataset\n",
+    "# The sum_transform and mean_transform will be applyied to each window\n",
+    "# of the dataset, sequentially\n",
+    "transformer = TransformMultiModalDataset(\n",
+    "    transforms=[sum_transform, mean_tranform]\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "46032b0c-63ee-4c87-9234-7f97ada28d0d",
+   "metadata": {},
+   "source": [
+    "We can apply the sequence of transforms the a dataset. We must just call the `TransformMultiModalDataset` object passing the `MultiModalDataset` as input parameter. It will result in a new `ArrayMultiModalDataset` with the samples transformed. The new `window_slices` will be automatically calculcated."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "3b12d477-82dc-4ced-8060-071d9ad14aef",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:55.329953Z",
+     "iopub.status.busy": "2022-08-31T18:09:55.329726Z",
+     "iopub.status.idle": "2022-08-31T18:09:55.333282Z",
+     "shell.execute_reply": "2022-08-31T18:09:55.332868Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:55.329931Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "There are 4 samples\n",
+      "Number of windows: 2\n",
+      "The window slices: [(0, 1), (1, 2)]\n"
+     ]
+    }
+   ],
+   "source": [
+    "transformed_dataset = transformer(multi_modal_dataset)\n",
+    "\n",
+    "print(f\"There are {len(transformed_dataset)} samples\")\n",
+    "print(f\"Number of windows: {transformed_dataset.num_windows}\")\n",
+    "print(f\"The window slices: {transformed_dataset.window_slices}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "20953573-4bf5-4e6a-8bd4-c4283962f939",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:55.335342Z",
+     "iopub.status.busy": "2022-08-31T18:09:55.334980Z",
+     "iopub.status.idle": "2022-08-31T18:09:55.338521Z",
+     "shell.execute_reply": "2022-08-31T18:09:55.338007Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:55.335324Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Samples:\n",
+      "[[10.5 12.5]\n",
+      " [14.5 16.5]\n",
+      " [18.5 20.5]\n",
+      " [22.5 24.5]]\n",
+      "Labels:\n",
+      "[0 0 1 1]\n"
+     ]
+    }
+   ],
+   "source": [
+    "samples, labels = transformed_dataset[:]\n",
+    "print(f\"Samples:\\n{samples}\")\n",
+    "print(f\"Labels:\\n{labels}\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e8177ab5-806e-4813-8777-727e216d9ebb",
+   "metadata": {},
+   "source": [
+    "The same transform can be applied to another `MultiModalDataset`."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "f2b2aaa9-74ac-4249-a989-f09bb53b95ea",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:55.340065Z",
+     "iopub.status.busy": "2022-08-31T18:09:55.339475Z",
+     "iopub.status.idle": "2022-08-31T18:09:55.345718Z",
+     "shell.execute_reply": "2022-08-31T18:09:55.345098Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:55.340039Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Samples:\n",
+      "[[0.5488135  0.71518937 0.60276338 0.54488318]\n",
+      " [0.4236548  0.64589411 0.43758721 0.891773  ]\n",
+      " [0.96366276 0.38344152 0.79172504 0.52889492]\n",
+      " [0.56804456 0.92559664 0.07103606 0.0871293 ]]\n",
+      "Labels:\n",
+      "[0 0 1 1]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Set the seed to allows reprodutibility. \n",
+    "# This will generate the same random numbers\n",
+    "np.random.seed(0)\n",
+    "samples = np.random.random(16).reshape(4, 4)\n",
+    "labels = np.array([0, 0, 1, 1])\n",
+    "\n",
+    "multi_modal_dataset_2 = ArrayMultiModalDataset(\n",
+    "    X=samples, y=labels, \n",
+    "    window_slices=[(0, 2), (2, 4)], # window 0 are composed by columns 0 and 1\n",
+    "                                    # window 2 are composed by columns 2 and 3\n",
+    "    window_names=[\"a\", \"b\"]         # Optional parameter informing the name\n",
+    "                                    # of each window\n",
+    ")\n",
+    "\n",
+    "samples, labels = multi_modal_dataset_2[:]\n",
+    "print(f\"Samples:\\n{samples}\")\n",
+    "print(f\"Labels:\\n{labels}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "ab1d3e36-4358-4084-a69b-2fae4c1a3955",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:55.346807Z",
+     "iopub.status.busy": "2022-08-31T18:09:55.346384Z",
+     "iopub.status.idle": "2022-08-31T18:09:55.350216Z",
+     "shell.execute_reply": "2022-08-31T18:09:55.349649Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:55.346790Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "There are 4 samples\n",
+      "Number of windows: 2\n",
+      "The window slices: [(0, 1), (1, 2)]\n"
+     ]
+    }
+   ],
+   "source": [
+    "transformed_dataset_2 = transformer(multi_modal_dataset_2)\n",
+    "\n",
+    "print(f\"There are {len(transformed_dataset_2)} samples\")\n",
+    "print(f\"Number of windows: {transformed_dataset_2.num_windows}\")\n",
+    "print(f\"The window slices: {transformed_dataset_2.window_slices}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "ad7d61d9-138a-4d69-b256-062636357660",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-31T18:09:55.351041Z",
+     "iopub.status.busy": "2022-08-31T18:09:55.350819Z",
+     "iopub.status.idle": "2022-08-31T18:09:55.354537Z",
+     "shell.execute_reply": "2022-08-31T18:09:55.353798Z",
+     "shell.execute_reply.started": "2022-08-31T18:09:55.351027Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Samples:\n",
+      "[[10.63200144 10.57382328]\n",
+      " [10.53477446 10.66468011]\n",
+      " [10.67355214 10.66030998]\n",
+      " [10.7468206  10.07908268]]\n",
+      "Labels:\n",
+      "[0 0 1 1]\n"
+     ]
+    }
+   ],
+   "source": [
+    "samples, labels = transformed_dataset_2[:]\n",
+    "print(f\"Samples:\\n{samples}\")\n",
+    "print(f\"Labels:\\n{labels}\")"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.10"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

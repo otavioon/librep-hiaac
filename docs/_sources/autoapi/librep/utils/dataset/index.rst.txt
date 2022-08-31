@@ -1,0 +1,38 @@
+:py:mod:`librep.utils.dataset`
+==============================
+
+.. py:module:: librep.utils.dataset
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.utils.dataset.PandasDatasetsIO
+
+
+
+
+.. py:class:: PandasDatasetsIO(path, train_filename = 'train.csv', validation_filename = 'validation.csv', test_filename = 'test.csv')
+
+   .. py:method:: __repr__()
+
+      Return repr(self).
+
+
+   .. py:method:: __str__()
+
+      Return str(self).
+
+
+   .. py:method:: load(load_train = True, load_validation = True, load_test = True)
+
+
+   .. py:method:: save(train, validation, test, description_file = 'README.md', description = None)
+
+
+

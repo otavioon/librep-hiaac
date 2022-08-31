@@ -1,0 +1,66 @@
+:py:mod:`librep.transforms.spectrogram`
+=======================================
+
+.. py:module:: librep.transforms.spectrogram
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.transforms.spectrogram.Spectrogram
+
+
+
+
+.. py:class:: Spectrogram(fs = 100, segment_size = 50, overlap = 30)
+
+   Bases: :py:obj:`librep.base.transform.Transform`
+
+   For filtering or modifying the data, in a supervised or unsupervised way.
+   `fit` allows implementing parametrizable transforms. This method sees the
+   whole dataset. `transform` allows transforming each sample.
+
+   .. py:method:: fit(X, y = None)
+
+      Fit the transformation with information of the whole dataset.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          An array-like representing the whole dataset with shape:
+          (n_samples, n_features).
+      y : ArrayLike
+          The respective labels, with shape: (n_samples, ). This parameter is
+          optional and may be used if needed.
+      **fit_params : type
+          Optional data-dependent parameters.
+
+      Returns
+      -------
+      'Transform'
+          The transform (self).
+
+
+
+   .. py:method:: transform(X)
+
+      Transforms the dataset.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          An array-like of sample with shape (n_samples, n_features, ).
+
+      Returns
+      -------
+      ArrayLike
+          An array-like with the transformed samples.
+
+
+
+

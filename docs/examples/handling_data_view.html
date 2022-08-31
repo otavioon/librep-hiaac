@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorial 1: Handling HAR dataset views and Transforms &mdash; Librep 0.0.1-dev
+ documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Pre-processing KuHar Dataset and Generate Views" href="preprocess_kuhar.html" />
+    <link rel="prev" title="Examples" href="../examples.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Librep
+          </a>
+              <div class="version">
+                0.0.1-dev
+
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howtos.html">How-To Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Programming Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 1: Handling HAR dataset views and Transforms</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Common-imports-and-definitions">Common imports and definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Loading-data">Loading data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Creating-a-Librep-dataset-from-pandas-dataframes">Creating a Librep dataset from pandas dataframes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Kuhar">Kuhar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MotionSense">MotionSense</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Inspect-sample">Inspect sample</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Kuhar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">MotionSense</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Checking-windows">Checking windows</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Kuhar-windows">Kuhar windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#MotionSense-windows">MotionSense windows</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Transforms">Transforms</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Use-Resample-and-FFT-in-Kuhar">Use Resample and FFT in Kuhar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Use-Resample-and-FFT-in-MotionSense">Use Resample and FFT in MotionSense</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="preprocess_kuhar.html">Pre-processing KuHar Dataset and Generate Views</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocess_motionsense.html">Pre-processing MotionSense Dataset and Generate Views</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motionsense_train.html">Example of Training with MotionSense</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Librep</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../examples.html">Examples</a> &raquo;</li>
+      <li>Tutorial 1: Handling HAR dataset views and Transforms</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/examples/handling_data_view.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+.jp-RenderedHTMLCommon thead,
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+.jp-RenderedHTMLCommon th,
+div.rendered_html th {
+  font-weight: bold;
+}
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+.jp-RenderedHTMLCommon tbody tr:hover,
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="Tutorial-1:-Handling-HAR-dataset-views-and-Transforms">
+<h1>Tutorial 1: Handling HAR dataset views and Transforms<a class="headerlink" href="#Tutorial-1:-Handling-HAR-dataset-views-and-Transforms" title="Permalink to this heading"></a></h1>
+<p>This tutorial will show how to: 1. Quick load train, test and validation CSV subsets from a dataset using <code class="docutils literal notranslate"><span class="pre">PandasDatasetsIO</span></code> helper 2. Subclassing the <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> interface using <code class="docutils literal notranslate"><span class="pre">PandasMultiModalDataset</span></code> 3. Acessing data and labels 4. Apply transforms to a dataset 5. Apply chain transforms to a dataset</p>
+<section id="Common-imports-and-definitions">
+<h2>Common imports and definitions<a class="headerlink" href="#Common-imports-and-definitions" title="Permalink to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>  <span class="c1"># For defining dataset Paths</span>
+<span class="kn">import</span> <span class="nn">sys</span>                <span class="c1"># For include librep package</span>
+
+<span class="c1"># This must be done if librep is not installed via pip,</span>
+<span class="c1"># as this directory (examples) is appart from librep package root</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+
+<span class="c1"># Third party imports</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Librep imports</span>
+<span class="kn">from</span> <span class="nn">librep.utils.dataset</span> <span class="kn">import</span> <span class="n">PandasDatasetsIO</span>          <span class="c1"># For quick load train, test and validation CSVs</span>
+<span class="kn">from</span> <span class="nn">librep.datasets.multimodal</span> <span class="kn">import</span> <span class="n">PandasMultiModalDataset</span> <span class="c1"># Wrap CSVs to librep&#39;s `Dataset` interface</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Loading-data">
+<h2>Loading data<a class="headerlink" href="#Loading-data" title="Permalink to this heading"></a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Path for KuHar balanced view with the same activities (and labels numbers) as MotionSense</span>
+<span class="c1"># It is assumed that the directory will contain (train.csv, test.csv and validation.csv)</span>
+<span class="n">kuhar_dataset_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/views/KuHar/balanced_motionsense_equivalent_view&quot;</span><span class="p">)</span>
+
+<span class="c1"># Path for Motionsese balanced view</span>
+<span class="n">motionsense_dataset_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/views/MotionSense/balanced_view&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Once paths is defined, we can load the CSV as pandas dataframes</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kuhar dataframes</span>
+<span class="n">kh_train</span><span class="p">,</span> <span class="n">kh_validation</span><span class="p">,</span> <span class="n">kh_test</span> <span class="o">=</span> <span class="n">PandasDatasetsIO</span><span class="p">(</span><span class="n">kuhar_dataset_path</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="c1"># MotionSense dataframes</span>
+<span class="n">ms_train</span><span class="p">,</span> <span class="n">ms_validation</span><span class="p">,</span> <span class="n">ms_test</span> <span class="o">=</span> <span class="n">PandasDatasetsIO</span><span class="p">(</span><span class="n">motionsense_dataset_path</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<p>Letś take a look in the train dataframes</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kh_train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Unnamed: 0</th>
+      <th>accel-x-0</th>
+      <th>accel-x-1</th>
+      <th>accel-x-2</th>
+      <th>accel-x-3</th>
+      <th>accel-x-4</th>
+      <th>accel-x-5</th>
+      <th>accel-x-6</th>
+      <th>accel-x-7</th>
+      <th>accel-x-8</th>
+      <th>...</th>
+      <th>gyro-z-299</th>
+      <th>accel-start-time</th>
+      <th>gyro-start-time</th>
+      <th>accel-end-time</th>
+      <th>gyro-end-time</th>
+      <th>activity code</th>
+      <th>length</th>
+      <th>serial</th>
+      <th>index</th>
+      <th>user</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>3.461310</td>
+      <td>-1.252847</td>
+      <td>-3.496563</td>
+      <td>-5.207304</td>
+      <td>-6.004595</td>
+      <td>-6.113169</td>
+      <td>-5.801509</td>
+      <td>-5.177825</td>
+      <td>-4.269927</td>
+      <td>...</td>
+      <td>0.364809</td>
+      <td>18.999</td>
+      <td>18.993</td>
+      <td>21.989</td>
+      <td>21.983</td>
+      <td>0</td>
+      <td>300</td>
+      <td>1</td>
+      <td>1800</td>
+      <td>1026</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>0.543923</td>
+      <td>2.928824</td>
+      <td>5.357442</td>
+      <td>7.666032</td>
+      <td>9.274595</td>
+      <td>9.504671</td>
+      <td>8.480812</td>
+      <td>7.024246</td>
+      <td>6.017520</td>
+      <td>...</td>
+      <td>0.516896</td>
+      <td>13.016</td>
+      <td>13.015</td>
+      <td>16.006</td>
+      <td>16.005</td>
+      <td>0</td>
+      <td>300</td>
+      <td>1</td>
+      <td>1200</td>
+      <td>1044</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>-5.489694</td>
+      <td>-7.227507</td>
+      <td>-8.707464</td>
+      <td>-10.075059</td>
+      <td>-10.948791</td>
+      <td>-10.493007</td>
+      <td>-9.060446</td>
+      <td>-8.766560</td>
+      <td>-8.540925</td>
+      <td>...</td>
+      <td>-0.478851</td>
+      <td>23.707</td>
+      <td>23.706</td>
+      <td>26.659</td>
+      <td>26.658</td>
+      <td>0</td>
+      <td>300</td>
+      <td>6</td>
+      <td>2400</td>
+      <td>1045</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>2.846000</td>
+      <td>3.760000</td>
+      <td>4.047900</td>
+      <td>3.738100</td>
+      <td>3.103400</td>
+      <td>2.184900</td>
+      <td>1.330600</td>
+      <td>0.328300</td>
+      <td>-0.904100</td>
+      <td>...</td>
+      <td>-0.236850</td>
+      <td>89.306</td>
+      <td>89.024</td>
+      <td>92.305</td>
+      <td>92.013</td>
+      <td>0</td>
+      <td>300</td>
+      <td>1</td>
+      <td>3900</td>
+      <td>1004</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>-4.132881</td>
+      <td>-4.075327</td>
+      <td>-3.745526</td>
+      <td>-3.110118</td>
+      <td>-2.204922</td>
+      <td>-1.180573</td>
+      <td>-0.275069</td>
+      <td>0.062984</td>
+      <td>-0.333226</td>
+      <td>...</td>
+      <td>0.255464</td>
+      <td>15.999</td>
+      <td>15.993</td>
+      <td>18.989</td>
+      <td>18.983</td>
+      <td>0</td>
+      <td>300</td>
+      <td>1</td>
+      <td>1500</td>
+      <td>1026</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 1810 columns</p>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ms_train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Unnamed: 0</th>
+      <th>attitude.roll-0</th>
+      <th>attitude.roll-1</th>
+      <th>attitude.roll-2</th>
+      <th>attitude.roll-3</th>
+      <th>attitude.roll-4</th>
+      <th>attitude.roll-5</th>
+      <th>attitude.roll-6</th>
+      <th>attitude.roll-7</th>
+      <th>attitude.roll-8</th>
+      <th>...</th>
+      <th>userAcceleration.z-295</th>
+      <th>userAcceleration.z-296</th>
+      <th>userAcceleration.z-297</th>
+      <th>userAcceleration.z-298</th>
+      <th>userAcceleration.z-299</th>
+      <th>activity code</th>
+      <th>length</th>
+      <th>trial_code</th>
+      <th>index</th>
+      <th>user</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>1.093387</td>
+      <td>1.129419</td>
+      <td>1.166286</td>
+      <td>1.176539</td>
+      <td>1.218638</td>
+      <td>1.218076</td>
+      <td>1.169095</td>
+      <td>1.104227</td>
+      <td>1.041327</td>
+      <td>...</td>
+      <td>0.025803</td>
+      <td>0.015770</td>
+      <td>0.109555</td>
+      <td>0.172113</td>
+      <td>0.248941</td>
+      <td>0</td>
+      <td>300</td>
+      <td>1</td>
+      <td>1200</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>1.528132</td>
+      <td>1.527992</td>
+      <td>1.527765</td>
+      <td>1.516768</td>
+      <td>1.493941</td>
+      <td>1.476302</td>
+      <td>1.455153</td>
+      <td>1.441702</td>
+      <td>1.443440</td>
+      <td>...</td>
+      <td>0.578416</td>
+      <td>0.572674</td>
+      <td>0.490945</td>
+      <td>0.345010</td>
+      <td>0.129649</td>
+      <td>0</td>
+      <td>300</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>-1.331274</td>
+      <td>-1.315688</td>
+      <td>-1.315034</td>
+      <td>-1.315621</td>
+      <td>-1.287623</td>
+      <td>-1.218232</td>
+      <td>-1.139884</td>
+      <td>-1.054611</td>
+      <td>-0.970854</td>
+      <td>...</td>
+      <td>0.102089</td>
+      <td>0.124263</td>
+      <td>0.122183</td>
+      <td>0.125418</td>
+      <td>0.230901</td>
+      <td>0</td>
+      <td>300</td>
+      <td>2</td>
+      <td>600</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>0.715184</td>
+      <td>0.679044</td>
+      <td>0.662668</td>
+      <td>0.662928</td>
+      <td>0.670537</td>
+      <td>0.666622</td>
+      <td>0.652839</td>
+      <td>0.662879</td>
+      <td>0.723967</td>
+      <td>...</td>
+      <td>-0.033105</td>
+      <td>0.119528</td>
+      <td>0.057709</td>
+      <td>-0.057865</td>
+      <td>-0.097547</td>
+      <td>0</td>
+      <td>300</td>
+      <td>11</td>
+      <td>0</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>-2.004835</td>
+      <td>-2.041697</td>
+      <td>-2.044302</td>
+      <td>-2.038474</td>
+      <td>-2.055756</td>
+      <td>-2.102689</td>
+      <td>-2.158746</td>
+      <td>-2.202283</td>
+      <td>-2.232511</td>
+      <td>...</td>
+      <td>0.072444</td>
+      <td>0.005214</td>
+      <td>-0.231522</td>
+      <td>-0.560348</td>
+      <td>-0.678777</td>
+      <td>0</td>
+      <td>300</td>
+      <td>2</td>
+      <td>1800</td>
+      <td>19</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 3606 columns</p>
+</div></div>
+</div>
+</section>
+<section id="Creating-a-Librep-dataset-from-pandas-dataframes">
+<h2>Creating a Librep dataset from pandas dataframes<a class="headerlink" href="#Creating-a-Librep-dataset-from-pandas-dataframes" title="Permalink to this heading"></a></h2>
+<p>We use the <code class="docutils literal notranslate"><span class="pre">PandasMultiModalDataset</span></code> class to create librep’s dataset. When calling it, we must define: - The name of the features (column prefixes) that we want from dataframes - The name of the label column</p>
+<p>The dataset will wrap around librep’s <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> class, which override <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> and <code class="docutils literal notranslate"><span class="pre">__len__</span></code> methods. - Calling <code class="docutils literal notranslate"><span class="pre">len(dataset)</span></code> will return the number of rows in the dataframe - Calling <code class="docutils literal notranslate"><span class="pre">dataset[0]</span></code> will return a tuple with 2 elements: - The first element is the sample (at row 0, in this case), with the selected features - The second element is the label of this sample</p>
+<section id="Kuhar">
+<h3>Kuhar<a class="headerlink" href="#Kuhar" title="Permalink to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kuhar features to select</span>
+<span class="n">features</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;accel-x&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;accel-y&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;accel-z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gyro-x&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gyro-y&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gyro-z&quot;</span>
+<span class="p">]</span>
+
+<span class="c1"># Creating the datasets</span>
+
+<span class="c1"># Train</span>
+<span class="n">kh_train_dataset</span> <span class="o">=</span> <span class="n">PandasMultiModalDataset</span><span class="p">(</span>
+    <span class="n">kh_train</span><span class="p">,</span>
+    <span class="n">feature_prefixes</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+    <span class="n">label_columns</span><span class="o">=</span><span class="s2">&quot;activity code&quot;</span><span class="p">,</span>
+    <span class="n">as_array</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># Validation</span>
+<span class="n">kh_validation_dataset</span> <span class="o">=</span> <span class="n">PandasMultiModalDataset</span><span class="p">(</span>
+    <span class="n">kh_validation</span><span class="p">,</span>
+    <span class="n">feature_prefixes</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+    <span class="n">label_columns</span><span class="o">=</span><span class="s2">&quot;activity code&quot;</span><span class="p">,</span>
+    <span class="n">as_array</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># Test</span>
+<span class="n">kh_test_dataset</span> <span class="o">=</span> <span class="n">PandasMultiModalDataset</span><span class="p">(</span>
+    <span class="n">kh_test</span><span class="p">,</span>
+    <span class="n">feature_prefixes</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+    <span class="n">label_columns</span><span class="o">=</span><span class="s2">&quot;activity code&quot;</span><span class="p">,</span>
+    <span class="n">as_array</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="MotionSense">
+<h3>MotionSense<a class="headerlink" href="#MotionSense" title="Permalink to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># MotionSense features to select</span>
+<span class="n">features</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;userAcceleration.x&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;userAcceleration.y&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;userAcceleration.z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rotationRate.x&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rotationRate.y&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rotationRate.z&quot;</span>
+<span class="p">]</span>
+
+<span class="c1"># Creating the datasets</span>
+
+<span class="c1"># Train</span>
+<span class="n">ms_train_dataset</span> <span class="o">=</span> <span class="n">PandasMultiModalDataset</span><span class="p">(</span>
+    <span class="n">ms_train</span><span class="p">,</span>
+    <span class="n">feature_prefixes</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+    <span class="n">label_columns</span><span class="o">=</span><span class="s2">&quot;activity code&quot;</span><span class="p">,</span>
+    <span class="n">as_array</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># Validation</span>
+<span class="n">ms_validation_dataset</span> <span class="o">=</span> <span class="n">PandasMultiModalDataset</span><span class="p">(</span>
+    <span class="n">ms_validation</span><span class="p">,</span>
+    <span class="n">feature_prefixes</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+    <span class="n">label_columns</span><span class="o">=</span><span class="s2">&quot;activity code&quot;</span><span class="p">,</span>
+    <span class="n">as_array</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># Test</span>
+<span class="n">ms_test_dataset</span> <span class="o">=</span> <span class="n">PandasMultiModalDataset</span><span class="p">(</span>
+    <span class="n">ms_test</span><span class="p">,</span>
+    <span class="n">feature_prefixes</span><span class="o">=</span><span class="n">features</span><span class="p">,</span>
+    <span class="n">label_columns</span><span class="o">=</span><span class="s2">&quot;activity code&quot;</span><span class="p">,</span>
+    <span class="n">as_array</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ms_train_dataset</span><span class="p">[</span><span class="mi">1500</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+array([ 0.240575, -0.045942,  0.017618, ..., -0.26045 , -0.3158  ,
+       -0.918042])
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Inspect-sample">
+<h2>Inspect sample<a class="headerlink" href="#Inspect-sample" title="Permalink to this heading"></a></h2>
+<section id="id1">
+<h3>Kuhar<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lets print the first sample of kh_train dataset.</span>
+<span class="c1"># Is a tuple, with an vector of 1800 elements as first element and the label as second</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">kh_train_dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(array([ 3.4613104 , -1.2528467 , -3.496563  , ...,  0.36297613,
+        0.40329325,  0.36480874]), 0)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Inspecting sample</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The sample 0: </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shape of sample 0: </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The label of sample 0: </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The sample 0: [ 3.4613104  -1.2528467  -3.496563   ...  0.36297613  0.40329325
+  0.36480874]
+Shape of sample 0: (1800,)
+The label of sample 0: 0
+</pre></div></div>
+</div>
+</section>
+<section id="id2">
+<h3>MotionSense<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lets print the first sample of kh_train dataset.</span>
+<span class="c1"># Is a tuple, with an vector of 1800 elements as first element and the label as second</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">ms_train_dataset</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(array([-0.120843,  0.470622,  0.269861, ..., -0.046833, -0.283947,
+       -0.521564]), 0)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Inspecting sample</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The sample 0: </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shape sample 0: </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The label of sample 0: </span><span class="si">{</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+The sample 0: [-0.120843  0.470622  0.269861 ... -0.046833 -0.283947 -0.521564]
+Shape sample 0: (1800,)
+The label of sample 0: 0
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Checking-windows">
+<h2>Checking windows<a class="headerlink" href="#Checking-windows" title="Permalink to this heading"></a></h2>
+<p>MultiModal datasets have windows as each sample can be composed by elements of different natures. For instance, a single sample of 1800 elements from KuHar dataset view is composed by accelerometer (3-axis) and gyroscope (3-axis).</p>
+<p>We can check which parts of the sample (window slices) correspoend to which sensors and axis checking the <code class="docutils literal notranslate"><span class="pre">window_slices</span></code>, <code class="docutils literal notranslate"><span class="pre">window_name</span></code> and <code class="docutils literal notranslate"><span class="pre">num_windows</span></code> atrributes.</p>
+<p>These values is automatically filled when using the <code class="docutils literal notranslate"><span class="pre">PandasMultiModalDataset</span></code> class.</p>
+<section id="Kuhar-windows">
+<h3>Kuhar windows<a class="headerlink" href="#Kuhar-windows" title="Permalink to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Kuhar train have </span><span class="si">{</span><span class="n">kh_train_dataset</span><span class="o">.</span><span class="n">num_windows</span><span class="si">}</span><span class="s2"> windows&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Each sample train can be sliced at: </span><span class="si">{</span><span class="n">kh_train_dataset</span><span class="o">.</span><span class="n">window_slices</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Each slice has the following name associated: </span><span class="si">{</span><span class="n">kh_train_dataset</span><span class="o">.</span><span class="n">window_names</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Kuhar train have 6 windows
+Each sample train can be sliced at: [(0, 300), (300, 600), (600, 900), (900, 1200), (1200, 1500), (1500, 1800)]
+Each slice has the following name associated: [&#39;accel-x&#39;, &#39;accel-y&#39;, &#39;accel-z&#39;, &#39;gyro-x&#39;, &#39;gyro-y&#39;, &#39;gyro-z&#39;]
+</pre></div></div>
+</div>
+</section>
+<section id="MotionSense-windows">
+<h3>MotionSense windows<a class="headerlink" href="#MotionSense-windows" title="Permalink to this heading"></a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Motionsense train have </span><span class="si">{</span><span class="n">ms_train_dataset</span><span class="o">.</span><span class="n">num_windows</span><span class="si">}</span><span class="s2"> windows&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Each sample train can be sliced at: </span><span class="si">{</span><span class="n">ms_train_dataset</span><span class="o">.</span><span class="n">window_slices</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Each slice has the following name associated: </span><span class="si">{</span><span class="n">ms_train_dataset</span><span class="o">.</span><span class="n">window_names</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Motionsense train have 6 windows
+Each sample train can be sliced at: [(0, 300), (300, 600), (600, 900), (900, 1200), (1200, 1500), (1500, 1800)]
+Each slice has the following name associated: [&#39;userAcceleration.x&#39;, &#39;userAcceleration.y&#39;, &#39;userAcceleration.z&#39;, &#39;rotationRate.x&#39;, &#39;rotationRate.y&#39;, &#39;rotationRate.z&#39;]
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Transforms">
+<h2>Transforms<a class="headerlink" href="#Transforms" title="Permalink to this heading"></a></h2>
+<p>We can apply a chain of transforms to a single dataset using <code class="docutils literal notranslate"><span class="pre">TransformMultiModalDataset</span></code>. This class will iterate over the whole dataset and, for each window of each sample, will apply the transform.</p>
+<p>MultiModalDatasets allows applying transforms to a window of a sample instead of the whole sample</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">librep.datasets.multimodal</span> <span class="kn">import</span> <span class="n">TransformMultiModalDataset</span>
+<span class="kn">from</span> <span class="nn">librep.transforms.fft</span> <span class="kn">import</span> <span class="n">FFT</span>
+<span class="kn">from</span> <span class="nn">librep.transforms.stats</span> <span class="kn">import</span> <span class="n">StatsTransform</span>
+<span class="kn">from</span> <span class="nn">librep.transforms.resampler</span> <span class="kn">import</span> <span class="n">SimpleResampler</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resampler</span> <span class="o">=</span> <span class="n">SimpleResampler</span><span class="p">(</span><span class="n">new_sample_size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">fft_transform</span> <span class="o">=</span> <span class="n">FFT</span><span class="p">()</span>
+<span class="n">transformer</span> <span class="o">=</span> <span class="n">TransformMultiModalDataset</span><span class="p">(</span><span class="n">transforms</span><span class="o">=</span><span class="p">[</span><span class="n">resampler</span><span class="p">,</span> <span class="n">fft_transform</span><span class="p">],</span> <span class="n">new_window_name_prefix</span><span class="o">=</span><span class="s2">&quot;resample-100-fft.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<section id="Use-Resample-and-FFT-in-Kuhar">
+<h3>Use Resample and FFT in Kuhar<a class="headerlink" href="#Use-Resample-and-FFT-in-Kuhar" title="Permalink to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resampled_kh_train_dataset_fft</span> <span class="o">=</span> <span class="n">transformer</span><span class="p">(</span><span class="n">kh_train_dataset</span><span class="p">)</span>
+<span class="n">resampled_kh_validation_dataset_fft</span> <span class="o">=</span> <span class="n">transformer</span><span class="p">(</span><span class="n">kh_validation_dataset</span><span class="p">)</span>
+<span class="n">resampled_kh_test_dataset_fft</span> <span class="o">=</span> <span class="n">transformer</span><span class="p">(</span><span class="n">kh_test_dataset</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resampled_kh_train_dataset_fft</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(array([1.59463682e+01, 8.65515034e+00, 2.27354416e+01, 1.97537874e+01,
+        9.25508722e+00, 7.09820675e+01, 7.20439930e+01, 8.63793839e+01,
+        5.51569339e+01, 2.55919794e+01, 3.23705964e+01, 2.55852007e+01,
+        2.20892355e+01, 1.81927479e+01, 5.00077102e+01, 1.13724929e+02,
+        7.78939711e+01, 6.27460963e+01, 2.61259616e+01, 2.55478458e+01,
+        2.59205229e+01, 3.36605549e+01, 3.97725356e+01, 7.62682196e+00,
+        3.12322281e+01, 1.70850192e+01, 2.67012667e+01, 2.30589481e+01,
+        1.21252088e+01, 4.10023238e+00, 5.18090094e+00, 1.21208434e+01,
+        9.54793754e+00, 8.47690534e+00, 9.66471919e+00, 6.59353515e+00,
+        4.18492000e+00, 1.85648103e+00, 1.10085834e+01, 9.44515729e+00,
+        1.21408122e+01, 3.26294045e-01, 2.99345158e+00, 3.11082536e+00,
+        4.64142178e+00, 1.44292597e+00, 8.50990863e+00, 9.02777719e+00,
+        1.34475812e+01, 3.02679706e+00, 1.14960365e+01, 3.02679706e+00,
+        1.34475812e+01, 9.02777719e+00, 8.50990863e+00, 1.44292597e+00,
+        4.64142178e+00, 3.11082536e+00, 2.99345158e+00, 3.26294045e-01,
+        1.21408122e+01, 9.44515729e+00, 1.10085834e+01, 1.85648103e+00,
+        4.18492000e+00, 6.59353515e+00, 9.66471919e+00, 8.47690534e+00,
+        9.54793754e+00, 1.21208434e+01, 5.18090094e+00, 4.10023238e+00,
+        1.21252088e+01, 2.30589481e+01, 2.67012667e+01, 1.70850192e+01,
+        3.12322281e+01, 7.62682196e+00, 3.97725356e+01, 3.36605549e+01,
+        2.59205229e+01, 2.55478458e+01, 2.61259616e+01, 6.27460963e+01,
+        7.78939711e+01, 1.13724929e+02, 5.00077102e+01, 1.81927479e+01,
+        2.20892355e+01, 2.55852007e+01, 3.23705964e+01, 2.55919794e+01,
+        5.51569339e+01, 8.63793839e+01, 7.20439930e+01, 7.09820675e+01,
+        9.25508722e+00, 1.97537874e+01, 2.27354416e+01, 8.65515034e+00,
+        1.85920677e+00, 1.45067755e+01, 5.07419891e+00, 3.48246355e+01,
+        1.69018968e+01, 1.35001329e+01, 3.22197402e+01, 2.56406150e+01,
+        4.59198533e+01, 1.45718324e+01, 4.94942106e+01, 4.34231104e+01,
+        1.64708311e+01, 1.84884787e+01, 3.23828227e+01, 9.95569767e+00,
+        4.90787431e+01, 3.02748256e+01, 6.69238099e+01, 1.14981470e+01,
+        4.60107974e+00, 1.32099930e+01, 7.16014729e+00, 3.04753905e+01,
+        4.57340847e+01, 1.39443310e+01, 1.36686389e+01, 1.13441666e+01,
+        2.69580141e+01, 3.77065808e+00, 4.59384740e+00, 1.63819185e+01,
+        1.28644963e+01, 7.38542781e+00, 2.49099523e+00, 4.09540445e+00,
+        6.18474207e+00, 8.45850434e+00, 6.02453008e+00, 5.54427648e+00,
+        8.52871880e+00, 3.46489845e+00, 2.70252212e+00, 2.14046217e+00,
+        2.17284628e+00, 4.10503941e+00, 1.38927425e+00, 5.42014260e+00,
+        6.40876210e+00, 4.99153866e+00, 1.62661608e+00, 4.99153866e+00,
+        6.40876210e+00, 5.42014260e+00, 1.38927425e+00, 4.10503941e+00,
+        2.17284628e+00, 2.14046217e+00, 2.70252212e+00, 3.46489845e+00,
+        8.52871880e+00, 5.54427648e+00, 6.02453008e+00, 8.45850434e+00,
+        6.18474207e+00, 4.09540445e+00, 2.49099523e+00, 7.38542781e+00,
+        1.28644963e+01, 1.63819185e+01, 4.59384740e+00, 3.77065808e+00,
+        2.69580141e+01, 1.13441666e+01, 1.36686389e+01, 1.39443310e+01,
+        4.57340847e+01, 3.04753905e+01, 7.16014729e+00, 1.32099930e+01,
+        4.60107974e+00, 1.14981470e+01, 6.69238099e+01, 3.02748256e+01,
+        4.90787431e+01, 9.95569767e+00, 3.23828227e+01, 1.84884787e+01,
+        1.64708311e+01, 4.34231104e+01, 4.94942106e+01, 1.45718324e+01,
+        4.59198533e+01, 2.56406150e+01, 3.22197402e+01, 1.35001329e+01,
+        1.69018968e+01, 3.48246355e+01, 5.07419891e+00, 1.45067755e+01,
+        2.36322334e+01, 2.10800202e+00, 8.52855504e+00, 7.29987869e+00,
+        4.57990342e+00, 3.24829639e+01, 7.05390430e+01, 1.66166960e+01,
+        3.33500252e+01, 1.90069370e+01, 1.85170006e+01, 4.20431814e+01,
+        3.98055637e+01, 4.12397788e+01, 3.44069170e+01, 1.60680056e+01,
+        2.79645189e+01, 2.03607559e+01, 1.05507512e+01, 8.36920378e+00,
+        2.63695757e+01, 5.01833063e+01, 7.36392805e+00, 9.62061832e+00,
+        3.62402401e+00, 1.25690379e+01, 1.59254018e+01, 5.08961210e+01,
+        2.60605990e+01, 3.09262623e+00, 1.22370804e+01, 1.30423775e+01,
+        1.34060248e+01, 9.86903794e+00, 2.07443485e+01, 2.54553382e+01,
+        1.96972135e+01, 1.26134817e+01, 1.64647802e+01, 4.67636906e+00,
+        1.16591398e+01, 1.41427645e+01, 8.47682166e+00, 1.61013628e+01,
+        1.12617361e+01, 5.19127612e+00, 5.11034222e+00, 9.70020333e+00,
+        1.26689309e+01, 1.47364497e+01, 2.34658905e+00, 1.47364497e+01,
+        1.26689309e+01, 9.70020333e+00, 5.11034222e+00, 5.19127612e+00,
+        1.12617361e+01, 1.61013628e+01, 8.47682166e+00, 1.41427645e+01,
+        1.16591398e+01, 4.67636906e+00, 1.64647802e+01, 1.26134817e+01,
+        1.96972135e+01, 2.54553382e+01, 2.07443485e+01, 9.86903794e+00,
+        1.34060248e+01, 1.30423775e+01, 1.22370804e+01, 3.09262623e+00,
+        2.60605990e+01, 5.08961210e+01, 1.59254018e+01, 1.25690379e+01,
+        3.62402401e+00, 9.62061832e+00, 7.36392805e+00, 5.01833063e+01,
+        2.63695757e+01, 8.36920378e+00, 1.05507512e+01, 2.03607559e+01,
+        2.79645189e+01, 1.60680056e+01, 3.44069170e+01, 4.12397788e+01,
+        3.98055637e+01, 4.20431814e+01, 1.85170006e+01, 1.90069370e+01,
+        3.33500252e+01, 1.66166960e+01, 7.05390430e+01, 3.24829639e+01,
+        4.57990342e+00, 7.29987869e+00, 8.52855504e+00, 2.10800202e+00,
+        5.09292602e+01, 1.53876451e+01, 1.52384163e+01, 2.67786831e+01,
+        1.12631186e+01, 7.53558243e+00, 1.47400329e+01, 8.92943305e+00,
+        2.03354113e+01, 6.66630355e+00, 8.40769160e+00, 8.29102760e+00,
+        2.98008153e+00, 5.40893324e-01, 8.08965797e+00, 4.76349331e+00,
+        9.01937709e+00, 3.44822751e+00, 6.40364631e+00, 4.85761092e+00,
+        1.94801161e+00, 6.72846110e+00, 6.56755589e-01, 2.32828085e+00,
+        1.73838975e+00, 2.08374765e+00, 3.21934051e+00, 1.77060838e+00,
+        1.26033167e+00, 3.04378971e+00, 1.02307254e+00, 1.39729455e+00,
+        2.43190705e-01, 1.12596331e+00, 1.42566217e+00, 1.94652739e+00,
+        3.40435632e-01, 1.17462387e+00, 1.61790411e+00, 9.70432876e-01,
+        2.07328047e+00, 1.23600746e+00, 1.65943838e+00, 4.54633135e-01,
+        4.13916466e-01, 1.35801706e+00, 1.16519895e+00, 1.36294435e+00,
+        7.21450802e-01, 3.39309078e-01, 7.02902641e-01, 3.39309078e-01,
+        7.21450802e-01, 1.36294435e+00, 1.16519895e+00, 1.35801706e+00,
+        4.13916466e-01, 4.54633135e-01, 1.65943838e+00, 1.23600746e+00,
+        2.07328047e+00, 9.70432876e-01, 1.61790411e+00, 1.17462387e+00,
+        3.40435632e-01, 1.94652739e+00, 1.42566217e+00, 1.12596331e+00,
+        2.43190705e-01, 1.39729455e+00, 1.02307254e+00, 3.04378971e+00,
+        1.26033167e+00, 1.77060838e+00, 3.21934051e+00, 2.08374765e+00,
+        1.73838975e+00, 2.32828085e+00, 6.56755589e-01, 6.72846110e+00,
+        1.94801161e+00, 4.85761092e+00, 6.40364631e+00, 3.44822751e+00,
+        9.01937709e+00, 4.76349331e+00, 8.08965797e+00, 5.40893324e-01,
+        2.98008153e+00, 8.29102760e+00, 8.40769160e+00, 6.66630355e+00,
+        2.03354113e+01, 8.92943305e+00, 1.47400329e+01, 7.53558243e+00,
+        1.12631186e+01, 2.67786831e+01, 1.52384163e+01, 1.53876451e+01,
+        5.02131532e-01, 2.59857721e+00, 4.38479626e+00, 1.17201551e+00,
+        6.63931937e+00, 7.94866774e+00, 7.07831226e+00, 2.36883566e+00,
+        5.41666936e+00, 1.05080958e+00, 4.77178946e+00, 1.10086604e+00,
+        3.32575198e+00, 1.79153660e+00, 8.43251643e+00, 1.53499604e+01,
+        9.33936282e+00, 9.34862169e+00, 4.85151938e+00, 2.10038315e+00,
+        4.50656217e+00, 9.97138810e+00, 5.81575281e+00, 1.47727691e+00,
+        2.04234373e+00, 2.52681630e-01, 1.66015504e+00, 1.08278150e+01,
+        4.55059052e+00, 1.52605965e+00, 2.50180010e+00, 2.52883046e+00,
+        2.00472358e+00, 1.73425927e+00, 4.40800259e+00, 3.86131271e+00,
+        1.71016744e+00, 1.90357683e+00, 1.67392616e+00, 1.70505680e-01,
+        1.51043238e+00, 2.09549395e+00, 1.50167882e+00, 5.88366407e-01,
+        2.03255282e+00, 1.56109542e+00, 9.47102599e-01, 6.96361816e-01,
+        1.30626373e+00, 1.28161554e+00, 7.36092385e-01, 1.28161554e+00,
+        1.30626373e+00, 6.96361816e-01, 9.47102599e-01, 1.56109542e+00,
+        2.03255282e+00, 5.88366407e-01, 1.50167882e+00, 2.09549395e+00,
+        1.51043238e+00, 1.70505680e-01, 1.67392616e+00, 1.90357683e+00,
+        1.71016744e+00, 3.86131271e+00, 4.40800259e+00, 1.73425927e+00,
+        2.00472358e+00, 2.52883046e+00, 2.50180010e+00, 1.52605965e+00,
+        4.55059052e+00, 1.08278150e+01, 1.66015504e+00, 2.52681630e-01,
+        2.04234373e+00, 1.47727691e+00, 5.81575281e+00, 9.97138810e+00,
+        4.50656217e+00, 2.10038315e+00, 4.85151938e+00, 9.34862169e+00,
+        9.33936282e+00, 1.53499604e+01, 8.43251643e+00, 1.79153660e+00,
+        3.32575198e+00, 1.10086604e+00, 4.77178946e+00, 1.05080958e+00,
+        5.41666936e+00, 2.36883566e+00, 7.07831226e+00, 7.94866774e+00,
+        6.63931937e+00, 1.17201551e+00, 4.38479626e+00, 2.59857721e+00,
+        1.16188608e+01, 3.14690103e+00, 3.74400538e+00, 6.48280586e+00,
+        9.69691316e-01, 5.21357285e-01, 3.37725573e+00, 1.67146347e+00,
+        7.81650550e+00, 4.72006538e+00, 3.70301626e+00, 5.00874805e+00,
+        1.72589714e+00, 2.19599231e+00, 1.34287352e+00, 3.71404836e+00,
+        3.12327013e+00, 1.04208972e+00, 1.57982142e+00, 3.48769939e+00,
+        2.01294606e+00, 8.57355563e-01, 4.18339206e+00, 3.59342004e+00,
+        1.78004100e+00, 3.70748410e+00, 2.47112767e+00, 7.38637437e-01,
+        1.97375112e+00, 2.29605363e+00, 1.44045699e+00, 1.82977171e+00,
+        1.00918477e+00, 5.55502835e-01, 4.11058710e-01, 7.22500924e-01,
+        6.93902583e-01, 4.64897520e-01, 7.92382609e-01, 3.30971358e-01,
+        8.08896474e-01, 7.46700193e-02, 4.16990158e-01, 7.68771132e-01,
+        5.09063470e-01, 3.70932714e-02, 2.14763625e-01, 5.25242795e-01,
+        6.55363478e-01, 4.30606629e-01, 5.45298746e-01, 4.30606629e-01,
+        6.55363478e-01, 5.25242795e-01, 2.14763625e-01, 3.70932714e-02,
+        5.09063470e-01, 7.68771132e-01, 4.16990158e-01, 7.46700193e-02,
+        8.08896474e-01, 3.30971358e-01, 7.92382609e-01, 4.64897520e-01,
+        6.93902583e-01, 7.22500924e-01, 4.11058710e-01, 5.55502835e-01,
+        1.00918477e+00, 1.82977171e+00, 1.44045699e+00, 2.29605363e+00,
+        1.97375112e+00, 7.38637437e-01, 2.47112767e+00, 3.70748410e+00,
+        1.78004100e+00, 3.59342004e+00, 4.18339206e+00, 8.57355563e-01,
+        2.01294606e+00, 3.48769939e+00, 1.57982142e+00, 1.04208972e+00,
+        3.12327013e+00, 3.71404836e+00, 1.34287352e+00, 2.19599231e+00,
+        1.72589714e+00, 5.00874805e+00, 3.70301626e+00, 4.72006538e+00,
+        7.81650550e+00, 1.67146347e+00, 3.37725573e+00, 5.21357285e-01,
+        9.69691316e-01, 6.48280586e+00, 3.74400538e+00, 3.14690103e+00]),
+ 0)
+</pre></div></div>
+</div>
+</section>
+<section id="Use-Resample-and-FFT-in-MotionSense">
+<h3>Use Resample and FFT in MotionSense<a class="headerlink" href="#Use-Resample-and-FFT-in-MotionSense" title="Permalink to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resampled_ms_train_dataset_fft</span> <span class="o">=</span> <span class="n">transformer</span><span class="p">(</span><span class="n">ms_train_dataset</span><span class="p">)</span>
+<span class="n">resampled_ms_validation_dataset_fft</span> <span class="o">=</span> <span class="n">transformer</span><span class="p">(</span><span class="n">ms_validation_dataset</span><span class="p">)</span>
+<span class="n">resampled_ms_test_dataset_fft</span> <span class="o">=</span> <span class="n">transformer</span><span class="p">(</span><span class="n">ms_test_dataset</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="preprocess_kuhar.html" class="btn btn-neutral float-right" title="Pre-processing KuHar Dataset and Generate Views" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, H.IAAC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

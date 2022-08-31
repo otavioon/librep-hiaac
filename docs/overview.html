@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overview &mdash; Librep 0.0.1-dev
+ documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorials" href="tutorials.html" />
+    <link rel="prev" title="Installation Guide" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Librep
+          </a>
+              <div class="version">
+                0.0.1-dev
+
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#directory-structure">Directory Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#design-decisions">Design Decisions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howtos.html">How-To Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Programming Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Librep</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/overview.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="overview">
+<span id="id1"></span><h1>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h1>
+<a class="reference internal image-reference" href="_images/workflow.png"><img alt="Default Workflow" src="_images/workflow.png" style="width: 100%;" /></a>
+<p>Librep aims to define a common API for several ML projects.
+In summary several ML workflows follows the some stages, shown in the above figure (specialized to Human Activity Recognition (HAR) worklows):</p>
+<ol class="arabic simple">
+<li><p>Pre-process raw data (steps 2) creating a CSV file (or other format, depending on the context).</p></li>
+<li><p>Create a canonical data set (step 3), that is, a <strong>dataset view</strong>. From librep’s perspective any processed data set subclass <code class="docutils literal notranslate"><span class="pre">librep.base.data.Dataset</span></code> class. An <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> is a map-style data set and iterate over samples using Python’s <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> method. If your dataset is a CSV file, that can be opened with Pandas, you can use <code class="docutils literal notranslate"><span class="pre">librep.datasets.common.PandasMultiModalDataset</span></code> to wrap around the <code class="docutils literal notranslate"><span class="pre">Dataset</span></code> class. Thus, every row will be a sample and have the corresponding label.</p></li>
+<li><p>Several transformations can be done in samples of the data set (step 4). Every transformation must subclass <code class="docutils literal notranslate"><span class="pre">librep.base.data.Transform</span></code> class and implement <code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">transform``methods.</span> <span class="pre">``fit</span></code> receives all samples in a data set and is used derive information about all samples (such as the mean and standard deviation of the data). <code class="docutils literal notranslate"><span class="pre">transform</span></code> is applied to a <strong>single</strong> sample of the data set. Classes such as <code class="docutils literal notranslate"><span class="pre">librep.dataset.common.TransformMultiModalDataset</span></code> helps to apply several transforms (in chain, as in Figure above) to all samples of the data set. This will generate an <strong>Embedding</strong>.</p></li>
+<li><p>The embedded data set can be fit to a ML model (step 5). Every ML model, supervised, unsupervised or deep must subclass <code class="docutils literal notranslate"><span class="pre">librep.base.estimator.Estimator</span></code> class and implement the <code class="docutils literal notranslate"><span class="pre">fit</span></code> and <code class="docutils literal notranslate"><span class="pre">predict</span></code> methods. <code class="docutils literal notranslate"><span class="pre">fit</span></code> trains the model (<code class="docutils literal notranslate"><span class="pre">y</span></code> parameter must be passed for supervised learning models and it is optional for unsupervised method) while <code class="docutils literal notranslate"><span class="pre">predict</span></code> will perform the prediction.</p></li>
+<li><p>Results can be finally evaluated (step 6). The evaluators must override classes at <code class="docutils literal notranslate"><span class="pre">librep.base.evaluator</span></code> in order to evaluate a model, accordingly to the problem. Usually, evaluations will return a dict with results, or plot an image, or write some information to a file.</p></li>
+</ol>
+<p>Librep API was designed with the following principles:</p>
+<ul class="simple">
+<li><p>Be a flexible API, in order to be easily to expand it.</p></li>
+<li><p>Match well known APIs such as Pytorch and scikit-learn.</p></li>
+<li><p>Handle large data sets, those that does not fit in RAM memory.</p></li>
+<li><p>Allows performing parallel and distributed computations.</p></li>
+<li><p>Easy integration with cloud environments, such as Amazon SageMaker.</p></li>
+<li><p>Easily create units tests and using continuous integration tools.</p></li>
+</ul>
+<section id="directory-structure">
+<h2>Directory Structure<a class="headerlink" href="#directory-structure" title="Permalink to this heading"></a></h2>
+<p>The librep package directory is organized as follows:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">base</span></code>: contains all base classes that must be sub classed to implement different librep’s functionalities.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">config</span></code>: some system configuration and diagnostic output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">datasets</span></code>: tools for generating data set views (CSV files), wrappers around <code class="docutils literal notranslate"><span class="pre">librep.base.data.Dataset</span></code> class for data sets, and tools for generating synthetic data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">estimators</span></code>: estimators implementing the <code class="docutils literal notranslate"><span class="pre">librep.base.estimator.Estimator</span></code> interface. Scikit learn estimators already implement this interface. Also, there are wrappers to Pytorch and tensorflow models around <code class="docutils literal notranslate"><span class="pre">librep.base.estimator.Estimator</span></code> interface.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">losses</span></code>: classes defining loss functions, which follow the pattern of <code class="docutils literal notranslate"><span class="pre">torch.nn.modules.loss</span></code>. Implement common losses from HAR papers and implementations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metrics</span></code>: defines metric tracking types, used for deep learning models.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">transforms</span></code>: transformations implementing the <code class="docutils literal notranslate"><span class="pre">librep.base.data.Transform</span></code> interface.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">utils</span></code>: utilitary functions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">workflow</span></code>: tools for represent the workflow pipeline as an Directed Acyclic Graph (DAG) and tools for executing this graph (sequentially, parallel, distributed, or in cloud). This interface is not well defined yet and should not be used for now.</p></li>
+</ul>
+</section>
+<section id="design-decisions">
+<h2>Design Decisions<a class="headerlink" href="#design-decisions" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">transform</span></code> method is applyied to a single sample. It is supposed that this sample will already be processed (<em>e.g.</em>, reshaped) accordingly.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorials.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, H.IAAC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

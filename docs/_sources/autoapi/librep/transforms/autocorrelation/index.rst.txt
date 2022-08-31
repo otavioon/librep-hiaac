@@ -1,0 +1,55 @@
+:py:mod:`librep.transforms.autocorrelation`
+===========================================
+
+.. py:module:: librep.transforms.autocorrelation
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.transforms.autocorrelation.AutoCorrelation
+
+
+
+
+.. py:class:: AutoCorrelation(mode = 'full')
+
+   Bases: :py:obj:`librep.base.transform.Transform`
+
+   Calculates the autocorrelation of a sample.
+
+   Parameters
+   ----------
+   mode : str
+       Mode of transform. See `np.correlate`.
+
+
+   .. py:method:: fit(X, y = None)
+
+      Not used.
+
+              
+
+
+   .. py:method:: transform(X)
+
+      Returns the autocorrelation of the samples.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          Samples to be transfomed with shape (n_samples, n_features, ).
+
+      Returns
+      -------
+      ArrayLike
+          The transformed sample.
+
+
+
+

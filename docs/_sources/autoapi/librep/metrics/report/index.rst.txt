@@ -1,0 +1,27 @@
+:py:mod:`librep.metrics.report`
+===============================
+
+.. py:module:: librep.metrics.report
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.metrics.report.ClassificationReport
+
+
+
+
+.. py:class:: ClassificationReport(use_accuracy = True, use_f1_score = True, use_confusion_matrix = True, use_classification_report = False, plot_confusion_matrix = True, output_path = None)
+
+   Bases: :py:obj:`librep.base.evaluators.SupervisedEvaluator`
+
+   .. py:method:: evaluate(y_true, y_pred, **evaluator_params)
+
+
+

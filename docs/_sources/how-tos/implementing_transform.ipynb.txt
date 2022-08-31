@@ -1,0 +1,386 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "f037585a-29bd-44f5-9b92-2686a3dd8370",
+   "metadata": {},
+   "source": [
+    "# Implementing a Transform\n",
+    "\n",
+    "A transformation is a function that is applyied to a data set generating a new, transformed data set.\n",
+    "In `librep` transforms are classes are based in `scikit-learn` API. \n",
+    "Every transformation must inherit from `librep.base.transform.Transform` abstract class and implement the `fit` (optional) and `transform` methods.\n",
+    "\n",
+    "`fit` method allows to analyse the data set and extract useful information that may be used for transform. It receives the following parameters:\n",
+    "\n",
+    "- `X`: which is an array-like object with the samples\n",
+    "- `y` (optional): which is an array-like of labels of each sample\n",
+    "- May receive additional parameters passed as keyworded arguments. \n",
+    "\n",
+    "The `fit` method return a self-reference (*e.g.* `return self`)\n",
+    "\n",
+    "`transform` method transform the samples and returns a array-like with the transformed samples. It receives the parameter `X` which is an array-like object with the samples.\n",
+    "\n",
+    "Options for customizing the transformation must be passed to class' constructor, that is, in `__init__` method.\n",
+    "\n",
+    "Transforms tries to follow the following principles:\n",
+    "\n",
+    "- For non-deterministic transforms, that is, that involve random computations, always tries to pass the `seed` as parameter and use it to create a determininistic transform.\n",
+    "- Customization options must be pased via constructor and used accordingly\n",
+    "- Transforms suppose that data already comes in the desired format\n",
+    "- `transform` function does not alter the input object (`X`). It generates a new array with transformed samples based on `X`.\n",
+    "- Optionally, transforms may implement `__str__` and `__repr__` function."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "6e61a640-14ab-4391-b750-be25aa64ef0a",
+   "metadata": {},
+   "source": [
+    "## A simple transform"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5e1d8c3f-6db1-4559-b39f-45f45116ba90",
+   "metadata": {},
+   "source": [
+    "Below is an example of a transformation called `MyTransform` that sums an integer `value` (passed as parameter to the class constructor) to every sample of the dataset. It only implements the `transform` method."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "b9ee6b42-eb61-4711-b836-e5716d532ef8",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-30T21:03:52.875131Z",
+     "iopub.status.busy": "2022-08-30T21:03:52.874932Z",
+     "iopub.status.idle": "2022-08-30T21:03:57.808050Z",
+     "shell.execute_reply": "2022-08-30T21:03:57.807475Z",
+     "shell.execute_reply.started": "2022-08-30T21:03:52.875115Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "# Default imports\n",
+    "import numpy as np\n",
+    "\n",
+    "# Base class\n",
+    "from librep.base.transform import Transform\n",
+    "# Typing definitions (from input)\n",
+    "from librep.config.type_definitions import ArrayLike\n",
+    "\n",
+    "\n",
+    "class MyTransform(Transform):\n",
+    "    def __init__(self, value: int):\n",
+    "        self.value = value\n",
+    "\n",
+    "    def transform(self, X: ArrayLike):\n",
+    "        datas = []\n",
+    "        # Iterate over each sample of X\n",
+    "        for x in X:\n",
+    "            summed_x = x + self.value\n",
+    "            datas.append(summed_x)\n",
+    "        return np.array(datas)\n",
+    "\n",
+    "    # This text will be printed when a string of an object ofthis class is called.\n",
+    "    def __str__(self) -> str:\n",
+    "        return f\"MyTransform with: value={self.value}\"\n",
+    "\n",
+    "    def __repr__(self) -> str:\n",
+    "        return str(self)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5386d011-eab5-4627-a321-7c0baafa2094",
+   "metadata": {},
+   "source": [
+    "We can instantiate our transform and test it on a synthetic dataset"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "5cba4d8c-6bb8-4d66-a59d-f8c0c4233a74",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-30T21:03:57.808789Z",
+     "iopub.status.busy": "2022-08-30T21:03:57.808529Z",
+     "iopub.status.idle": "2022-08-30T21:03:57.815980Z",
+     "shell.execute_reply": "2022-08-30T21:03:57.815584Z",
+     "shell.execute_reply.started": "2022-08-30T21:03:57.808774Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "MyTransform with: value=10"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Instantiating the transform object\n",
+    "\n",
+    "my_transform = MyTransform(value=10)\n",
+    "my_transform"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "1db21831-bfcf-4f14-ae4f-8d023194e264",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-30T21:03:57.816747Z",
+     "iopub.status.busy": "2022-08-30T21:03:57.816561Z",
+     "iopub.status.idle": "2022-08-30T21:03:57.822808Z",
+     "shell.execute_reply": "2022-08-30T21:03:57.822265Z",
+     "shell.execute_reply.started": "2022-08-30T21:03:57.816731Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[ 0,  1,  2,  3],\n",
+       "       [ 4,  5,  6,  7],\n",
+       "       [ 8,  9, 10, 11],\n",
+       "       [12, 13, 14, 15]])"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Lets generate synthetic data (4x4 matrix)\n",
+    "\n",
+    "array = np.arange(16).reshape(4, 4)\n",
+    "array"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "b26b4fc7-361d-4c0c-b199-a38eddd37289",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-30T21:03:57.823588Z",
+     "iopub.status.busy": "2022-08-30T21:03:57.823358Z",
+     "iopub.status.idle": "2022-08-30T21:03:57.827089Z",
+     "shell.execute_reply": "2022-08-30T21:03:57.826620Z",
+     "shell.execute_reply.started": "2022-08-30T21:03:57.823572Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[10, 11, 12, 13],\n",
+       "       [14, 15, 16, 17],\n",
+       "       [18, 19, 20, 21],\n",
+       "       [22, 23, 24, 25]])"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Lets apply the transform\n",
+    "\n",
+    "new_array = my_transform.fit_transform(array)\n",
+    "new_array"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e1b610a4-c4ea-471a-9a0e-72c7f012b276",
+   "metadata": {},
+   "source": [
+    "## A more complex transform"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "73ebf15e-82aa-41dd-93d1-48c7e531ddeb",
+   "metadata": {},
+   "source": [
+    "Lets implement the MinMax Scaler. `fit` method will find the min and max from the dataset and `transform` will use this information scale the dataset, that is, for each sample `x`, calculate: $ x-min \\over max $"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "d30720f6-aa08-4661-9aef-a1f06c72b63d",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-30T21:03:57.827975Z",
+     "iopub.status.busy": "2022-08-30T21:03:57.827763Z",
+     "iopub.status.idle": "2022-08-30T21:03:57.832052Z",
+     "shell.execute_reply": "2022-08-30T21:03:57.831608Z",
+     "shell.execute_reply.started": "2022-08-30T21:03:57.827955Z"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "class MinMaxTransform(Transform):\n",
+    "    def __init__(self):\n",
+    "        self.min_val = None\n",
+    "        self.max_val = None\n",
+    "\n",
+    "    def fit(self, X: ArrayLike, y: ArrayLike):\n",
+    "        self.min_val = np.min(X)\n",
+    "        self.max_val = np.max(X)\n",
+    "\n",
+    "    def transform(self, X: ArrayLike):\n",
+    "        return (X-self.min_val)/(self.max_val)\n",
+    "\n",
+    "    def __str__(self) -> str:\n",
+    "        return f\"My MinMax Scaler\"\n",
+    "\n",
+    "    def __repr__(self) -> str:\n",
+    "        return str(self)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "1905c3ca-7475-49bb-b15c-9ddc812afc26",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-30T21:03:57.833869Z",
+     "iopub.status.busy": "2022-08-30T21:03:57.833486Z",
+     "iopub.status.idle": "2022-08-30T21:03:57.836882Z",
+     "shell.execute_reply": "2022-08-30T21:03:57.836501Z",
+     "shell.execute_reply.started": "2022-08-30T21:03:57.833852Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "My MinMax Scaler"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Instantiating the transform object\n",
+    "minmax_transform = MinMaxTransform()\n",
+    "minmax_transform"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "864de5b5-4575-4cd2-9b7d-a925155a7021",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-30T21:03:57.837607Z",
+     "iopub.status.busy": "2022-08-30T21:03:57.837417Z",
+     "iopub.status.idle": "2022-08-30T21:03:57.840821Z",
+     "shell.execute_reply": "2022-08-30T21:03:57.840429Z",
+     "shell.execute_reply.started": "2022-08-30T21:03:57.837592Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[ 0,  1,  2,  3],\n",
+       "       [ 4,  5,  6,  7],\n",
+       "       [ 8,  9, 10, 11],\n",
+       "       [12, 13, 14, 15]])"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Lets generate synthetic data (4x4 matrix)\n",
+    "\n",
+    "array = np.arange(16).reshape(4, 4)\n",
+    "array"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "a3a8a2c2-1202-49dc-85e3-a50de81d072d",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2022-08-30T21:03:57.841595Z",
+     "iopub.status.busy": "2022-08-30T21:03:57.841381Z",
+     "iopub.status.idle": "2022-08-30T21:03:57.845812Z",
+     "shell.execute_reply": "2022-08-30T21:03:57.845332Z",
+     "shell.execute_reply.started": "2022-08-30T21:03:57.841578Z"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[0.        , 0.06666667, 0.13333333, 0.2       ],\n",
+       "       [0.26666667, 0.33333333, 0.4       , 0.46666667],\n",
+       "       [0.53333333, 0.6       , 0.66666667, 0.73333333],\n",
+       "       [0.8       , 0.86666667, 0.93333333, 1.        ]])"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Lets apply the transform\n",
+    "\n",
+    "new_array = minmax_transform.fit_transform(array)\n",
+    "new_array"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.10"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

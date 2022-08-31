@@ -1,0 +1,18 @@
+:py:mod:`librep.datasets.har`
+=============================
+
+.. py:module:: librep.datasets.har
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   extrasensory/index.rst
+   generator/index.rst
+   kuhar/index.rst
+   motionsense/index.rst
+
+

@@ -1,0 +1,25 @@
+:py:mod:`librep.datasets`
+=========================
+
+.. py:module:: librep.datasets
+
+
+Subpackages
+-----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 3
+
+   har/index.rst
+   multimodal/index.rst
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   common/index.rst
+
+

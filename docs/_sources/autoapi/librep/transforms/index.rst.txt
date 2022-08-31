@@ -1,0 +1,435 @@
+:py:mod:`librep.transforms`
+===========================
+
+.. py:module:: librep.transforms
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   autocorrelation/index.rst
+   fft/index.rst
+   resampler/index.rst
+   spectrogram/index.rst
+   stats/index.rst
+   umap/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.transforms.AutoCorrelation
+   librep.transforms.FFT
+   librep.transforms.InvertibleTransform
+   librep.transforms.SimpleResampler
+   librep.transforms.StatsTransform
+   librep.transforms.Transform
+   librep.transforms.Transform
+   librep.transforms.Transform
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   librep.transforms.ArrayLike
+   librep.transforms.ArrayLike
+   librep.transforms.ArrayLike
+   librep.transforms.ArrayLike
+   librep.transforms.UMAP
+
+
+.. py:data:: ArrayLike
+   
+
+   
+
+.. py:data:: ArrayLike
+   
+
+   
+
+.. py:data:: ArrayLike
+   
+
+   
+
+.. py:data:: ArrayLike
+   
+
+   
+
+.. py:class:: AutoCorrelation(mode = 'full')
+
+   Bases: :py:obj:`librep.base.transform.Transform`
+
+   Calculates the autocorrelation of a sample.
+
+   Parameters
+   ----------
+   mode : str
+       Mode of transform. See `np.correlate`.
+
+
+   .. py:method:: fit(X, y = None)
+
+      Not used.
+
+              
+
+
+   .. py:method:: transform(X)
+
+      Returns the autocorrelation of the samples.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          Samples to be transfomed with shape (n_samples, n_features, ).
+
+      Returns
+      -------
+      ArrayLike
+          The transformed sample.
+
+
+
+
+.. py:class:: FFT(transpose = False, absolute = True, centered = False)
+
+   Bases: :py:obj:`librep.base.transform.InvertibleTransform`
+
+   Performs the DFT at one sample.
+
+   Parameters
+   ----------
+   transpose : bool
+       Return the transpose of the transformed sample (the default is False).
+   absolute : bool
+       Return the absolute values instead of a complex number (the default is True).
+   centered : bool
+       If True, returns the only the first half of the transformed sample, as
+       FFT is symmetric (the default is False).
+
+   Examples
+   ----------
+   >>> time_sample = np.arange(256)
+   >>> fft_transform = FFT(centered=True)
+   >>> fft_sample = fft_transform.fit_transform(time_sample)
+   >>> fft_sample.shape
+   (128, )
+
+
+   .. py:method:: fit(X, y = None)
+
+      Not used.
+
+              
+
+
+   .. py:method:: inverse_transform(X)
+      :abstractmethod:
+
+      Transform a sample with the inverse FFT.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          The samples to be transfomed with shape (n_features, ).
+
+      Returns
+      -------
+      ArrayLike
+          The transformed sample.
+
+
+
+   .. py:method:: transform(X)
+
+      Transform a sample using FFT.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          The samples to be transfomed with shape (n_features, n_features, ).
+
+      Returns
+      -------
+      ArrayLike
+          The transformed sample.
+
+
+
+
+.. py:class:: InvertibleTransform
+
+   Bases: :py:obj:`Transform`
+
+   Denotes a invertible transform.
+
+   .. py:method:: inverse_transform(X)
+      :abstractmethod:
+
+      Perform the inverse transform on data.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          An array-like of sample with shape (n_samples, n_features, ).
+
+      Returns
+      -------
+      ArrayLike
+          An array-like with the transformed samples.
+
+
+
+
+.. py:class:: SimpleResampler(new_sample_size)
+
+   Bases: :py:obj:`librep.base.transform.Transform`
+
+   Resample a single sample using `scipy.signal.resample` method.
+
+   Parameters
+   ----------
+   new_sample_size : int
+       The new number of points.
+
+
+   .. py:method:: fit(X, y = None)
+
+      Not used.
+
+              
+
+
+   .. py:method:: transform(X)
+
+      Resample signal samples.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          The signal samples with shape: (n_samples, n_features, )
+
+      Returns
+      -------
+      ArrayLike
+          The resampled samples with shape: (n_samples, new_sample_size, ).
+
+
+
+
+.. py:class:: StatsTransform(keep_values = False, capture_statistical = True, capture_indices = True)
+
+   Bases: :py:obj:`librep.base.transform.Transform`
+
+   Extract statistical information of a sample.
+
+   Parameters
+   ----------
+   keep_values : bool
+       If true, the statistical information is concatenated with the input
+       sample. (the default is False).
+   capture_statistical : bool
+       If True, extract statistical information about the sample.
+   capture_indices : bool
+       If True, extract statistical information about the indexes of the sample.
+
+
+   .. py:method:: fit(X, y)
+
+      Not used.
+
+              
+
+
+   .. py:method:: transform(X)
+
+      Extract statistical information of samples.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          The sample used to extract the information, with shape (n_samples, n_features, ).
+
+      Returns
+      -------
+      ArrayLike
+          An array with the statistical information about the samples. If 
+          `keep_values` parameter is set, the statistical information will be
+          concatenated along the input sample.
+
+
+
+
+.. py:class:: Transform
+
+   Bases: :py:obj:`librep.base.parametrizable.Parametrizable`
+
+   For filtering or modifying the data, in a supervised or unsupervised way.
+   `fit` allows implementing parametrizable transforms. This method sees the
+   whole dataset. `transform` allows transforming each sample.
+
+   .. py:method:: fit(X, y = None, **fit_params)
+
+      Fit the transformation with information of the whole dataset.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          An array-like representing the whole dataset with shape:
+          (n_samples, n_features).
+      y : ArrayLike
+          The respective labels, with shape: (n_samples, ). This parameter is
+          optional and may be used if needed.
+      **fit_params : type
+          Optional data-dependent parameters.
+
+      Returns
+      -------
+      'Transform'
+          The transform (self).
+
+
+
+   .. py:method:: fit_transform(X, y = None, **fit_params)
+
+
+   .. py:method:: transform(X)
+      :abstractmethod:
+
+      Transforms the dataset.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          An array-like of sample with shape (n_samples, n_features, ).
+
+      Returns
+      -------
+      ArrayLike
+          An array-like with the transformed samples.
+
+
+
+
+.. py:class:: Transform
+
+   Bases: :py:obj:`librep.base.parametrizable.Parametrizable`
+
+   For filtering or modifying the data, in a supervised or unsupervised way.
+   `fit` allows implementing parametrizable transforms. This method sees the
+   whole dataset. `transform` allows transforming each sample.
+
+   .. py:method:: fit(X, y = None, **fit_params)
+
+      Fit the transformation with information of the whole dataset.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          An array-like representing the whole dataset with shape:
+          (n_samples, n_features).
+      y : ArrayLike
+          The respective labels, with shape: (n_samples, ). This parameter is
+          optional and may be used if needed.
+      **fit_params : type
+          Optional data-dependent parameters.
+
+      Returns
+      -------
+      'Transform'
+          The transform (self).
+
+
+
+   .. py:method:: fit_transform(X, y = None, **fit_params)
+
+
+   .. py:method:: transform(X)
+      :abstractmethod:
+
+      Transforms the dataset.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          An array-like of sample with shape (n_samples, n_features, ).
+
+      Returns
+      -------
+      ArrayLike
+          An array-like with the transformed samples.
+
+
+
+
+.. py:class:: Transform
+
+   Bases: :py:obj:`librep.base.parametrizable.Parametrizable`
+
+   For filtering or modifying the data, in a supervised or unsupervised way.
+   `fit` allows implementing parametrizable transforms. This method sees the
+   whole dataset. `transform` allows transforming each sample.
+
+   .. py:method:: fit(X, y = None, **fit_params)
+
+      Fit the transformation with information of the whole dataset.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          An array-like representing the whole dataset with shape:
+          (n_samples, n_features).
+      y : ArrayLike
+          The respective labels, with shape: (n_samples, ). This parameter is
+          optional and may be used if needed.
+      **fit_params : type
+          Optional data-dependent parameters.
+
+      Returns
+      -------
+      'Transform'
+          The transform (self).
+
+
+
+   .. py:method:: fit_transform(X, y = None, **fit_params)
+
+
+   .. py:method:: transform(X)
+      :abstractmethod:
+
+      Transforms the dataset.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          An array-like of sample with shape (n_samples, n_features, ).
+
+      Returns
+      -------
+      ArrayLike
+          An array-like with the transformed samples.
+
+
+
+
+.. py:data:: UMAP
+   
+
+   
+

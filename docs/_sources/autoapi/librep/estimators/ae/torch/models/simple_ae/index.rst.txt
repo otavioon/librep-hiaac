@@ -1,0 +1,27 @@
+:py:mod:`librep.estimators.ae.torch.models.simple_ae`
+=====================================================
+
+.. py:module:: librep.estimators.ae.torch.models.simple_ae
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.estimators.ae.torch.models.simple_ae.SimpleAutoEncoder
+
+
+
+
+.. py:class:: SimpleAutoEncoder(input_shape, output_shape=None)
+
+   Bases: :py:obj:`torch.nn.Module`
+
+   .. py:method:: forward(features)
+
+
+

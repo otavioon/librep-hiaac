@@ -1,0 +1,26 @@
+:py:mod:`librep.utils.visualization.graphs`
+===========================================
+
+.. py:module:: librep.utils.visualization.graphs
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   librep.utils.visualization.graphs.visualize_sample
+   librep.utils.visualization.graphs.visualize_sample_windowed
+
+
+
+.. py:function:: visualize_sample(ys, xs=None, label = '', mode = 'lines+text', title = None)
+
+
+.. py:function:: visualize_sample_windowed(window_size, ys, xs=None, labels = None, mode = 'lines+text', sample_size = None, title = None)
+
+

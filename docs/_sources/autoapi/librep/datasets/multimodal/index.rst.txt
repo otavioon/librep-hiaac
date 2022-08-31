@@ -1,0 +1,196 @@
+:py:mod:`librep.datasets.multimodal`
+====================================
+
+.. py:module:: librep.datasets.multimodal
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   multimodal/index.rst
+   transformer/index.rst
+
+
+Package Contents
+----------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.datasets.multimodal.ArrayMultiModalDataset
+   librep.datasets.multimodal.MultiModalDataset
+   librep.datasets.multimodal.PandasMultiModalDataset
+   librep.datasets.multimodal.TransformMultiModalDataset
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   librep.datasets.multimodal.combine_multi_modal_datasets
+
+
+
+.. py:class:: ArrayMultiModalDataset(X, y, window_slices, window_names = None)
+
+   Bases: :py:obj:`MultiModalDataset`
+
+   An abstract class representing a generic map-style dataset which
+   implement the getitem and len protocols. All datasets that represent a map
+   from keys to data samples should subclass it.
+
+   Datasets subclassed from this class can be acessed using the subscription
+   syntax, such as `dataset[index]`. It usually return a tuple where the first
+   element represent the sample and the second, the label.
+
+   All map-style datasets must be implement the len protocol which returns the
+   number of samples in the dataset.
+
+
+   .. py:method:: __getitem__(index)
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __str__()
+
+      Return str(self).
+
+
+   .. py:method:: num_windows()
+      :property:
+
+
+   .. py:method:: window_names()
+      :property:
+
+
+   .. py:method:: window_slices()
+      :property:
+
+
+
+.. py:class:: MultiModalDataset
+
+   Bases: :py:obj:`librep.base.data.Dataset`
+
+   An abstract class representing a generic map-style dataset which
+   implement the getitem and len protocols. All datasets that represent a map
+   from keys to data samples should subclass it.
+
+   Datasets subclassed from this class can be acessed using the subscription
+   syntax, such as `dataset[index]`. It usually return a tuple where the first
+   element represent the sample and the second, the label.
+
+   All map-style datasets must be implement the len protocol which returns the
+   number of samples in the dataset.
+
+
+   .. py:method:: num_windows()
+      :property:
+
+
+   .. py:method:: window_names()
+      :property:
+
+
+   .. py:method:: window_slices()
+      :property:
+
+
+
+.. py:class:: PandasMultiModalDataset(dataframe, feature_prefixes = None, label_columns = 'activity code', as_array = True)
+
+   Bases: :py:obj:`librep.datasets.common.PandasDataset`, :py:obj:`MultiModalDataset`
+
+   Dataset implementation for multi modal PandasDataset.
+   It assumes that each sample is composed is a feature vector where
+   parts of this vector comes from different natures.
+   For instance, a sample with 900 features where features:
+   - 0-299: correspond to acelerometer x
+   - 300-599: correspond to accelerometer y
+   - 600-899: correspond to accelerometer z
+
+
+   The MultiModalHAR dataset, derived from Dataset.
+   The __getitem__ returns 2-element tuple where:
+   - The first element is the sample (from the indexed-row of the
+   dataframe with the selected features, as features); and
+   - The seconds element is the label (from the indexed-row of the
+   dataframe with the selected label_columns, as labels) .
+
+   Parameters
+   ----------
+   dataframe : pd.DataFrame
+       The dataframe with KuHar samples.
+   feature_prefixes : Optional[Union[str, List[str]]]
+       Which features from features must be selected. Features will be
+       selected based on these prefixes. If None, select all features.
+   label_columns : Union[str, List[str]]
+       The columns(s) that represents the label. If the value is an `str`,
+       a scalar will be returned, else, a list will be returned.
+   as_array : bool
+       If true, return a `np.ndarray`, else return a `pd.Series`, for each
+       sample.
+
+   Examples
+   ----------
+   >>> train_csv = pd.read_csv(my_filepath)
+   >>> # This will select the accelerometer (x, y, and z) from HAR dataset
+   >>> train_dataset = MultiModalHARDataset(feature_prefixes=["accel-x", "accel-y", "accel-z"], label_columns="activity code")
+   >>> len(train_dataset)
+   10
+   >>> train_dataset[0]
+   (np.ndarray(0.5, 0.6, 0.7), 0)
+
+
+   .. py:method:: __str__()
+
+      Return str(self).
+
+
+   .. py:method:: num_windows()
+      :property:
+
+
+   .. py:method:: window_names()
+      :property:
+
+
+   .. py:method:: window_slices()
+      :property:
+
+
+
+.. py:class:: TransformMultiModalDataset(transforms, collate_fn = np.hstack, new_window_name_prefix = '')
+
+   Apply a list of transforms into the whole dataset, generating a new
+   dataset.
+
+   Parameters
+   ----------
+   transforms : List[Transform]
+       List of transforms to be applyied to each sample, in order.
+
+   Note: It supposes the number of windows will remain the same
+
+   TODO: it not using fit. fit should be called over whole dataset.
+
+   .. py:method:: __call__(dataset)
+
+
+   .. py:method:: __transform_sample(transform, X, y, slices)
+
+
+
+.. py:function:: combine_multi_modal_datasets(d1, d2, collate_fn = np.hstack, labels_combine = __label_selector)
+
+

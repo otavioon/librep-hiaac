@@ -1,0 +1,19 @@
+:py:mod:`librep.base`
+=====================
+
+.. py:module:: librep.base
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   data/index.rst
+   estimator/index.rst
+   evaluators/index.rst
+   parametrizable/index.rst
+   transform/index.rst
+
+

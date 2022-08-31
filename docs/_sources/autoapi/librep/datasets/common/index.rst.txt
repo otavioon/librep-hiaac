@@ -1,0 +1,52 @@
+:py:mod:`librep.datasets.common`
+================================
+
+.. py:module:: librep.datasets.common
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.datasets.common.PandasDataset
+
+
+
+
+.. py:class:: PandasDataset(dataframe, features_columns, label_columns, as_array = True)
+
+   Bases: :py:obj:`librep.base.data.Dataset`
+
+   An abstract class representing a generic map-style dataset which
+   implement the getitem and len protocols. All datasets that represent a map
+   from keys to data samples should subclass it.
+
+   Datasets subclassed from this class can be acessed using the subscription
+   syntax, such as `dataset[index]`. It usually return a tuple where the first
+   element represent the sample and the second, the label.
+
+   All map-style datasets must be implement the len protocol which returns the
+   number of samples in the dataset.
+
+
+   .. py:method:: __getitem__(index)
+
+
+   .. py:method:: __len__()
+
+
+   .. py:method:: __repr__()
+
+      Return repr(self).
+
+
+   .. py:method:: __str__()
+
+      Return str(self).
+
+
+

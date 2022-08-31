@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>librep.datasets.har.extrasensory &mdash; Librep 0.0.1-dev
+ documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> Librep
+          </a>
+              <div class="version">
+                0.0.1-dev
+
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../howtos.html">How-To Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">Programming Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Librep</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>librep.datasets.har.extrasensory</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for librep.datasets.har.extrasensory</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">tqdm</span>
+<span class="kn">from</span> <span class="nn">tqdm.contrib.concurrent</span> <span class="kn">import</span> <span class="n">thread_map</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">librep.config.type_definitions</span> <span class="kn">import</span> <span class="n">PathLike</span>
+
+
+<div class="viewcode-block" id="User"><a class="viewcode-back" href="../../../../autoapi/librep/datasets/har/extrasensory/index.html#librep.datasets.har.extrasensory.User">[docs]</a><span class="k">class</span> <span class="nc">User</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class representing an User in the Extrasensory dataset&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">feature_file</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">user_accelerometer_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">user_gyroscope_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">user_gravity_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">store_raw_df</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">default_dtype</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;float64&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        uuid : str</span>
+<span class="sd">            Unique user identifier.</span>
+<span class="sd">        feature_file : Path</span>
+<span class="sd">            Path from the user&#39;s feature file.</span>
+<span class="sd">        user_accelerometer_dir : Path</span>
+<span class="sd">            Path from the user&#39;s accelerometer directory.</span>
+<span class="sd">        user_gyroscope_dir : Path</span>
+<span class="sd">            Path from the user&#39;s gyroscope directory.</span>
+<span class="sd">        user_gravity_dir : Path, optional</span>
+<span class="sd">            Path from the user&#39;s gravity directory.</span>
+<span class="sd">        store_raw_df : bool</span>
+<span class="sd">            Boolean indicating if the user&#39;s dataframe must be cached to be</span>
+<span class="sd">            accessed quickly, once read. Thus, when calling `raw_measurements`</span>
+<span class="sd">            method, the cached version will be returned, instead of</span>
+<span class="sd">            constructing the dataframe again, which may be slow.</span>
+<span class="sd">            Note that dataframe may be quite large.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="n">uuid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_accelerometer_dir</span> <span class="o">=</span> <span class="n">user_accelerometer_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_gyroscope_dir</span> <span class="o">=</span> <span class="n">user_gyroscope_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">user_gravity_dir</span> <span class="o">=</span> <span class="n">user_gravity_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_path</span> <span class="o">=</span> <span class="n">feature_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_dtype</span> <span class="o">=</span> <span class="n">default_dtype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">processed_features_df</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels_df</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_df</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store_raw_df</span> <span class="o">=</span> <span class="n">store_raw_df</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parse_features</span><span class="p">()</span>
+        <span class="c1"># self.metadata = self._read_user_labels()</span>
+
+<div class="viewcode-block" id="User._parse_features"><a class="viewcode-back" href="../../../../autoapi/librep/datasets/har/extrasensory/index.html#librep.datasets.har.extrasensory.User._parse_features">[docs]</a>    <span class="k">def</span> <span class="nf">_parse_features</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parse user&#39;s feature file. Store at `feature_df`.</span>
+<span class="sd">        - `feature_names` member will store all features that is not label,</span>
+<span class="sd">        that is, which does not start with &#39;label&#39; string.</span>
+<span class="sd">        - `label_names` member will store the name of all labels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Parse user&#39;s CSV file</span>
+        <span class="n">feature_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_path</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">&quot;gzip&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Use &#39;timestamp&#39; column as index</span>
+        <span class="n">feature_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="s2">&quot;timestamp source&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">feature_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;timestamp source&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># ----------- Features -----------</span>
+        <span class="c1"># Extract feature names, that is, columns not starting with &quot;label&quot;</span>
+        <span class="c1"># nor &quot;timestamp&quot;</span>
+        <span class="n">feature_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">col</span>
+                <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">feature_df</span><span class="o">.</span><span class="n">columns</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">processed_features_df</span> <span class="o">=</span> <span class="n">feature_df</span><span class="p">[</span><span class="n">feature_names</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">default_dtype</span>
+        <span class="p">)</span>
+
+        <span class="c1"># ----------- Labels -----------</span>
+        <span class="c1"># Dictionary mapping the label columns, that is, columns with name starting</span>
+        <span class="c1"># with &quot;label:&quot; string, to the same label, but without &quot;label:&quot; prefix</span>
+        <span class="n">labels_rename</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">col</span><span class="p">:</span> <span class="n">col</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;label:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">feature_df</span><span class="o">.</span><span class="n">columns</span>
+            <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;label:&quot;</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="c1"># Rename the label dataframe&#39;s columns to remove the &quot;label:&quot; string</span>
+        <span class="n">feature_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">labels_rename</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Select label columns</span>
+        <span class="n">label_names</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">labels_rename</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+        <span class="c1"># Transform label columns values to booleans instead int or NaN</span>
+        <span class="c1"># Note: NaN and 0 values will be considered False.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels_df</span> <span class="o">=</span> <span class="n">feature_df</span><span class="p">[</span><span class="n">label_names</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
+
+        <span class="c1"># Merged labels column</span>
+        <span class="n">merged_labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">true_labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="n">k</span><span class="p">]]</span>
+            <span class="n">true_labels</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">true_labels</span><span class="p">)</span>
+            <span class="n">merged_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">true_labels</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels_df</span><span class="p">[</span><span class="s2">&quot;merged label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">merged_labels</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">num_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Number of samples attached to this user</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            Numbe of sampes from this user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_df</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">raw_measurements</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns a dataframe with raw mesaurements of an User from all</span>
+<span class="sd">        timestamps files.</span>
+
+<span class="sd">        Note</span>
+<span class="sd">        ----</span>
+<span class="sd">        If `store_raw_df` member is set to true, this dataframe will be cached.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">            A dataframe with the user&#39;s measurements from all timestamps files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># If a cached value exists, returns it.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_df</span>
+
+        <span class="k">def</span> <span class="nf">read_raw_timestamp</span><span class="p">(</span><span class="n">timestamp</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot;Read measurements from a specific timestamp</span>
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            timestamp : str</span>
+<span class="sd">                Timestamp to read</span>
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            pd.DataFrame</span>
+<span class="sd">                Dataframe with the user&#39;s measurements from a given timestamp.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># ---- Accelerometer ----</span>
+                <span class="n">acc_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_accelerometer_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.m_raw_acc.dat&quot;</span>
+                <span class="c1"># Read accelerometer&#39;s CSV</span>
+                <span class="n">acc_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                    <span class="n">acc_file</span><span class="p">,</span>
+                    <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">sep</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default_dtype</span><span class="p">,</span>
+                    <span class="n">names</span><span class="o">=</span><span class="p">[</span>
+                        <span class="s2">&quot;accelerometer timestamp&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;accelerometer-x&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;accelerometer-y&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;accelerometer-z&quot;</span><span class="p">,</span>
+                    <span class="p">],</span>
+                <span class="p">)</span>
+
+                <span class="c1"># ---- Gyroscope ----</span>
+                <span class="n">gyro_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_gyroscope_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.m_proc_gyro.dat&quot;</span>
+                <span class="c1"># Read gyroscope&#39;s CSV</span>
+                <span class="n">gyro_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                    <span class="n">gyro_file</span><span class="p">,</span>
+                    <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">sep</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span>
+                    <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default_dtype</span><span class="p">,</span>
+                    <span class="n">names</span><span class="o">=</span><span class="p">[</span>
+                        <span class="s2">&quot;gyroscope timestamp&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;gyroscope-x&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;gyroscope-y&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;gyroscope-z&quot;</span><span class="p">,</span>
+                    <span class="p">],</span>
+                <span class="p">)</span>
+
+                <span class="c1"># ---- Gravity ----</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_gravity_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">gravity_file</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">user_gyroscope_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.m_proc_gravity.dat&quot;</span>
+                    <span class="p">)</span>
+                    <span class="c1"># Read gravity&#39;s CSV</span>
+                    <span class="n">gravity_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                        <span class="n">gravity_file</span><span class="p">,</span>
+                        <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">sep</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">,</span>
+                        <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default_dtype</span><span class="p">,</span>
+                        <span class="n">names</span><span class="o">=</span><span class="p">[</span>
+                            <span class="s2">&quot;gravity timestamp&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;gravity-x&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;gravity-y&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;gravity-z&quot;</span><span class="p">,</span>
+                        <span class="p">],</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">gravity_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+                <span class="c1"># labels = self.feature_df.loc[[timestamp], self.label_names]</span>
+
+                <span class="c1"># Concatenate all dataframes (column order)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">acc_data</span><span class="p">,</span> <span class="n">gyro_data</span><span class="p">,</span> <span class="n">gravity_data</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="c1">#                 # Read labels from this timestamp and add to dataframe</span>
+                <span class="c1">#                 labels = self.feature_df.loc[</span>
+                <span class="c1">#                     [timestamp], self.label_names + [&quot;label_source&quot;]]</span>
+                <span class="c1">#                 for i in labels.columns:</span>
+                <span class="c1">#                     data[i] = labels[i].to_list()*len(data)</span>
+                <span class="c1">#                 data = data.dropna()</span>
+
+                <span class="c1">#                 # Read features from this timestamp</span>
+                <span class="c1">#                 catch_features = [</span>
+                <span class="c1">#                     f for f in self.feature_names</span>
+                <span class="c1">#                     if  f.startswith(&quot;raw_acc:&quot;) or \</span>
+                <span class="c1">#                         f.startswith(&quot;proc_gyro:&quot;) or \</span>
+                <span class="c1">#                         f.startswith(&quot;proc_gravity:&quot;)</span>
+                <span class="c1">#                 ]</span>
+
+                <span class="c1">#                 features = self.feature_df.loc[[timestamp], catch_features]</span>
+                <span class="c1">#                 for i in features.columns:</span>
+                <span class="c1">#                     data[i] = features[i].to_list()*len(data)</span>
+
+                <span class="c1"># Assign a new column (imestamp source) telling from where</span>
+                <span class="c1"># these values comes from</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;timestamp source&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timestamp</span>
+
+                <span class="c1"># Just reordering columns.</span>
+                <span class="c1"># Put &quot;timestamp source&quot; at the beggining</span>
+                <span class="n">columns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+                <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">columns</span><span class="p">]</span>
+
+                <span class="c1"># Return data</span>
+                <span class="k">return</span> <span class="n">data</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># Process all user&#39;s timstamps</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">thread_map</span><span class="p">(</span>
+            <span class="n">read_raw_timestamp</span><span class="p">,</span>
+            <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels_df</span><span class="o">.</span><span class="n">index</span><span class="p">),</span>
+            <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Reading files from user </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># Filter erronous dataframes</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">res</span> <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="c1"># Concatenate all dataframes from all timestamps.</span>
+        <span class="c1"># Then sort rows at 3 levels:</span>
+        <span class="c1">#     1. timestamp source (where file comes from)</span>
+        <span class="c1">#     2. accelerometer timestamp (accelerometer time)</span>
+        <span class="c1">#     3. gyroscope timestamp (gyroscope time)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+            <span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;timestamp source&quot;</span><span class="p">,</span> <span class="s2">&quot;accelerometer timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;gyroscope timestamp&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Cache dataframe, if `store_raw_df` is set</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_raw_df</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raw_df</span> <span class="o">=</span> <span class="n">df</span>
+
+        <span class="c1"># Return dataframe</span>
+        <span class="k">return</span> <span class="n">df</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">processed_features</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">processed_features_df</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">labels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels_df</span></div>
+
+
+<div class="viewcode-block" id="RawExtraSensory"><a class="viewcode-back" href="../../../../autoapi/librep/datasets/har/extrasensory/index.html#librep.datasets.har.extrasensory.RawExtraSensory">[docs]</a><span class="k">class</span> <span class="nc">RawExtraSensory</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">labels_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">accelerometer_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">gyroscope_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">gravity_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">store_raw_df</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">default_dtype</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;float32&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels_dir</span> <span class="o">=</span> <span class="n">labels_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accelerometer_dir</span> <span class="o">=</span> <span class="n">accelerometer_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gyroscope_dir</span> <span class="o">=</span> <span class="n">gyroscope_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gravity_dir</span> <span class="o">=</span> <span class="n">gravity_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_users</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store_raw_df</span> <span class="o">=</span> <span class="n">store_raw_df</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_dtype</span> <span class="o">=</span> <span class="n">default_dtype</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read_users</span><span class="p">()</span>
+
+<div class="viewcode-block" id="RawExtraSensory._read_users"><a class="viewcode-back" href="../../../../autoapi/librep/datasets/har/extrasensory/index.html#librep.datasets.har.extrasensory.RawExtraSensory._read_users">[docs]</a>    <span class="k">def</span> <span class="nf">_read_users</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># get all files</span>
+        <span class="n">label_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels_dir</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">&quot;*.csv.gz&quot;</span><span class="p">))</span>
+
+        <span class="k">def</span> <span class="nf">_read_user</span><span class="p">(</span><span class="n">label_file</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+            <span class="n">userid</span> <span class="o">=</span> <span class="n">label_file</span><span class="o">.</span><span class="n">stem</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="n">acc_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerometer_dir</span> <span class="o">/</span> <span class="n">userid</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">acc_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">userid</span><span class="si">}</span><span class="s2">: has no accelerometer files (skipping)&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">gyro_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gyroscope_dir</span> <span class="o">/</span> <span class="n">userid</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">gyro_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">userid</span><span class="si">}</span><span class="s2">: has no gyroscope files (skipping)&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="n">gravity_path</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gravity_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">gravity_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gravity_dir</span> <span class="o">/</span> <span class="n">userid</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">gravity_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User </span><span class="si">{</span><span class="n">userid</span><span class="si">}</span><span class="s2">: has no gravity files (skipping)&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="k">return</span> <span class="n">User</span><span class="p">(</span>
+                <span class="n">uuid</span><span class="o">=</span><span class="n">userid</span><span class="p">,</span>
+                <span class="n">feature_file</span><span class="o">=</span><span class="n">label_file</span><span class="p">,</span>
+                <span class="n">user_accelerometer_dir</span><span class="o">=</span><span class="n">acc_path</span><span class="p">,</span>
+                <span class="n">user_gyroscope_dir</span><span class="o">=</span><span class="n">gyro_path</span><span class="p">,</span>
+                <span class="n">user_gravity_dir</span><span class="o">=</span><span class="n">gravity_path</span><span class="p">,</span>
+                <span class="n">store_raw_df</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">store_raw_df</span><span class="p">,</span>
+                <span class="n">default_dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">default_dtype</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">users</span> <span class="o">=</span> <span class="n">thread_map</span><span class="p">(</span><span class="n">_read_user</span><span class="p">,</span> <span class="n">label_files</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Reading users.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_users</span> <span class="o">=</span> <span class="p">{</span><span class="n">u</span><span class="o">.</span><span class="n">uuid</span><span class="p">:</span> <span class="n">u</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">users</span> <span class="k">if</span> <span class="n">u</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">users</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">User</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_users</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_ids</span><span class="p">)]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">user_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_users</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+<div class="viewcode-block" id="RawExtraSensory.user_raw_measurements"><a class="viewcode-back" href="../../../../autoapi/librep/datasets/har/extrasensory/index.html#librep.datasets.har.extrasensory.RawExtraSensory.user_raw_measurements">[docs]</a>    <span class="k">def</span> <span class="nf">user_raw_measurements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_users</span><span class="p">[</span><span class="n">userid</span><span class="p">]</span><span class="o">.</span><span class="n">raw_measurements</span></div>
+
+<div class="viewcode-block" id="RawExtraSensory.user_processed_features"><a class="viewcode-back" href="../../../../autoapi/librep/datasets/har/extrasensory/index.html#librep.datasets.har.extrasensory.RawExtraSensory.user_processed_features">[docs]</a>    <span class="k">def</span> <span class="nf">user_processed_features</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_users</span><span class="p">[</span><span class="n">userid</span><span class="p">]</span><span class="o">.</span><span class="n">processed_features</span></div>
+
+<div class="viewcode-block" id="RawExtraSensory.user_labels"><a class="viewcode-back" href="../../../../autoapi/librep/datasets/har/extrasensory/index.html#librep.datasets.har.extrasensory.RawExtraSensory.user_labels">[docs]</a>    <span class="k">def</span> <span class="nf">user_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">userid</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_users</span><span class="p">[</span><span class="n">userid</span><span class="p">]</span><span class="o">.</span><span class="n">labels</span></div>
+
+<div class="viewcode-block" id="RawExtraSensory.__str__"><a class="viewcode-back" href="../../../../autoapi/librep/datasets/har/extrasensory/index.html#librep.datasets.har.extrasensory.RawExtraSensory.__str__">[docs]</a>    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Extrasensory dataset at </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">labels_dir</span><span class="si">}</span><span class="s2"> with &quot;</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">all_users</span><span class="p">)</span><span class="si">}</span><span class="s2"> users&quot;</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="RawExtraSensory.__repr__"><a class="viewcode-back" href="../../../../autoapi/librep/datasets/har/extrasensory/index.html#librep.datasets.har.extrasensory.RawExtraSensory.__repr__">[docs]</a>    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="RawExtraSensoryPreprocessor"><a class="viewcode-back" href="../../../../autoapi/librep/datasets/har/extrasensory/index.html#librep.datasets.har.extrasensory.RawExtraSensoryPreprocessor">[docs]</a><span class="k">class</span> <span class="nc">RawExtraSensoryPreprocessor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Split dataset into raw, labels and feateurs&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_es</span><span class="p">:</span> <span class="n">RawExtraSensory</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_es</span> <span class="o">=</span> <span class="n">raw_es</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RawExtraSensoryPreprocessor.convert"><a class="viewcode-back" href="../../../../autoapi/librep/datasets/har/extrasensory/index.html#librep.datasets.har.extrasensory.RawExtraSensoryPreprocessor.convert">[docs]</a>    <span class="k">def</span> <span class="nf">convert</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">user_ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">save_raw</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">save_labels</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">save_features</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">user_ids</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">users</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">u</span> <span class="k">for</span> <span class="n">uuid</span> <span class="ow">in</span> <span class="n">user_ids</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_es</span><span class="o">.</span><span class="n">users</span> <span class="k">if</span> <span class="n">u</span><span class="o">.</span><span class="n">uuid</span> <span class="o">==</span> <span class="n">uuid</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">users</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_es</span><span class="o">.</span><span class="n">users</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="n">users</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Reading users&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">save_raw</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">raw_measurements</span>
+                <span class="n">output_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">uuid</span><span class="si">}</span><span class="s2">_raw.csv&quot;</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">save_labels</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">labels</span>
+                <span class="n">output_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">uuid</span><span class="si">}</span><span class="s2">_labels.csv&quot;</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">save_features</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">processed_features</span>
+                <span class="n">output_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">uuid</span><span class="si">}</span><span class="s2">_features.csv&quot;</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div></div>
+
+
+<span class="c1"># class PreprocessedExtrasensoryDatasetGenerator:</span>
+<span class="c1">#     raw_url = &quot;&quot;</span>
+<span class="c1">#     labels_url = &quot;&quot;</span>
+<span class="c1">#     features_url = &quot;&quot;</span>
+
+<span class="c1">#     def __init__(self, dataset_dir: PathLike, download: bool = False):</span>
+<span class="c1">#         self.dataset_dir = Path(dataset_dir)</span>
+<span class="c1">#         if download:</span>
+<span class="c1">#             self.__download_and_extract()</span>
+<span class="c1">#         self.metadata_df: pd.DataFrame = self.__read_metadata()</span>
+
+<span class="c1">#     def __download_and_extract(self):</span>
+<span class="c1">#         &quot;&quot;&quot;Download and extract the MotionSense dataset (A only).&quot;&quot;&quot;</span>
+<span class="c1">#         raise NotImplementedError</span>
+
+<span class="c1">#     def __read_metadata(self) -&gt; pd.DataFrame:</span>
+<span class="c1">#         raw_files = {</span>
+<span class="c1">#             f.stem.split(&quot;_raw&quot;)[0]: f</span>
+<span class="c1">#             for f in self.dataset_dir.rglob(&quot;*_raw.csv&quot;)</span>
+<span class="c1">#         }</span>
+<span class="c1">#         label_files = {</span>
+<span class="c1">#             f.stem.split(&quot;_labels&quot;)[0]: f</span>
+<span class="c1">#             for f in self.dataset_dir.rglob(&quot;*_labels.csv&quot;)</span>
+<span class="c1">#         }</span>
+<span class="c1">#         feature_files = {</span>
+<span class="c1">#             f.stem.split(&quot;_features&quot;)[0]: f</span>
+<span class="c1">#             for f in self.dataset_dir.rglob(&quot;*_features.csv&quot;)</span>
+<span class="c1">#         }</span>
+
+<span class="c1">#         users_relation = []</span>
+<span class="c1">#         for uuid, path in label_files.items():</span>
+<span class="c1">#             if uuid not in raw_files:</span>
+<span class="c1">#                 warnings.warn(f&quot;Skipping user &#39;{uuid}&#39;: it does not have correspoding raw file&quot;)</span>
+<span class="c1">#                 continue</span>
+<span class="c1">#             if uuid not in feature_files:</span>
+<span class="c1">#                 warnings.warn(f&quot;Skipping user &#39;{uuid}&#39;: it does not have correspoding features file&quot;)</span>
+<span class="c1">#                 continue</span>
+
+<span class="c1">#             labels_df = pd.read_csv(path)</span>
+<span class="c1">#             for row_index, row in labels_df.iterrows():</span>
+<span class="c1">#                 if not row[&quot;merged label&quot;]:</span>
+<span class="c1">#                     continue</span>
+<span class="c1">#                 users_relation.append({</span>
+<span class="c1">#                     &quot;activities&quot;: row[&quot;merged label&quot;].split(&quot;,&quot;),</span>
+<span class="c1">#                     &quot;user&quot;: uuid,</span>
+<span class="c1">#                     &quot;timestamp source&quot;: row[&quot;timestamp source&quot;],</span>
+<span class="c1">#                     &quot;file&quot;: raw_files[uuid]</span>
+<span class="c1">#                 })</span>
+
+<span class="c1">#         return None</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, H.IAAC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

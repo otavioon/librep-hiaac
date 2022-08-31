@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>librep.base.data &mdash; Librep 0.0.1-dev
+ documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="librep.base.estimator" href="../estimator/index.html" />
+    <link rel="prev" title="librep.base" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> Librep
+          </a>
+              <div class="version">
+                0.0.1-dev
+
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../howtos.html">How-To Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../api.html">Programming Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep</span></code></a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.base</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../datasets/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.datasets</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../estimators/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.estimators</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../losses/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.losses</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../metrics/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.metrics</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../transforms/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.transforms</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../utils/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.utils</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../index.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Librep</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../../api.html">Programming Reference</a> &raquo;</li>
+          <li><a href="../../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep</span></code></a> &raquo;</li>
+          <li><a href="../index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.base</span></code></a> &raquo;</li>
+      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.base.data</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../../_sources/autoapi/librep/base/data/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="module-librep.base.data">
+<span id="librep-base-data"></span><h1><a class="reference internal" href="#module-librep.base.data" title="librep.base.data"><code class="xref py py-mod docutils literal notranslate"><span class="pre">librep.base.data</span></code></a><a class="headerlink" href="#module-librep.base.data" title="Permalink to this heading"></a></h1>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<section id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#librep.base.data.ChainDataset" title="librep.base.data.ChainDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ChainDataset</span></code></a></p></td>
+<td><p>An abstract class representing a generic map-style dataset which</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#librep.base.data.ConcatDataset" title="librep.base.data.ConcatDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConcatDataset</span></code></a></p></td>
+<td><p>Dataset as a concatenation of multiple datasets.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#librep.base.data.Dataset" title="librep.base.data.Dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Dataset</span></code></a></p></td>
+<td><p>An abstract class representing a generic map-style dataset which</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#librep.base.data.IterableDataset" title="librep.base.data.IterableDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IterableDataset</span></code></a></p></td>
+<td><p>An abstract class representing a generic map-style dataset which</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#librep.base.data.SimpleDataset" title="librep.base.data.SimpleDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SimpleDataset</span></code></a></p></td>
+<td><p>A simple dataset implementation that return samples from an array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#librep.base.data.Subset" title="librep.base.data.Subset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Subset</span></code></a></p></td>
+<td><p>Subset of a dataset at specified indices..</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="librep.base.data.ChainDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">librep.base.data.</span></span><span class="sig-name descname"><span class="pre">ChainDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datasets</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#librep.base.data.ChainDataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#librep.base.data.IterableDataset" title="librep.base.data.IterableDataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IterableDataset</span></code></a></p>
+<p>An abstract class representing a generic map-style dataset which
+implement the getitem and len protocols. All datasets that represent a map
+from keys to data samples should subclass it.</p>
+<p>Datasets subclassed from this class can be acessed using the subscription
+syntax, such as <cite>dataset[index]</cite>. It usually return a tuple where the first
+element represent the sample and the second, the label.</p>
+<p>All map-style datasets must be implement the len protocol which returns the
+number of samples in the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>datasets</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="#librep.base.data.Dataset" title="librep.base.data.Dataset"><em>Dataset</em></a><em>]</em>) – </p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.base.data.ChainDataset.__iter__">
+<span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#ChainDataset.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.ChainDataset.__iter__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.base.data.ChainDataset.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#ChainDataset.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.ChainDataset.__len__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="librep.base.data.ConcatDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">librep.base.data.</span></span><span class="sig-name descname"><span class="pre">ConcatDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datasets</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#ConcatDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.ConcatDataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#librep.base.data.Dataset" title="librep.base.data.Dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Dataset</span></code></a></p>
+<p>Dataset as a concatenation of multiple datasets.</p>
+<p>This class is useful to assemble different existing datasets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>datasets</strong> (<em>Iterable</em><em>[</em><a class="reference internal" href="#librep.base.data.Dataset" title="librep.base.data.Dataset"><em>Dataset</em></a><em>]</em>) – </p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="librep.base.data.ConcatDataset.cumulative_sizes">
+<span class="sig-name descname"><span class="pre">cumulative_sizes</span></span><em class="property"><span class="w"> </span><span class="pre">:List[int]</span></em><a class="headerlink" href="#librep.base.data.ConcatDataset.cumulative_sizes" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="librep.base.data.ConcatDataset.datasets">
+<span class="sig-name descname"><span class="pre">datasets</span></span><em class="property"><span class="w"> </span><span class="pre">:List[Dataset]</span></em><a class="headerlink" href="#librep.base.data.ConcatDataset.datasets" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.base.data.ConcatDataset.__getitem__">
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#ConcatDataset.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.ConcatDataset.__getitem__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.base.data.ConcatDataset.__getitem_slice__">
+<span class="sig-name descname"><span class="pre">__getitem_slice__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">the_slice</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#ConcatDataset.__getitem_slice__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.ConcatDataset.__getitem_slice__" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>the_slice</strong> (<em>slice</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.base.data.ConcatDataset.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#ConcatDataset.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.ConcatDataset.__len__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.base.data.ConcatDataset.cumsum">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cumsum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#ConcatDataset.cumsum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.ConcatDataset.cumsum" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="librep.base.data.Dataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">librep.base.data.</span></span><span class="sig-name descname"><span class="pre">Dataset</span></span><a class="reference internal" href="../../../../_modules/librep/base/data.html#Dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.Dataset" title="Permalink to this definition"></a></dt>
+<dd><p>An abstract class representing a generic map-style dataset which
+implement the getitem and len protocols. All datasets that represent a map
+from keys to data samples should subclass it.</p>
+<p>Datasets subclassed from this class can be acessed using the subscription
+syntax, such as <cite>dataset[index]</cite>. It usually return a tuple where the first
+element represent the sample and the second, the label.</p>
+<p>All map-style datasets must be implement the len protocol which returns the
+number of samples in the dataset.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.base.data.Dataset.__add__">
+<span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#Dataset.__add__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.Dataset.__add__" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#librep.base.data.Dataset" title="librep.base.data.Dataset"><em>Dataset</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#librep.base.data.ConcatDataset" title="librep.base.data.ConcatDataset">ConcatDataset</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.base.data.Dataset.__getitem__">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#Dataset.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.Dataset.__getitem__" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.base.data.Dataset.__len__">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#Dataset.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.Dataset.__len__" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="librep.base.data.IterableDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">librep.base.data.</span></span><span class="sig-name descname"><span class="pre">IterableDataset</span></span><a class="reference internal" href="../../../../_modules/librep/base/data.html#IterableDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.IterableDataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#librep.base.data.Dataset" title="librep.base.data.Dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Dataset</span></code></a></p>
+<p>An abstract class representing a generic map-style dataset which
+implement the getitem and len protocols. All datasets that represent a map
+from keys to data samples should subclass it.</p>
+<p>Datasets subclassed from this class can be acessed using the subscription
+syntax, such as <cite>dataset[index]</cite>. It usually return a tuple where the first
+element represent the sample and the second, the label.</p>
+<p>All map-style datasets must be implement the len protocol which returns the
+number of samples in the dataset.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.base.data.IterableDataset.__add__">
+<span class="sig-name descname"><span class="pre">__add__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#IterableDataset.__add__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.IterableDataset.__add__" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#librep.base.data.Dataset" title="librep.base.data.Dataset"><em>Dataset</em></a>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.base.data.IterableDataset.__iter__">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__iter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#IterableDataset.__iter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.IterableDataset.__iter__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="librep.base.data.SimpleDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">librep.base.data.</span></span><span class="sig-name descname"><span class="pre">SimpleDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#SimpleDataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.SimpleDataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#librep.base.data.Dataset" title="librep.base.data.Dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Dataset</span></code></a></p>
+<p>A simple dataset implementation that return samples from an array.</p>
+<dl class="simple">
+<dt>X<span class="classifier">ArrayLike</span></dt><dd><p>An array-like data.</p>
+</dd>
+<dt>y<span class="classifier">ArrayLike</span></dt><dd><p>An array-like set of labels.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>librep.config.type_definitions.ArrayLike</em>) – </p></li>
+<li><p><strong>y</strong> (<em>librep.config.type_definitions.ArrayLike</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.base.data.SimpleDataset.__getitem__">
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#SimpleDataset.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.SimpleDataset.__getitem__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.base.data.SimpleDataset.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#SimpleDataset.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.SimpleDataset.__len__" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="librep.base.data.Subset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">librep.base.data.</span></span><span class="sig-name descname"><span class="pre">Subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#Subset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.Subset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#librep.base.data.Dataset" title="librep.base.data.Dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Dataset</span></code></a></p>
+<p>Subset of a dataset at specified indices..</p>
+<dl class="simple">
+<dt>dataset<span class="classifier">Dataset</span></dt><dd><p>The dataset.</p>
+</dd>
+<dt>indices<span class="classifier">Sequence[int]</span></dt><dd><p>Indices selected for subset.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<a class="reference internal" href="#librep.base.data.Dataset" title="librep.base.data.Dataset"><em>Dataset</em></a>) – </p></li>
+<li><p><strong>indices</strong> (<em>Sequence</em><em>[</em><em>int</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.base.data.Subset.__getitem__">
+<span class="sig-name descname"><span class="pre">__getitem__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#Subset.__getitem__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.Subset.__getitem__" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="librep.base.data.Subset.__len__">
+<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/librep/base/data.html#Subset.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#librep.base.data.Subset.__len__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="librep.base" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../estimator/index.html" class="btn btn-neutral float-right" title="librep.base.estimator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, H.IAAC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+:py:mod:`librep.base.estimator`
+===============================
+
+.. py:module:: librep.base.estimator
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   librep.base.estimator.Estimator
+
+
+
+
+.. py:class:: Estimator
+
+   Bases: :py:obj:`librep.base.parametrizable.Parametrizable`
+
+   An object which manages the estimation and decoding of a model.
+       
+
+   .. py:method:: fit(X, y = None, **estimator_params)
+      :abstractmethod:
+
+      Fits the model function arround X. It takes some samples (X) and
+      the respective labels (y) if the model is supervised.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          An array-like representing the whole dataset with shape:
+          (n_samples, n_features).
+      y : ArrayLike
+          The respective labels, with shape: (n_samples, ). This parameter is
+          optional and may be used if needed.
+      **estimator_params : type
+          Optional data-dependent parameters.
+
+      Returns
+      -------
+      'Estimator'
+          The estimator (self).
+
+
+
+   .. py:method:: fit_predict(X, y = None, **estimator_params)
+
+      Chain fit and predict methods, togheter. It fits the model and
+      predict the samples of X.
+
+      Parameters
+      ----------
+      X : ArrayLike
+          An array-like representing the whole dataset with shape:
+          (n_samples, n_features).
+      y : ArrayLike
+          The respective labels, with shape: (n_samples, ). This parameter is
+          optional and may be used if needed.
+      **estimator_params : type
+          Optional data-dependent parameters.
+
+      Returns
+      -------
+      ArrayLike
+          An array-like with shape (n_samples, ) describing the respective
+          labels predicted for each samples.
+
+
+
+   .. py:method:: predict(X)
+      :abstractmethod:
+
+      Predict or project the values of the samples (X).
+
+      Parameters
+      ----------
+      X : ArrayLike
+          An array-like of samples, with shape: (n_features, ).
+
+      Returns
+      -------
+      ArrayLike
+          An array-like describing the respective labels predicted for each
+          samples.
+
+
+
+

@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pre-processing KuHar Dataset and Generate Views &mdash; Librep 0.0.1-dev
+ documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Pre-processing MotionSense Dataset and Generate Views" href="preprocess_motionsense.html" />
+    <link rel="prev" title="Tutorial 1: Handling HAR dataset views and Transforms" href="handling_data_view.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Librep
+          </a>
+              <div class="version">
+                0.0.1-dev
+
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../howtos.html">How-To Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Programming Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="handling_data_view.html">Tutorial 1: Handling HAR dataset views and Transforms</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Pre-processing KuHar Dataset and Generate Views</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Creating-a-KuHar-Balanced-View">Creating a KuHar Balanced View</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Creating-a-Non-Balanced-KuHar-Balanced-View">Creating a Non-Balanced KuHar Balanced View</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Creating-a-Balanced-Kuhar-with-Only-MotionSense-activities">Creating a Balanced Kuhar with Only MotionSense activities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Creating-a-Non-Balanced-Kuhar-with-Only-MotionSense-activities">Creating a Non-Balanced Kuhar with Only MotionSense activities</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="preprocess_motionsense.html">Pre-processing MotionSense Dataset and Generate Views</a></li>
+<li class="toctree-l2"><a class="reference internal" href="motionsense_train.html">Example of Training with MotionSense</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Librep</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../examples.html">Examples</a> &raquo;</li>
+      <li>Pre-processing KuHar Dataset and Generate Views</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/examples/preprocess_kuhar.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+.jp-RenderedHTMLCommon thead,
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+.jp-RenderedHTMLCommon th,
+div.rendered_html th {
+  font-weight: bold;
+}
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+.jp-RenderedHTMLCommon tbody tr:hover,
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section id="Pre-processing-KuHar-Dataset-and-Generate-Views">
+<h1>Pre-processing KuHar Dataset and Generate Views<a class="headerlink" href="#Pre-processing-KuHar-Dataset-and-Generate-Views" title="Permalink to this heading"></a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">librep.datasets.har.kuhar</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">RawKuHar</span><span class="p">,</span>
+    <span class="n">RawKuHarIterator</span><span class="p">,</span>
+    <span class="n">KuHarDatasetGenerator</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">librep.utils.dataset</span> <span class="kn">import</span> <span class="n">PandasDatasetsIO</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataset_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/datasets/KuHar/1.Raw_time_domain_data&quot;</span><span class="p">)</span>
+<span class="n">kuhar_dataset</span> <span class="o">=</span> <span class="n">RawKuHar</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">,</span> <span class="n">download</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">kuhar_dataset</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+KuHar Dataset at: &#39;../data/datasets/KuHar/1.Raw_time_domain_data&#39;
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">act_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">kuhar_dataset</span><span class="o">.</span><span class="n">activity_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">18</span><span class="p">)]</span>
+<span class="n">act_names</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;Stand&#39;,
+ &#39;Sit&#39;,
+ &#39;Talk-sit&#39;,
+ &#39;Talk-stand&#39;,
+ &#39;Stand-sit&#39;,
+ &#39;Lay&#39;,
+ &#39;Lay-stand&#39;,
+ &#39;Pick&#39;,
+ &#39;Jump&#39;,
+ &#39;Push-up&#39;,
+ &#39;Sit-up&#39;,
+ &#39;Walk&#39;,
+ &#39;Walk-backwards&#39;,
+ &#39;Walk-circle&#39;,
+ &#39;Run&#39;,
+ &#39;Stair-up&#39;,
+ &#39;Stair-down&#39;,
+ &#39;Table-tennis&#39;]
+</pre></div></div>
+</div>
+<section id="Creating-a-KuHar-Balanced-View">
+<h2>Creating a KuHar Balanced View<a class="headerlink" href="#Creating-a-KuHar-Balanced-View" title="Permalink to this heading"></a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iterator</span> <span class="o">=</span> <span class="n">RawKuHarIterator</span><span class="p">(</span><span class="n">kuhar_dataset</span><span class="p">)</span>
+<span class="n">iterator</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Kuhar Iterator: users=89, activities=18
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kuhar_generator</span> <span class="o">=</span> <span class="n">KuHarDatasetGenerator</span><span class="p">(</span><span class="n">iterator</span><span class="p">,</span> <span class="n">time_window</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">window_overlap</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">kuhar_generator</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Dataset generator: time_window=300, overlap=0
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="p">,</span> <span class="n">validation</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">kuhar_generator</span><span class="o">.</span><span class="n">create_datasets</span><span class="p">(</span>
+    <span class="n">train_size</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+    <span class="n">validation_size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">ensure_distinct_users_per_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">balance_samples</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Generating full df over KuHar View: 1945it [01:39, 19.48it/s]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">hash_pandas_object</span><span class="p">(</span><span class="n">train</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">hash_pandas_object</span><span class="p">(</span><span class="n">validation</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">hash_pandas_object</span><span class="p">(</span><span class="n">test</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ca61c922fc72ef34f12bb19c954f63e20d552e1c
+53190325648181a44390dd332815ff82d67b6e66
+788444769fed9b4a2910739f680a33634a5715dd
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/views/KuHar/balanced_view&quot;</span><span class="p">)</span>
+
+<span class="n">train_act_samples</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="s2">&quot;activity code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<span class="n">validation_act_samples</span> <span class="o">=</span> <span class="n">validation</span><span class="p">[</span><span class="s2">&quot;activity code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<span class="n">test_act_samples</span> <span class="o">=</span> <span class="n">test</span><span class="p">[</span><span class="s2">&quot;activity code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<span class="n">activities</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">train_act_samples</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="si">}</span><span class="s2"> train, </span><span class="si">{</span><span class="n">validation_act_samples</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="si">}</span><span class="s2"> validation, </span><span class="si">{</span><span class="n">test_act_samples</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="si">}</span><span class="s2"> test)&quot;</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">kuhar_dataset</span><span class="o">.</span><span class="n">activity_names</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+<span class="n">activities</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">activities</span><span class="p">)</span>
+
+<span class="n">train_users</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">no_samples</span><span class="si">}</span><span class="s2"> samples)&quot;</span> <span class="k">for</span> <span class="n">user</span><span class="p">,</span> <span class="n">no_samples</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+<span class="n">train_users</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">train_users</span><span class="p">)</span>
+<span class="n">validation_users</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">no_samples</span><span class="si">}</span><span class="s2"> samples)&quot;</span> <span class="k">for</span> <span class="n">user</span><span class="p">,</span> <span class="n">no_samples</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">validation</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+<span class="n">validation_users</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">validation_users</span><span class="p">)</span>
+<span class="n">test_users</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">no_samples</span><span class="si">}</span><span class="s2"> samples)&quot;</span> <span class="k">for</span> <span class="n">user</span><span class="p">,</span> <span class="n">no_samples</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+<span class="n">test_users</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_users</span><span class="p">)</span>
+
+
+<span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;# Balanced KuHar View</span>
+
+<span class="s2">This view contains train, validation and test subsets in the following proportions:</span>
+<span class="s2">- Train: 70% of samples</span>
+<span class="s2">- Validation: 10% of samples</span>
+<span class="s2">- Test: 20% of samples</span>
+
+<span class="s2">After splits, the datasets were balanced in relation to the activity code column, that is, each subset have the same number of activitiy samples.</span>
+
+<span class="s2">## Activities:</span>
+<span class="si">{</span><span class="n">activities</span><span class="si">}</span><span class="s2"></span>
+
+<span class="s2">## Users</span>
+<span class="s2">- </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="si">}</span><span class="s2"> users train dataset: </span><span class="si">{</span><span class="n">train_users</span><span class="si">}</span><span class="s2">.</span>
+<span class="s2">- </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">validation</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="si">}</span><span class="s2"> users validation dataset: </span><span class="si">{</span><span class="n">validation_users</span><span class="si">}</span><span class="s2">.</span>
+<span class="s2">- </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="si">}</span><span class="s2"> users test dataset: </span><span class="si">{</span><span class="n">test_users</span><span class="si">}</span><span class="s2">.</span>
+
+<span class="s2">**NOTE**: Each subset contain samples from distinct users, that is, samples of one user belongs exclusivelly to one of three subsets.</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">description</span><span class="p">)</span>
+<span class="n">pandas_io</span> <span class="o">=</span> <span class="n">PandasDatasetsIO</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+# Balanced KuHar View
+
+This view contains train, validation and test subsets in the following proportions:
+- Train: 70% of samples
+- Validation: 10% of samples
+- Test: 20% of samples
+
+After splits, the datasets were balanced in relation to the activity code column, that is, each subset have the same number of activitiy samples.
+
+## Activities:
+- 0: Stand (176 train, 13 validation, 24 test)
+- 1: Sit (176 train, 13 validation, 24 test)
+- 2: Talk-sit (176 train, 13 validation, 24 test)
+- 3: Talk-stand (176 train, 13 validation, 24 test)
+- 4: Stand-sit (176 train, 13 validation, 24 test)
+- 5: Lay (176 train, 13 validation, 24 test)
+- 6: Lay-stand (176 train, 13 validation, 24 test)
+- 7: Pick (176 train, 13 validation, 24 test)
+- 8: Jump (176 train, 13 validation, 24 test)
+- 9: Push-up (176 train, 13 validation, 24 test)
+- 10: Sit-up (176 train, 13 validation, 24 test)
+- 11: Walk (176 train, 13 validation, 24 test)
+- 12: Walk-backwards (176 train, 13 validation, 24 test)
+- 13: Walk-circle (176 train, 13 validation, 24 test)
+- 14: Run (176 train, 13 validation, 24 test)
+- 15: Stair-up (176 train, 13 validation, 24 test)
+- 16: Stair-down (176 train, 13 validation, 24 test)
+- 17: Table-tennis (176 train, 13 validation, 24 test)
+
+## Users
+- 62 users train dataset: 1002 (86 samples), 1005 (33 samples), 1006 (21 samples), 1007 (29 samples), 1008 (56 samples), 1010 (12 samples), 1013 (48 samples), 1014 (117 samples), 1015 (72 samples), 1016 (26 samples), 1017 (21 samples), 1019 (27 samples), 1020 (25 samples), 1021 (31 samples), 1022 (89 samples), 1024 (103 samples), 1025 (27 samples), 1026 (87 samples), 1027 (54 samples), 1028 (21 samples), 1030 (36 samples), 1031 (46 samples), 1032 (21 samples), 1033 (16 samples), 1034 (120 samples), 1037 (55 samples), 1038 (58 samples), 1039 (105 samples), 1040 (73 samples), 1041 (87 samples), 1042 (81 samples), 1043 (81 samples), 1044 (94 samples), 1045 (59 samples), 1047 (32 samples), 1048 (32 samples), 1049 (31 samples), 1053 (19 samples), 1054 (9 samples), 1055 (29 samples), 1056 (17 samples), 1058 (27 samples), 1060 (30 samples), 1063 (30 samples), 1066 (19 samples), 1067 (15 samples), 1068 (38 samples), 1070 (26 samples), 1071 (41 samples), 1073 (8 samples), 1075 (11 samples), 1076 (29 samples), 1077 (32 samples), 1078 (16 samples), 1079 (15 samples), 1082 (123 samples), 1083 (30 samples), 1084 (28 samples), 1086 (36 samples), 1087 (24 samples), 1088 (30 samples), 1101 (474 samples).
+- 9 users validation dataset: 1009 (15 samples), 1029 (14 samples), 1035 (2 samples), 1036 (53 samples), 1046 (69 samples), 1052 (22 samples), 1061 (34 samples), 1064 (12 samples), 1090 (13 samples).
+- 18 users test dataset: 1001 (18 samples), 1003 (26 samples), 1004 (72 samples), 1011 (12 samples), 1018 (21 samples), 1023 (70 samples), 1050 (28 samples), 1051 (21 samples), 1057 (14 samples), 1062 (17 samples), 1065 (17 samples), 1069 (20 samples), 1072 (19 samples), 1074 (15 samples), 1080 (14 samples), 1081 (31 samples), 1085 (6 samples), 1089 (11 samples).
+
+**NOTE**: Each subset contain samples from distinct users, that is, samples of one user belongs exclusivelly to one of three subsets.
+
+
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pandas_io</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">train</span><span class="o">=</span><span class="n">train</span><span class="p">,</span> <span class="n">validation</span><span class="o">=</span><span class="n">validation</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Creating-a-Non-Balanced-KuHar-Balanced-View">
+<h2>Creating a Non-Balanced KuHar Balanced View<a class="headerlink" href="#Creating-a-Non-Balanced-KuHar-Balanced-View" title="Permalink to this heading"></a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="p">,</span> <span class="n">validation</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">kuhar_generator</span><span class="o">.</span><span class="n">create_datasets</span><span class="p">(</span>
+    <span class="n">train_size</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+    <span class="n">validation_size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">ensure_distinct_users_per_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">balance_samples</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Generating full df over KuHar View: 1945it [01:34, 20.60it/s]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">hash_pandas_object</span><span class="p">(</span><span class="n">train</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">hash_pandas_object</span><span class="p">(</span><span class="n">validation</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">hash_pandas_object</span><span class="p">(</span><span class="n">test</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+7f86d5cebdc4a20af30d506e80f17498af521c92
+aaf4800108b16aac80b2169331c5d9f112bd21c3
+c41fa9a09d4641d982c215648a8c2e04eef5abde
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/views/KuHar/non_balanced_view&quot;</span><span class="p">)</span>
+
+<span class="n">train_act_samples</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="s2">&quot;activity code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<span class="n">validation_act_samples</span> <span class="o">=</span> <span class="n">validation</span><span class="p">[</span><span class="s2">&quot;activity code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<span class="n">test_act_samples</span> <span class="o">=</span> <span class="n">test</span><span class="p">[</span><span class="s2">&quot;activity code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<span class="n">activities</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">train_act_samples</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="si">}</span><span class="s2"> train, </span><span class="si">{</span><span class="n">validation_act_samples</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="si">}</span><span class="s2"> validation, </span><span class="si">{</span><span class="n">test_act_samples</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="si">}</span><span class="s2"> test)&quot;</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">kuhar_dataset</span><span class="o">.</span><span class="n">activity_names</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+<span class="n">activities</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">activities</span><span class="p">)</span>
+
+<span class="n">train_users</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">no_samples</span><span class="si">}</span><span class="s2"> samples)&quot;</span> <span class="k">for</span> <span class="n">user</span><span class="p">,</span> <span class="n">no_samples</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+<span class="n">train_users</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">train_users</span><span class="p">)</span>
+<span class="n">validation_users</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">no_samples</span><span class="si">}</span><span class="s2"> samples)&quot;</span> <span class="k">for</span> <span class="n">user</span><span class="p">,</span> <span class="n">no_samples</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">validation</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+<span class="n">validation_users</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">validation_users</span><span class="p">)</span>
+<span class="n">test_users</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">no_samples</span><span class="si">}</span><span class="s2"> samples)&quot;</span> <span class="k">for</span> <span class="n">user</span><span class="p">,</span> <span class="n">no_samples</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">test</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+<span class="n">test_users</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_users</span><span class="p">)</span>
+
+
+<span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;# Non-Balanced KuHar View</span>
+
+<span class="s2">This view contains train, validation and test subsets in the following proportions:</span>
+<span class="s2">- Train: 70% of samples</span>
+<span class="s2">- Validation: 10% of samples</span>
+<span class="s2">- Test: 20% of samples</span>
+
+<span class="s2">## Activities:</span>
+<span class="si">{</span><span class="n">activities</span><span class="si">}</span><span class="s2"></span>
+
+<span class="s2">## Users</span>
+<span class="s2">- </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="si">}</span><span class="s2"> users train dataset: </span><span class="si">{</span><span class="n">train_users</span><span class="si">}</span><span class="s2">.</span>
+<span class="s2">- </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">validation</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="si">}</span><span class="s2"> users validation dataset: </span><span class="si">{</span><span class="n">validation_users</span><span class="si">}</span><span class="s2">.</span>
+<span class="s2">- </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="si">}</span><span class="s2"> users test dataset: </span><span class="si">{</span><span class="n">test_users</span><span class="si">}</span><span class="s2">.</span>
+
+<span class="s2">**NOTE**: Each subset contain samples from distinct users, that is, samples of one user belongs exclusivelly to one of three subsets.</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">description</span><span class="p">)</span>
+<span class="n">pandas_io</span> <span class="o">=</span> <span class="n">PandasDatasetsIO</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+# Non-Balanced KuHar View
+
+This view contains train, validation and test subsets in the following proportions:
+- Train: 70% of samples
+- Validation: 10% of samples
+- Test: 20% of samples
+
+## Activities:
+- 0: Stand (1391 train, 141 validation, 298 test)
+- 1: Sit (1401 train, 146 validation, 265 test)
+- 2: Talk-sit (1356 train, 147 validation, 247 test)
+- 3: Talk-stand (1405 train, 146 validation, 269 test)
+- 4: Stand-sit (1552 train, 162 validation, 314 test)
+- 5: Lay (1359 train, 143 validation, 280 test)
+- 6: Lay-stand (1340 train, 128 validation, 219 test)
+- 7: Pick (1029 train, 90 validation, 162 test)
+- 8: Jump (557 train, 27 validation, 72 test)
+- 9: Push-up (432 train, 13 validation, 24 test)
+- 10: Sit-up (894 train, 29 validation, 70 test)
+- 11: Walk (615 train, 87 validation, 89 test)
+- 12: Walk-backwards (232 train, 19 validation, 39 test)
+- 13: Walk-circle (176 train, 21 validation, 44 test)
+- 14: Run (497 train, 24 validation, 39 test)
+- 15: Stair-up (752 train, 30 validation, 32 test)
+- 16: Stair-down (735 train, 27 validation, 31 test)
+- 17: Table-tennis (261 train, 57 validation, 122 test)
+
+## Users
+- 62 users train dataset: 1002 (486 samples), 1005 (200 samples), 1006 (174 samples), 1007 (211 samples), 1008 (393 samples), 1010 (122 samples), 1013 (351 samples), 1014 (567 samples), 1015 (388 samples), 1016 (195 samples), 1017 (189 samples), 1019 (188 samples), 1020 (180 samples), 1021 (219 samples), 1022 (574 samples), 1024 (371 samples), 1025 (198 samples), 1026 (502 samples), 1027 (266 samples), 1028 (155 samples), 1030 (213 samples), 1031 (214 samples), 1032 (156 samples), 1033 (134 samples), 1034 (540 samples), 1037 (281 samples), 1038 (229 samples), 1039 (480 samples), 1040 (422 samples), 1041 (406 samples), 1042 (317 samples), 1043 (319 samples), 1044 (298 samples), 1045 (260 samples), 1047 (159 samples), 1048 (170 samples), 1049 (172 samples), 1053 (148 samples), 1054 (80 samples), 1055 (193 samples), 1056 (166 samples), 1058 (180 samples), 1060 (189 samples), 1063 (224 samples), 1066 (129 samples), 1067 (113 samples), 1068 (165 samples), 1070 (175 samples), 1071 (260 samples), 1073 (81 samples), 1075 (110 samples), 1076 (188 samples), 1077 (164 samples), 1078 (142 samples), 1079 (149 samples), 1082 (300 samples), 1083 (40 samples), 1084 (45 samples), 1086 (59 samples), 1087 (40 samples), 1088 (40 samples), 1101 (1905 samples).
+- 9 users validation dataset: 1009 (118 samples), 1029 (180 samples), 1035 (22 samples), 1036 (249 samples), 1046 (280 samples), 1052 (177 samples), 1061 (194 samples), 1064 (160 samples), 1090 (57 samples).
+- 18 users test dataset: 1001 (177 samples), 1003 (199 samples), 1004 (270 samples), 1011 (165 samples), 1018 (207 samples), 1023 (271 samples), 1050 (154 samples), 1051 (118 samples), 1057 (146 samples), 1062 (127 samples), 1065 (138 samples), 1069 (188 samples), 1072 (138 samples), 1074 (111 samples), 1080 (42 samples), 1081 (83 samples), 1085 (40 samples), 1089 (42 samples).
+
+**NOTE**: Each subset contain samples from distinct users, that is, samples of one user belongs exclusivelly to one of three subsets.
+
+
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pandas_io</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">train</span><span class="o">=</span><span class="n">train</span><span class="p">,</span> <span class="n">validation</span><span class="o">=</span><span class="n">validation</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Creating-a-Balanced-Kuhar-with-Only-MotionSense-activities">
+<h2>Creating a Balanced Kuhar with Only MotionSense activities<a class="headerlink" href="#Creating-a-Balanced-Kuhar-with-Only-MotionSense-activities" title="Permalink to this heading"></a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">activities_to_select</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Stair-down&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Stair-up&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Sit&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Stand&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Walk&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Run&quot;</span>
+<span class="p">]</span>
+
+<span class="n">activity_codes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">kuhar_dataset</span><span class="o">.</span><span class="n">activity_codes</span><span class="p">[</span><span class="n">act_name</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">act_name</span> <span class="ow">in</span> <span class="n">activities_to_select</span>
+<span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MotionSense equivalent activity codes: </span><span class="si">{</span><span class="n">activity_codes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">activity_remap</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">code</span><span class="p">:</span> <span class="n">i</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">code</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">activity_codes</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The codes will be remaped as motionsense: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">old</span><span class="si">}</span><span class="s1"> will become </span><span class="si">{</span><span class="n">new</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="ow">in</span> <span class="n">activity_remap</span><span class="o">.</span><span class="n">items</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+MotionSense equivalent activity codes: [16, 15, 1, 0, 11, 14]
+The codes will be remaped as motionsense: 16 will become 0, 15 will become 1, 1 will become 2, 0 will become 3, 11 will become 4, 14 will become 5
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iterator</span> <span class="o">=</span> <span class="n">RawKuHarIterator</span><span class="p">(</span><span class="n">kuhar_dataset</span><span class="p">,</span> <span class="n">activities</span><span class="o">=</span><span class="n">activity_codes</span><span class="p">)</span>
+<span class="n">iterator</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Kuhar Iterator: users=89, activities=6
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kuhar_generator</span> <span class="o">=</span> <span class="n">KuHarDatasetGenerator</span><span class="p">(</span><span class="n">iterator</span><span class="p">,</span> <span class="n">time_window</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">window_overlap</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">kuhar_generator</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Dataset generator: time_window=300, overlap=0
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="p">,</span> <span class="n">validation</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">kuhar_generator</span><span class="o">.</span><span class="n">create_datasets</span><span class="p">(</span>
+    <span class="n">train_size</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+    <span class="n">validation_size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">ensure_distinct_users_per_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">balance_samples</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">activities_remap</span><span class="o">=</span><span class="n">activity_remap</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Generating full df over KuHar View: 625it [00:31, 20.00it/s]
+/home/lopani/Documents/Doutorado/UNICAMP/H.IAAC-Meta4/librep-hiaac/examples/../librep/datasets/har/kuhar.py:577: SettingWithCopyWarning:
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  train.replace({&#34;activity code&#34;: activities_remap}, inplace=True)
+/home/lopani/Documents/Doutorado/UNICAMP/H.IAAC-Meta4/librep-hiaac/examples/../librep/datasets/har/kuhar.py:578: SettingWithCopyWarning:
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  validation.replace({&#34;activity code&#34;: activities_remap}, inplace=True)
+/home/lopani/Documents/Doutorado/UNICAMP/H.IAAC-Meta4/librep-hiaac/examples/../librep/datasets/har/kuhar.py:579: SettingWithCopyWarning:
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  test.replace({&#34;activity code&#34;: activities_remap}, inplace=True)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">hash_pandas_object</span><span class="p">(</span><span class="n">train</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">hash_pandas_object</span><span class="p">(</span><span class="n">validation</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">hash_pandas_object</span><span class="p">(</span><span class="n">test</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+d2f65a92a465ec6c7ed4043ddb0d29d1e2512f4d
+be157d48d43b077bc741110a36ddede4bbafe27d
+fef3d897a8fbd6c20f45f70095c69bde637ce057
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/views/KuHar/balanced_motionsense_equivalent_view&quot;</span><span class="p">)</span>
+
+<span class="n">train_act_samples</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="s2">&quot;activity code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<span class="n">validation_act_samples</span> <span class="o">=</span> <span class="n">validation</span><span class="p">[</span><span class="s2">&quot;activity code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<span class="n">test_act_samples</span> <span class="o">=</span> <span class="n">test</span><span class="p">[</span><span class="s2">&quot;activity code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<span class="n">activities</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">new</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">kuhar_dataset</span><span class="o">.</span><span class="n">activity_names</span><span class="p">[</span><span class="n">old</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">train_act_samples</span><span class="p">[</span><span class="n">new</span><span class="p">]</span><span class="si">}</span><span class="s2"> train, </span><span class="si">{</span><span class="n">validation_act_samples</span><span class="p">[</span><span class="n">new</span><span class="p">]</span><span class="si">}</span><span class="s2"> validation, </span><span class="si">{</span><span class="n">test_act_samples</span><span class="p">[</span><span class="n">new</span><span class="p">]</span><span class="si">}</span><span class="s2"> test)&quot;</span>
+    <span class="k">for</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="ow">in</span> <span class="n">activity_remap</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<span class="p">]</span>
+<span class="n">activities</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">activities</span><span class="p">)</span>
+
+<span class="n">train_users</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">no_samples</span><span class="si">}</span><span class="s2"> samples)&quot;</span>
+    <span class="k">for</span> <span class="n">user</span><span class="p">,</span> <span class="n">no_samples</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+        <span class="n">train</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+<span class="n">train_users</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">train_users</span><span class="p">)</span>
+<span class="n">validation_users</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">no_samples</span><span class="si">}</span><span class="s2"> samples)&quot;</span>
+    <span class="k">for</span> <span class="n">user</span><span class="p">,</span> <span class="n">no_samples</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+        <span class="n">validation</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+<span class="n">validation_users</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">validation_users</span><span class="p">)</span>
+<span class="n">test_users</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">no_samples</span><span class="si">}</span><span class="s2"> samples)&quot;</span>
+    <span class="k">for</span> <span class="n">user</span><span class="p">,</span> <span class="n">no_samples</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+        <span class="n">test</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+<span class="n">test_users</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_users</span><span class="p">)</span>
+
+
+<span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;# Balanced MotionSense equivalent KuHar Dataset</span>
+
+<span class="s2">This view contains train, validation and test subsets in the following proportions:</span>
+<span class="s2">- Train: 70% of samples</span>
+<span class="s2">- Validation: 10% of samples</span>
+<span class="s2">- Test: 20% of samples</span>
+
+<span class="s2">After splits, the datasets were balanced in relation to the activity code column, that is, each subset have the same number of activitiy samples.</span>
+
+<span class="s2">## Activities:</span>
+
+<span class="s2">This view contains only samples with activities codes equivalent to MotionSense.</span>
+<span class="s2">In this way, only activities: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">activities_to_select</span><span class="p">)</span><span class="si">}</span><span class="s2">, were selected.</span>
+<span class="s2">To each activity were assigned the same MotionSense activity code, thus: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">old</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">kuhar_dataset</span><span class="o">.</span><span class="n">activity_names</span><span class="p">[</span><span class="n">old</span><span class="p">]</span><span class="si">}</span><span class="s1"> in KuHar) became </span><span class="si">{</span><span class="n">new</span><span class="si">}</span><span class="s1"> (in MotionSense)&#39;</span> <span class="k">for</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="ow">in</span> <span class="n">activity_remap</span><span class="o">.</span><span class="n">items</span><span class="p">())</span><span class="si">}</span><span class="s2"></span>
+
+<span class="si">{</span><span class="n">activities</span><span class="si">}</span><span class="s2"></span>
+
+<span class="s2">## Users</span>
+<span class="s2">- </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="si">}</span><span class="s2"> users train dataset: </span><span class="si">{</span><span class="n">train_users</span><span class="si">}</span><span class="s2">.</span>
+<span class="s2">- </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">validation</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="si">}</span><span class="s2"> users validation dataset: </span><span class="si">{</span><span class="n">validation_users</span><span class="si">}</span><span class="s2">.</span>
+<span class="s2">- </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="si">}</span><span class="s2"> users test dataset: </span><span class="si">{</span><span class="n">test_users</span><span class="si">}</span><span class="s2">.</span>
+
+<span class="s2">**NOTE**: Each subset contain samples from distinct users, that is, samples of one user belongs exclusivelly to one of three subsets.</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">description</span><span class="p">)</span>
+<span class="n">pandas_io</span> <span class="o">=</span> <span class="n">PandasDatasetsIO</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+# Balanced MotionSense equivalent KuHar Dataset
+
+This view contains train, validation and test subsets in the following proportions:
+- Train: 70% of samples
+- Validation: 10% of samples
+- Test: 20% of samples
+
+After splits, the datasets were balanced in relation to the activity code column, that is, each subset have the same number of activitiy samples.
+
+## Activities:
+
+This view contains only samples with activities codes equivalent to MotionSense.
+In this way, only activities: Stair-down, Stair-up, Sit, Stand, Walk, Run, were selected.
+To each activity were assigned the same MotionSense activity code, thus: 16 (Stair-down in KuHar) became 0 (in MotionSense), 15 (Stair-up in KuHar) became 1 (in MotionSense), 1 (Sit in KuHar) became 2 (in MotionSense), 0 (Stand in KuHar) became 3 (in MotionSense), 11 (Walk in KuHar) became 4 (in MotionSense), 14 (Run in KuHar) became 5 (in MotionSense)
+
+- 0: Stair-down (231 train, 10 validation, 104 test)
+- 1: Stair-up (231 train, 10 validation, 104 test)
+- 2: Sit (231 train, 10 validation, 104 test)
+- 3: Stand (231 train, 10 validation, 104 test)
+- 4: Walk (231 train, 10 validation, 104 test)
+- 5: Run (231 train, 10 validation, 104 test)
+
+## Users
+- 56 users train dataset: 1001 (8 samples), 1002 (78 samples), 1003 (11 samples), 1004 (57 samples), 1006 (6 samples), 1007 (9 samples), 1011 (12 samples), 1013 (16 samples), 1014 (35 samples), 1015 (14 samples), 1016 (10 samples), 1017 (5 samples), 1018 (5 samples), 1019 (8 samples), 1021 (4 samples), 1022 (33 samples), 1023 (55 samples), 1024 (93 samples), 1026 (57 samples), 1027 (56 samples), 1028 (6 samples), 1029 (9 samples), 1030 (8 samples), 1032 (7 samples), 1035 (7 samples), 1036 (45 samples), 1037 (48 samples), 1038 (32 samples), 1039 (79 samples), 1040 (59 samples), 1042 (97 samples), 1044 (97 samples), 1045 (47 samples), 1046 (61 samples), 1047 (5 samples), 1048 (9 samples), 1049 (15 samples), 1050 (13 samples), 1053 (8 samples), 1054 (5 samples), 1055 (3 samples), 1057 (4 samples), 1058 (12 samples), 1061 (11 samples), 1062 (10 samples), 1064 (7 samples), 1066 (7 samples), 1067 (2 samples), 1068 (13 samples), 1074 (13 samples), 1075 (15 samples), 1076 (6 samples), 1077 (14 samples), 1078 (10 samples), 1080 (16 samples), 1081 (14 samples).
+- 7 users validation dataset: 1005 (2 samples), 1031 (6 samples), 1033 (2 samples), 1041 (41 samples), 1051 (4 samples), 1069 (1 samples), 1073 (4 samples).
+- 17 users test dataset: 1008 (26 samples), 1009 (12 samples), 1010 (11 samples), 1020 (12 samples), 1025 (7 samples), 1034 (100 samples), 1043 (62 samples), 1052 (23 samples), 1056 (9 samples), 1060 (8 samples), 1063 (17 samples), 1065 (12 samples), 1070 (15 samples), 1071 (15 samples), 1072 (7 samples), 1079 (9 samples), 1101 (279 samples).
+
+**NOTE**: Each subset contain samples from distinct users, that is, samples of one user belongs exclusivelly to one of three subsets.
+
+
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pandas_io</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">train</span><span class="o">=</span><span class="n">train</span><span class="p">,</span> <span class="n">validation</span><span class="o">=</span><span class="n">validation</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Creating-a-Non-Balanced-Kuhar-with-Only-MotionSense-activities">
+<h2>Creating a Non-Balanced Kuhar with Only MotionSense activities<a class="headerlink" href="#Creating-a-Non-Balanced-Kuhar-with-Only-MotionSense-activities" title="Permalink to this heading"></a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train</span><span class="p">,</span> <span class="n">validation</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">kuhar_generator</span><span class="o">.</span><span class="n">create_datasets</span><span class="p">(</span>
+    <span class="n">train_size</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+    <span class="n">validation_size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">ensure_distinct_users_per_dataset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">balance_samples</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">activities_remap</span><span class="o">=</span><span class="n">activity_remap</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Generating full df over KuHar View: 625it [00:30, 20.35it/s]
+/home/lopani/Documents/Doutorado/UNICAMP/H.IAAC-Meta4/librep-hiaac/examples/../librep/datasets/har/kuhar.py:577: SettingWithCopyWarning:
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  train.replace({&#34;activity code&#34;: activities_remap}, inplace=True)
+/home/lopani/Documents/Doutorado/UNICAMP/H.IAAC-Meta4/librep-hiaac/examples/../librep/datasets/har/kuhar.py:578: SettingWithCopyWarning:
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  validation.replace({&#34;activity code&#34;: activities_remap}, inplace=True)
+/home/lopani/Documents/Doutorado/UNICAMP/H.IAAC-Meta4/librep-hiaac/examples/../librep/datasets/har/kuhar.py:579: SettingWithCopyWarning:
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  test.replace({&#34;activity code&#34;: activities_remap}, inplace=True)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">hash_pandas_object</span><span class="p">(</span><span class="n">train</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">hash_pandas_object</span><span class="p">(</span><span class="n">validation</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">hash_pandas_object</span><span class="p">(</span><span class="n">test</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+9bb7b85f4d2225a1c792267e1a6ecc094c90e2e0
+fc5f14633cc6c27e7a1d6cb880db8309b4a83fa8
+17afce3067ecec5fd2c1f10b56ac8be08f4fb8ab
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/views/KuHar/non_balanced_motionsense_equivalent_view&quot;</span><span class="p">)</span>
+
+<span class="n">train_act_samples</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="s2">&quot;activity code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<span class="n">validation_act_samples</span> <span class="o">=</span> <span class="n">validation</span><span class="p">[</span><span class="s2">&quot;activity code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<span class="n">test_act_samples</span> <span class="o">=</span> <span class="n">test</span><span class="p">[</span><span class="s2">&quot;activity code&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<span class="n">activities</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">new</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">kuhar_dataset</span><span class="o">.</span><span class="n">activity_names</span><span class="p">[</span><span class="n">old</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">train_act_samples</span><span class="p">[</span><span class="n">new</span><span class="p">]</span><span class="si">}</span><span class="s2"> train, </span><span class="si">{</span><span class="n">validation_act_samples</span><span class="p">[</span><span class="n">new</span><span class="p">]</span><span class="si">}</span><span class="s2"> validation, </span><span class="si">{</span><span class="n">test_act_samples</span><span class="p">[</span><span class="n">new</span><span class="p">]</span><span class="si">}</span><span class="s2"> test)&quot;</span>
+    <span class="k">for</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="ow">in</span> <span class="n">activity_remap</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<span class="p">]</span>
+<span class="n">activities</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">activities</span><span class="p">)</span>
+
+<span class="n">train_users</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">no_samples</span><span class="si">}</span><span class="s2"> samples)&quot;</span>
+    <span class="k">for</span> <span class="n">user</span><span class="p">,</span> <span class="n">no_samples</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+        <span class="n">train</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+<span class="n">train_users</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">train_users</span><span class="p">)</span>
+<span class="n">validation_users</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">no_samples</span><span class="si">}</span><span class="s2"> samples)&quot;</span>
+    <span class="k">for</span> <span class="n">user</span><span class="p">,</span> <span class="n">no_samples</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+        <span class="n">validation</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+<span class="n">validation_users</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">validation_users</span><span class="p">)</span>
+<span class="n">test_users</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">no_samples</span><span class="si">}</span><span class="s2"> samples)&quot;</span>
+    <span class="k">for</span> <span class="n">user</span><span class="p">,</span> <span class="n">no_samples</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+        <span class="n">test</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">]</span>
+<span class="n">test_users</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">test_users</span><span class="p">)</span>
+
+
+<span class="n">description</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;# Non-Balanced MotionSense equivalent KuHar Dataset View</span>
+
+<span class="s2">This view contains train, validation and test subsets in the following proportions:</span>
+<span class="s2">- Train: 70% of samples</span>
+<span class="s2">- Validation: 10% of samples</span>
+<span class="s2">- Test: 20% of samples</span>
+
+<span class="s2">## Activities:</span>
+
+<span class="s2">This view contains only samples with activities codes equivalent to MotionSense.</span>
+<span class="s2">In this way, only activities: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">activities_to_select</span><span class="p">)</span><span class="si">}</span><span class="s2">, were selected.</span>
+<span class="s2">To each activity were assigned the same MotionSense activity code, thus: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">old</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">kuhar_dataset</span><span class="o">.</span><span class="n">activity_names</span><span class="p">[</span><span class="n">old</span><span class="p">]</span><span class="si">}</span><span class="s1"> in KuHar) became </span><span class="si">{</span><span class="n">new</span><span class="si">}</span><span class="s1"> (in MotionSense)&#39;</span> <span class="k">for</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span> <span class="ow">in</span> <span class="n">activity_remap</span><span class="o">.</span><span class="n">items</span><span class="p">())</span><span class="si">}</span><span class="s2"></span>
+
+<span class="si">{</span><span class="n">activities</span><span class="si">}</span><span class="s2"></span>
+
+<span class="s2">## Users</span>
+<span class="s2">- </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="si">}</span><span class="s2"> users train dataset: </span><span class="si">{</span><span class="n">train_users</span><span class="si">}</span><span class="s2">.</span>
+<span class="s2">- </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">validation</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="si">}</span><span class="s2"> users validation dataset: </span><span class="si">{</span><span class="n">validation_users</span><span class="si">}</span><span class="s2">.</span>
+<span class="s2">- </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span><span class="si">}</span><span class="s2"> users test dataset: </span><span class="si">{</span><span class="n">test_users</span><span class="si">}</span><span class="s2">.</span>
+
+<span class="s2">**NOTE**: Each subset contain samples from distinct users, that is, samples of one user belongs exclusivelly to one of three subsets.</span>
+
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">description</span><span class="p">)</span>
+<span class="n">pandas_io</span> <span class="o">=</span> <span class="n">PandasDatasetsIO</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+# Non-Balanced MotionSense equivalent KuHar Dataset View
+
+This view contains train, validation and test subsets in the following proportions:
+- Train: 70% of samples
+- Validation: 10% of samples
+- Test: 20% of samples
+
+## Activities:
+
+This view contains only samples with activities codes equivalent to MotionSense.
+In this way, only activities: Stair-down, Stair-up, Sit, Stand, Walk, Run, were selected.
+To each activity were assigned the same MotionSense activity code, thus: 16 (Stair-down in KuHar) became 0 (in MotionSense), 15 (Stair-up in KuHar) became 1 (in MotionSense), 1 (Sit in KuHar) became 2 (in MotionSense), 0 (Stand in KuHar) became 3 (in MotionSense), 11 (Walk in KuHar) became 4 (in MotionSense), 14 (Run in KuHar) became 5 (in MotionSense)
+
+- 0: Stair-down (242 train, 13 validation, 538 test)
+- 1: Stair-up (254 train, 18 validation, 542 test)
+- 2: Sit (1273 train, 160 validation, 379 test)
+- 3: Stand (1273 train, 160 validation, 397 test)
+- 4: Walk (630 train, 57 validation, 104 test)
+- 5: Run (231 train, 10 validation, 319 test)
+
+## Users
+- 56 users train dataset: 1001 (42 samples), 1002 (164 samples), 1003 (43 samples), 1004 (94 samples), 1006 (41 samples), 1007 (40 samples), 1011 (40 samples), 1013 (77 samples), 1014 (148 samples), 1015 (79 samples), 1016 (42 samples), 1017 (40 samples), 1018 (40 samples), 1019 (40 samples), 1021 (42 samples), 1022 (145 samples), 1023 (102 samples), 1024 (172 samples), 1026 (152 samples), 1027 (99 samples), 1028 (40 samples), 1029 (40 samples), 1030 (41 samples), 1032 (40 samples), 1035 (22 samples), 1036 (94 samples), 1037 (110 samples), 1038 (85 samples), 1039 (187 samples), 1040 (142 samples), 1042 (163 samples), 1044 (158 samples), 1045 (101 samples), 1046 (115 samples), 1047 (49 samples), 1048 (46 samples), 1049 (51 samples), 1050 (45 samples), 1053 (40 samples), 1054 (40 samples), 1055 (40 samples), 1057 (45 samples), 1058 (40 samples), 1061 (48 samples), 1062 (41 samples), 1064 (44 samples), 1066 (38 samples), 1067 (41 samples), 1068 (58 samples), 1074 (43 samples), 1075 (41 samples), 1076 (41 samples), 1077 (41 samples), 1078 (40 samples), 1080 (26 samples), 1081 (25 samples).
+- 7 users validation dataset: 1005 (39 samples), 1031 (63 samples), 1033 (40 samples), 1041 (146 samples), 1051 (50 samples), 1069 (40 samples), 1073 (40 samples).
+- 17 users test dataset: 1008 (80 samples), 1009 (40 samples), 1010 (39 samples), 1020 (42 samples), 1025 (39 samples), 1034 (182 samples), 1043 (152 samples), 1052 (52 samples), 1056 (40 samples), 1060 (39 samples), 1063 (78 samples), 1065 (39 samples), 1070 (40 samples), 1071 (58 samples), 1072 (39 samples), 1079 (41 samples), 1101 (1279 samples).
+
+**NOTE**: Each subset contain samples from distinct users, that is, samples of one user belongs exclusivelly to one of three subsets.
+
+
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pandas_io</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">train</span><span class="o">=</span><span class="n">train</span><span class="p">,</span> <span class="n">validation</span><span class="o">=</span><span class="n">validation</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="n">test</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="handling_data_view.html" class="btn btn-neutral float-left" title="Tutorial 1: Handling HAR dataset views and Transforms" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="preprocess_motionsense.html" class="btn btn-neutral float-right" title="Pre-processing MotionSense Dataset and Generate Views" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, H.IAAC.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
