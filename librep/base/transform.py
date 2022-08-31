@@ -31,7 +31,7 @@ class Transform(Parametrizable):
             The transform (self).
 
         """
-        raise NotImplementedError
+        return self
 
     def transform(self, X: ArrayLike) -> ArrayLike:
         """Transforms the dataset.
