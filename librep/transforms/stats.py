@@ -26,11 +26,6 @@ class StatsTransform(Transform):
         self.capture_statistical = capture_statistical
         self.capture_indices = capture_indices
 
-    def fit(self, X, y):
-        """Not used.
-
-        """
-
     def transform(self, X: ArrayLike) -> ArrayLike:
         """Extract statistical information of samples.
 

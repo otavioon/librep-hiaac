@@ -41,13 +41,6 @@ class FFT(InvertibleTransform):
         self.absolute = absolute
         self.centered = centered
 
-    def fit(self, X: ArrayLike, y: ArrayLike = None):
-        """Not used.
-
-        """
-
-        return X
-
     def transform(self, X: ArrayLike) -> ArrayLike:
         """Transform a sample using FFT.
 

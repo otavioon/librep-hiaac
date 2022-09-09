@@ -18,11 +18,6 @@ class SimpleResampler(Transform):
     def __init__(self, new_sample_size: int):
         self.new_sample_size = new_sample_size
 
-    def fit(self, X: ArrayLike, y: ArrayLike = None):
-        """Not used.
-
-        """
-
     def transform(self, X: ArrayLike) -> ArrayLike:
         """Resample signal samples.
 

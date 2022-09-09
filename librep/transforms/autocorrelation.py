@@ -17,12 +17,6 @@ class AutoCorrelation(Transform):
     def __init__(self, mode: str = "full"):
         self.mode = mode
 
-    def fit(self, X: ArrayLike, y: ArrayLike = None):
-        """Not used.
-
-        """
-        pass
-
     def transform(self, X: ArrayLike) -> ArrayLike:
         """Returns the autocorrelation of the samples.
 
