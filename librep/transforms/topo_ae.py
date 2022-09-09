@@ -36,7 +36,7 @@ class TopologicalDimensionalityReduction(Transform):
                 patience -= 1
             else:
                 max_loss = loss.item()
-        pass
+        return self
 
     # TODO
     def transform(self, X: ArrayLike):
