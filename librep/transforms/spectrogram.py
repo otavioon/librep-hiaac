@@ -14,6 +14,7 @@ class Spectrogram(Transform):
         self.fs = fs
         self.segment_size = segment_size
         self.overlap = overlap
+
     # TODO
     def transform(self, X: ArrayLike):
         Sxx, f, t = signal.spectrogram(X,
