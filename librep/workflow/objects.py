@@ -107,5 +107,5 @@ class ObjectDatabase:
     def from_yaml(creator: ObjectCreator, path: PathLike) -> "ObjectDatabase":
         with Path(path).open("r") as f:
             objs = yaml.load(f, Loader=yaml.FullLoader)
-        return ObjectDatabase(creator, database=objs)
+        return ObjectDatabase(creator, database=objs["objects"])
 
