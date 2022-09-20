@@ -1,6 +1,6 @@
-from model_base import AutoencoderModel
-from topological_signature_distance import TopologicalSignatureDistance
-import model_submodules
+from librep.estimators.ae.torch.models.topological_ae.model_base import AutoencoderModel
+from librep.estimators.ae.torch.models.topological_ae.topological_signature_distance import TopologicalSignatureDistance
+from librep.estimators.ae.torch.models.topological_ae import model_submodules
 import torch
 import torch.nn as nn
 
@@ -15,6 +15,7 @@ class TopologicallyRegularizedAutoencoder(AutoencoderModel):
             ae_kwargs: Kewords to pass to `ConvolutionalAutoencoder` class
             toposig_kwargs: Keywords to pass to `TopologicalSignature` class
         """
+        print('Topologically Regularized', autoencoder_model)
         super().__init__()
         self.lam = lam
         ae_kwargs = ae_kwargs if ae_kwargs else {}
