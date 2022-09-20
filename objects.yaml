@@ -1,0 +1,38 @@
+objects:
+    abs_fft:
+        transform: FFT
+        kwargs:
+            absolute: True
+
+    simple_autocorrelation:
+        transform: AutoCorrelation
+
+    resampler_150_samples:
+        transform: SimpleResampler
+        kwargs:
+            new_sample_size: 150
+
+    resampler_300_samples:
+        transform: SimpleResampler
+        kwargs:
+            new_sample_size: 300
+
+    rf_1000:
+        estimator: RandomForestClassifier
+        kwargs:
+            n_estimators: 1000
+
+    knn_5:
+        estimator: KNeighborsClassifier
+        kwargs:
+            n_neighbors: 5
+
+
+    classification_report:
+        evaluator: ClassificationReport
+        kwargs:
+            use_accuracy: True
+            use_f1_score: True
+
+    confusion_matrix:
+        evaluator: ConfusionMatrix

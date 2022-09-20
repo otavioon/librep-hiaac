@@ -1,0 +1,34 @@
+datasets:
+    simple_train:
+        path: train.csv
+    simple_validation:
+        path: validation.csv
+    simple_test:
+        path: test.csv
+
+experiments:
+    simple_experiment:
+        description: "Create and classify using RF"
+        seed: 0
+        
+        nodes:
+            train_dataset:
+                dataset: simple_train
+            validation_dataset:
+                dataset: simple_validation
+            test_dataset:
+                dataset: simple_test
+            train:
+                flow: simple_workflow
+                placeholders:
+                    dataset: train_dataset
+            validation:
+                flow: simple_workflow_predict
+                placeholders:
+                    dataset: validation_dataset
+                    trained_model: train
+            test:
+                flow: simple_workflow_predict
+                placeholders:
+                    dataset: test_dataset
+                    trained_model: train
