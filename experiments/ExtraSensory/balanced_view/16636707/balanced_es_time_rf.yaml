@@ -1,0 +1,79 @@
+runs:
+-   end: 1663670907.951051
+    result:
+    -   accuracy: 0.5625
+        confusion matrix:
+        -   - 9
+            - 4
+            - 2
+            - 0
+        -   - 2
+            - 6
+            - 1
+            - 0
+        -   - 1
+            - 2
+            - 7
+            - 7
+        -   - 0
+            - 0
+            - 2
+            - 5
+        f1 score (macro): 0.5617924120646444
+        f1 score (micro): 0.5625
+        f1 score (weighted): 0.5632075879353556
+    run id: 1
+    start: 1663670907.656484
+    time taken: 0.2945671081542969
+-   end: 1663670908.230402
+    result:
+    -   accuracy: 0.5625
+        confusion matrix:
+        -   - 10
+            - 4
+            - 2
+            - 0
+        -   - 2
+            - 6
+            - 1
+            - 0
+        -   - 0
+            - 2
+            - 7
+            - 8
+        -   - 0
+            - 0
+            - 2
+            - 4
+        f1 score (macro): 0.5532293377120964
+        f1 score (micro): 0.5625
+        f1 score (weighted): 0.5717706622879037
+    run id: 2
+    start: 1663670907.9510534
+    time taken: 0.27934861183166504
+-   end: 1663670908.5166168
+    result:
+    -   accuracy: 0.6458333333333334
+        confusion matrix:
+        -   - 9
+            - 3
+            - 1
+            - 0
+        -   - 2
+            - 7
+            - 0
+            - 0
+        -   - 1
+            - 1
+            - 9
+            - 6
+        -   - 0
+            - 1
+            - 2
+            - 6
+        f1 score (macro): 0.644696223316913
+        f1 score (micro): 0.6458333333333334
+        f1 score (weighted): 0.6469704433497537
+    run id: 3
+    start: 1663670908.2304044
+    time taken: 0.2862124443054199
