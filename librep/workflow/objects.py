@@ -2,6 +2,7 @@ import importlib
 import inspect
 import pkgutil
 import yaml
+from functools import partial
 
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -21,32 +22,29 @@ import librep.transforms.spectrogram
 import librep.transforms.stats
 import librep.transforms.tsne
 import librep.transforms.umap
-
 import librep.estimators
 import librep.metrics.report
 
 
-class ObjectCreator:
+class InvalidOperatorType(Exception):
+    pass
 
-    def __init__(self,
-                 transform_lib: str = "librep.transforms",
-                 estimator_lib: str = "librep.estimators",
-                 evaluator_lib: str = "librep.evaluators"):
+
+class ObjectCreator:
+    def __init__(
+        self,
+        transform_lib: str = "librep.transforms",
+        estimator_lib: str = "librep.estimators",
+        evaluator_lib: str = "librep.evaluators",
+    ):
         self.transform_classes = {
-            "FFT":
-                librep.transforms.fft.FFT,
-            "AutoCorrelation":
-                librep.transforms.autocorrelation.AutoCorrelation,
-            "SimpleResampler":
-                librep.transforms.resampler.SimpleResampler,
-            "Spectrogram":
-                librep.transforms.spectrogram.Spectrogram,
-            "StatsTransform":
-                librep.transforms.stats.StatsTransform,
-            "TSNE":
-                librep.transforms.tsne.TSNE,
-            "UMAP":
-                librep.transforms.umap.UMAP,
+            "FFT": librep.transforms.fft.FFT,
+            "AutoCorrelation": librep.transforms.autocorrelation.AutoCorrelation,
+            "SimpleResampler": librep.transforms.resampler.SimpleResampler,
+            "Spectrogram": librep.transforms.spectrogram.Spectrogram,
+            "StatsTransform": librep.transforms.stats.StatsTransform,
+            "TSNE": librep.transforms.tsne.TSNE,
+            "UMAP": librep.transforms.umap.UMAP,
         }
 
         self.estimator_classes = {
@@ -69,43 +67,47 @@ class ObjectCreator:
         return self.evaluator_classes[name](*args, **kwargs)
 
 
-class ObjectDatabase:
+class OperatorCreator:
+    def __init__(self, database: dict):
+        self._database = database
 
-    def __init__(self,
-                 creator: ObjectCreator,
-                 database: Dict[str, dict] = None):
-        self._creator = creator
-        self._database: Dict[str, dict] = database or dict()
-
-    def update_database(self, database: Dict[str, dict], replace: bool = False):
-        if replace:
-            self._database = database
-        else:
-            self._database.update(database)
-
-    def instantiate(self, name: str, *args, **kwargs):
-        values = self._database[name]
-        # build args
-        new_args = args or values.get("args", tuple())
-        # build the kwargs
-        new_kwargs = values.get("kwargs", {})
-        new_kwargs.update(kwargs)
-
-        if "transform" in values:
-            name = values["transform"]
-            return self._creator.create_transform(name, *new_args, **new_kwargs)
-        elif "estimator" in values:
-            name = values["estimator"]
-            return self._creator.create_estimator(name, *new_args, **new_kwargs)
-        elif "evaluator" in values:
-            name = values["evaluator"]
-            return self._creator.create_evaluator(name, *new_args, **new_kwargs)
-        else:
-            raise ValueError("Invalid value")
+    def create(self, name: str, *args, **kwargs):
+        return self._database[name](*args, **kwargs)
 
     @staticmethod
-    def from_yaml(creator: ObjectCreator, path: PathLike) -> "ObjectDatabase":
-        with Path(path).open("r") as f:
-            objs = yaml.load(f, Loader=yaml.FullLoader)
-        return ObjectDatabase(creator, database=objs["objects"])
+    def from_yaml(path: PathLike, creator: ObjectCreator = None) -> "OperatorCreator":
+        path = Path(path)
+        creator = creator or ObjectCreator()
 
+        with path.open("r") as f:
+            values = yaml.load(f, Loader=yaml.FullLoader)
+
+        if "operators" not in values:
+            return OperatorCreator(dict())
+
+        database = dict()
+        for op_name, op_values in values["operators"].items():
+            args = op_values.get("args", tuple())
+            kwargs = op_values.get("kwargs", dict())
+            if "transform" in op_values:
+                name = op_values["transform"]
+                database[op_name] = partial(
+                    creator.create_transform, name, *args, **kwargs
+                )
+            elif "estimator" in op_values:
+                name = op_values["estimator"]
+                database[op_name] = partial(
+                    creator.create_estimator, name, *args, **kwargs
+                )
+            elif "evaluator" in op_values:
+                name = op_values["evaluator"]
+                database[op_name] = partial(
+                    creator.create_evaluator, name, *args, **kwargs
+                )
+            else:
+                raise InvalidOperatorType(op_name)
+
+        return OperatorCreator(database)
+
+
+def 

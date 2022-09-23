@@ -1,4 +1,4 @@
-objects:
+operators:
     abs_fft:
         transform: FFT
         kwargs:
