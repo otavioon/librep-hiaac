@@ -8,6 +8,24 @@ from librep.config.type_definitions import ArrayLike
 from .multimodal import MultiModalDataset, ArrayMultiModalDataset
 
 
+class WindowedTransform(Transform):
+
+    def __init__(
+            self,
+            transform: Transform,
+            fit_on: str = "all",  # can be window or None
+            transform_on: str = "window"):  #can be all
+        self.the_transform = transform
+        self.fit_on = fit_on
+        self.transform_on = transform_on
+
+        assert self.fit_on in ["all", "window", None]
+        assert self.transform_on in ["all", "window"]
+
+        if self.fit_on == "window":
+            assert self.transform_on == "window"
+
+
 class TransformMultiModalDataset:
     """Apply a list of transforms into the whole dataset, generating a new
     dataset.
@@ -32,48 +50,82 @@ class TransformMultiModalDataset:
         self.collate_fn = collate_fn
         self.new_window_name_prefix = new_window_name_prefix
 
-    def __transform_sample(
-        self,
-        transform: Transform,
-        X: ArrayLike,
-        y: ArrayLike,
-        slices: List[Tuple[int, int]],
-    ):
-        return [
-            transform.fit_transform(X[..., start:end], y)
-            for start, end in slices
-        ]
+    def __transform_sample(self, transform: Transform, X: ArrayLike,
+                           y: ArrayLike, slices: List[Tuple[int, int]],
+                           do_fit: bool):
+        if do_fit:
+            return [
+                transform.fit_transform(X[..., start:end], y)
+                for start, end in slices
+            ]
+        else:
+            return [
+                transform.transform(X[..., start:end]) for start, end in slices
+            ]
 
     def __call__(self, dataset: MultiModalDataset):
         new_dataset = dataset
-        for transform in self.transforms:
+        for window_transform in self.transforms:
+            if not isinstance(window_transform, WindowedTransform):
+                window_transform = WindowedTransform(window_transform)
+
             X = new_dataset[:][0]
             y = new_dataset[:][1]
-            new_X = self.__transform_sample(
-                transform=transform,
-                X=X,
-                y=y,
-                slices=new_dataset.window_slices,
-            )
-            new_y = y
 
-            # Calculate new slices
-            window_slices = []
-            start = 0
-            for x in new_X:
-                end = start + len(x[0])
-                window_slices.append((start, end))
-                start = end
+            # Combinations:
+            # fit_on=None, transform_on=window *
+            # fit_on=None, transform_on=all *
+            # fit_on=window, transform_on=window *
+            # fit_on=window, transform_on=all    (does not make sense)
+            # fit_on=all, transform_on=window *
+            # fit_on=all, transform_on=all *
 
-            # Collate the windows into a single array
-            new_X = self.collate_fn(new_X)
+            if window_transform.fit_on == "all":
+                window_transform.the_transform.fit(X, y)
+            elif window_transform.fit_on is None:
+                pass
 
-            # Create a new dataset
-            new_dataset = ArrayMultiModalDataset(
-                new_X, np.array(new_y), window_slices, new_dataset.window_names
-            )
+            if window_transform.transform_on == "window":
+                # fit_on=None, transform_on=window *
+                # fit_on=all, transform_on=window *
+                # fit_on=window, transform_on=window *
+                new_X = self.__transform_sample(
+                    transform=window_transform.the_transform,
+                    X=X,
+                    y=y,
+                    slices=new_dataset.window_slices,
+                    do_fit=window_transform.fit_on == "window")
+                new_y = y
+
+                # Calculate new slices
+                window_slices = []
+                start = 0
+                for x in new_X:
+                    end = start + len(x[0])
+                    window_slices.append((start, end))
+                    start = end
+
+                # Collate the windows into a single array
+                new_X = self.collate_fn(new_X)
+
+                # Create a new dataset
+                new_dataset = ArrayMultiModalDataset(new_X, np.array(new_y),
+                                                     window_slices,
+                                                     new_dataset.window_names)
+
+            else:
+                # fit_on=all, transform_on=all *
+                # fit_on=None, transform_on=all *
+                new_X = window_transform.the_transform.transform(X=X)
+                new_y = y
+
+                new_dataset = ArrayMultiModalDataset(new_X, np.array(new_y),
+                                                     new_dataset.window_slices,
+                                                     new_dataset.window_names)
+
         window_names = [
-            f"{self.new_window_name_prefix}{name}" for name in new_dataset.window_names
+            f"{self.new_window_name_prefix}{name}"
+            for name in new_dataset.window_names
         ]
         new_dataset._window_names = window_names
         return new_dataset

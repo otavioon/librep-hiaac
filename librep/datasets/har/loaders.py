@@ -141,6 +141,12 @@ class PandasMultiModalLoader:
 
         display(Markdown(self.readme(filename)))
 
+    def __str__(self) -> str:
+        return f"Loader: {self.description}"
+
+    def __repr__(self) -> str:
+        return str(self)
+
 
 class KuHarResampledView20HZ(PandasMultiModalLoader):
     url = "https://drive.google.com/file/d/1-fAzWQQ8jV8oSfxLSfzKA0eiJE66qgD9/view?usp=sharing"
