@@ -100,7 +100,7 @@ class PandasMultiModalLoader:
         if validation is None:
             validation = pd.DataFrame([], columns=default_columns)
         if test is None:
-            validation = pd.DataFrame([], columns=default_columns)
+            test = pd.DataFrame([], columns=default_columns)
 
         if concat_train_validation:
             train = pd.concat([train, validation], ignore_index=True)
@@ -170,9 +170,9 @@ class MotionSenseResampledView20HZ(PandasMultiModalLoader):
 
 
 class ExtraSensorySenseUnbalancedResampledView20HZ(PandasMultiModalLoader):
-    url = "https://drive.google.com/file/d/16d-16fyhKc8D-_ocATFdYsNhSwoUY4ft/view?usp=sharing"
-    description = "ExtraSensory Balanced View Resampled to 20HZ"
-    feature_columns = ["accel-x", "accel-y", "accel-z", "gyro-x", "gyro-y", "gyro-z"]
+    url = ""
+    description = "ExtraSensory Unbalanced View Resampled to 20HZ"
+    feature_columns = ["accelerometer-x", "accelerometer-y", "accelerometer-z", "gyroscope-x", "gyroscope-y", "gyroscope-z"]
     label = "activity code"
 
     def load(
@@ -198,6 +198,14 @@ class ExtraSensorySenseUnbalancedResampledView20HZ(PandasMultiModalLoader):
             label or self.label,
             as_array
         )
+
+
+class ExtraSensoryBalancedResampledView20HZ(PandasMultiModalLoader):
+    url = ""
+    description = "ExtraSensory Balanced View Resampled to 20HZ"
+    feature_columns = ["accelerometer-x", "accelerometer-y", "accelerometer-z", "gyroscope-x", "gyroscope-y", "gyroscope-z"]
+    label = "activity code"
+
 
 class CHARMUnbalancedView(PandasMultiModalLoader):
     url = "https://drive.google.com/file/d/1e_HgeGYmfWmv4_1ZdZRJuda9QuoNak2E/view?usp=sharing"
