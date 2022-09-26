@@ -100,7 +100,7 @@ class PandasMultiModalLoader:
         if validation is None:
             validation = pd.DataFrame([], columns=default_columns)
         if test is None:
-            validation = pd.DataFrame([], columns=default_columns)
+            test = pd.DataFrame([], columns=default_columns)
 
         if concat_train_validation:
             train = pd.concat([train, validation], ignore_index=True)
@@ -166,6 +166,44 @@ class MotionSenseResampledView20HZ(PandasMultiModalLoader):
         "rotationRate.y",
         "rotationRate.z",
     ]
+    label = "activity code"
+
+
+class ExtraSensorySenseUnbalancedResampledView20HZ(PandasMultiModalLoader):
+    url = ""
+    description = "ExtraSensory Unbalanced View Resampled to 20HZ"
+    feature_columns = ["accelerometer-x", "accelerometer-y", "accelerometer-z", "gyroscope-x", "gyroscope-y", "gyroscope-z"]
+    label = "activity code"
+
+    def load(
+        self,
+        load_train: bool = True,
+        load_validation: bool = False,
+        load_test: bool = False,
+        concat_train_validation: bool = False,
+        concat_all: bool = False,
+        features: List[str] = None,
+        label: str = None,
+        as_array: bool = True,
+    ):
+        if load_validation or load_test:
+            raise ValueError("View does not have validation nor test files")
+        return super().load(
+            load_train,
+            load_validation,
+            load_test,
+            concat_train_validation,
+            concat_all,
+            features or self.feature_columns,
+            label or self.label,
+            as_array
+        )
+
+
+class ExtraSensoryBalancedResampledView20HZ(PandasMultiModalLoader):
+    url = ""
+    description = "ExtraSensory Balanced View Resampled to 20HZ"
+    feature_columns = ["accelerometer-x", "accelerometer-y", "accelerometer-z", "gyroscope-x", "gyroscope-y", "gyroscope-z"]
     label = "activity code"
 
 
