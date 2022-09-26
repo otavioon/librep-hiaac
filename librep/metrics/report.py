@@ -62,7 +62,7 @@ class ClassificationReport(SupervisedEvaluator):
             result["classification report"] = res
 
         if self.plot_confusion_matrix:
-            ConfusionMatrixDisplay.from_predictions(y_true, y_pred)
+            ConfusionMatrixDisplay.from_predictions(y_true, y_pred, normalize='true')
             plt.show()
 
         return result
