@@ -24,7 +24,7 @@ class TopologicallyRegularizedAutoencoder(AutoencoderModel):
         self.autoencoder = getattr(model_submodules, autoencoder_model)(**ae_kwargs)
         self.latent_norm = torch.nn.Parameter(data=torch.ones(1),
                                               requires_grad=True)
-
+    
     @staticmethod
     def _compute_distance_matrix(x, p=2):
         x_flat = x.view(x.size(0), -1)
