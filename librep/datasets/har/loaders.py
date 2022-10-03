@@ -126,7 +126,7 @@ class PandasMultiModalLoader:
         )
 
         if concat_all:
-            return (train_dataset,)
+            return (train_dataset)
         elif concat_train_validation:
             return (train_dataset, test_dataset)
         return (train_dataset, validation_dataset, test_dataset)
