@@ -149,7 +149,7 @@ class PandasMultiModalLoader:
 
 
 class KuHarResampledView20HZ(PandasMultiModalLoader):
-    url = "https://drive.google.com/file/d/1-fAzWQQ8jV8oSfxLSfzKA0eiJE66qgD9/view?usp=sharing"
+    url = "https://drive.google.com/file/d/1-fAzWQQ8jV8oSfxLSfzKA0eiJE66qgD9"
     description = "KuHar Balanced View Resampled to 20HZ"
     feature_columns = ["accel-x", "accel-y", "accel-z", "gyro-x", "gyro-y", "gyro-z"]
     label = "activity code"
