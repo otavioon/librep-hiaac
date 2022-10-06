@@ -147,6 +147,36 @@ class PandasMultiModalLoader:
     def __repr__(self) -> str:
         return str(self)
 
+class MNISTView(PandasMultiModalLoader):
+    url = ""
+    description = "MNIST Defaut View"
+    feature_columns = [""] # Error?
+    label = "label"
+
+    def load(
+        self,
+        load_train: bool = True,
+        load_validation: bool = False,
+        load_test: bool = True,
+        concat_train_validation: bool = False,
+        concat_all: bool = False,
+        features: List[str] = None,
+        label: str = None,
+        as_array: bool = True,
+    ):
+        if load_validation:
+            raise ValueError("View does not have validation files")
+        return super().load(
+            load_train,
+            load_validation,
+            load_test,
+            concat_train_validation,
+            concat_all,
+            features or self.feature_columns,
+            label or self.label,
+            as_array
+        )
+    
 
 class KuHarResampledView20HZ(PandasMultiModalLoader):
     url = "https://drive.google.com/file/d/1-fAzWQQ8jV8oSfxLSfzKA0eiJE66qgD9/view?usp=sharing"
