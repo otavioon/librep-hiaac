@@ -15,9 +15,9 @@ class PandasDatasetsIO:
         test_filename: str = "test.csv",
     ):
         self.path = Path(path)
-        self.train_filename = train_filename
-        self.validation_filename = validation_filename
-        self.test_filename = test_filename
+        self.train_filename = train_filename or ""
+        self.validation_filename = validation_filename or ""
+        self.test_filename = test_filename or ""
 
     def save(
         self,
