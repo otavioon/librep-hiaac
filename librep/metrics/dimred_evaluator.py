@@ -21,7 +21,6 @@ class DimensionalityReductionQualityReport(CustomMultiEvaluator):
         use_local_property: bool = True,
         use_global_property: bool = True,
         neighbors_considered = 15,
-        sampling_threshold = 128,
         output_path: PathLike = None
     ):
         self.use_residual_variance_pearson = use_residual_variance_pearson
@@ -33,7 +32,6 @@ class DimensionalityReductionQualityReport(CustomMultiEvaluator):
         self.use_local_property = use_local_property
         self.use_global_property = use_global_property
         self.neighbors_considered = neighbors_considered
-        self.sampling_threshold = sampling_threshold
         self.output_path = Path(output_path) if output_path is not None else None 
 
         # TODO Save
@@ -56,50 +54,58 @@ class DimensionalityReductionQualityReport(CustomMultiEvaluator):
             X_highdim = X_highdim.X
         if type(X_lowdim) == ArrayMultiModalDataset:
             X_lowdim = X_lowdim.X
-        datapoints = X_highdim.shape[0]
-        samples_range = []
-        for i in range(0, datapoints, self.sampling_threshold):
-            if i + self.sampling_threshold <= datapoints:
-                samples_range.append((i, i+self.sampling_threshold))
+        # datapoints = X_highdim.shape[0]
+        # samples_range = []
+        # for i in range(0, datapoints, self.sampling_threshold):
+        #     if i + self.sampling_threshold <= datapoints:
+        #         samples_range.append((i, i+self.sampling_threshold))
         # print(samples_range)
         X_highdim = X_highdim.astype(np.float32)
         X_lowdim = X_lowdim.astype(np.float32)
-        drms = []
-        for i in samples_range:
-            # print(i)
-            drms.append(DRMetrics(X_highdim[i[0]:i[1]], X_lowdim[i[0]:i[1]]))
-        # drm = DRMetrics(X_highdim, X_lowdim)
+        # drms = []
+        # for i in samples_range:
+        #     # print(i)
+        #     drms.append(DRMetrics(X_highdim[i[0]:i[1]], X_lowdim[i[0]:i[1]]))
+        drm = DRMetrics(X_highdim, X_lowdim)
 
         if self.use_residual_variance_pearson:
-            res = np.mean([drm.Vr for drm in drms])
+            # res = np.mean([drm.Vr for drm in drms])
+            res = drm.Vr
             result["residual variance (pearson)"] = float(res)
 
         if self.use_residual_variance_spearman:
-            res = np.mean([drm.Vrs for drm in drms])
+            # res = np.mean([drm.Vrs for drm in drms])
+            res = drm.Vrs
             result["residual variance (spearman)"] = float(res)
 
         if self.use_trustworthiness:
-            res = np.mean([drm.T[self.neighbors_considered] for drm in drms])
+            # res = np.mean([drm.T[self.neighbors_considered] for drm in drms])
+            res = drm.T[self.neighbors_considered]
             result["trustworthiness"] = float(res)
 
         if self.use_continuity:
-            res = np.mean([drm.C[self.neighbors_considered] for drm in drms])
+            # res = np.mean([drm.C[self.neighbors_considered] for drm in drms])
+            res = drm.C[self.neighbors_considered]
             result["continuity"] = float(res)
 
         if self.use_co_k_nearest_neighbor_size:
-            res = np.mean([drm.QNN[self.neighbors_considered] for drm in drms])
+            # res = np.mean([drm.QNN[self.neighbors_considered] for drm in drms])
+            res = drm.QNN[self.neighbors_considered]
             result["co k nearest neighbor size"] = float(res)
 
         if self.use_local_continuity_meta_criterion:
-            res = np.mean([drm.LCMC[self.neighbors_considered] for drm in drms])
+            # res = np.mean([drm.LCMC[self.neighbors_considered] for drm in drms])
+            res = drm.LCMC[self.neighbors_considered]
             result["local continuity meta criterion"] = float(res)
 
         if self.use_local_property:
-            res = np.mean([drm.Qlocal for drm in drms])
+            # res = np.mean([drm.Qlocal for drm in drms])
+            res = drm.Qlocal
             result["local property"] = res
 
         if self.use_global_property:
-            res = np.mean([drm.Qglobal for drm in drms])
+            # res = np.mean([drm.Qglobal for drm in drms])
+            res = drm.Qglobal
             result["global property"] = res
 
         return result

@@ -150,7 +150,7 @@ class PandasMultiModalLoader:
 class MNISTView(PandasMultiModalLoader):
     url = ""
     description = "MNIST Defaut View"
-    feature_columns = ["pixel"] # Error?
+    feature_columns = [""] # Error?
     label = "label"
 
     def load(
