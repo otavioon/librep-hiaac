@@ -11,30 +11,6 @@ from librep.config.type_definitions import ArrayLike
 from librep.datasets.multimodal import TransformMultiModalDataset, MultiModalDataset
 
 
-@dataclass
-class NamedDataset:
-    name: str
-    dataset: Dataset
-
-
-@dataclass
-class NamedEstimator:
-    name: str
-    estimator: Estimator
-
-
-@dataclass
-class NamedTransform:
-    name: str
-    transform: Transform
-
-
-@dataclass
-class NamedEvaluator:
-    name: str
-    evaluator: Evaluators
-
-
 class SimpleTrainEvalWorkflow:
     def __init__(
         self,
