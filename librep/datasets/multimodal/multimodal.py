@@ -55,6 +55,10 @@ class ArrayMultiModalDataset(MultiModalDataset):
     def __str__(self):
         return f"ArrayMultiModalDataset: samples={len(self.X)}, shape={len(self.X)}, no. window={self.num_windows}"
 
+    def __repr__(self) -> str:
+        return str(self)
+
+
 
 class PandasMultiModalDataset(PandasDataset, MultiModalDataset):
     """Dataset implementation for multi modal PandasDataset.
@@ -158,7 +162,8 @@ class PandasMultiModalDataset(PandasDataset, MultiModalDataset):
     def num_windows(self) -> int:
         return len(self.window_slices)
 
-    def __str__(self):
-        return f"PandasMultiModalDataset: samples={len(self.data)}, features={len(self.feature_columns)}, no. window={self.num_windows}"
+    def __str__(self) -> str:
+        return f"PandasMultiModalDataset: samples={len(self.data)}, features={len(self.feature_columns)}, no. window={self.num_windows}, label_columns='{self.label_columns}'"
 
-
+    def __repr__(self) -> str:
+        return str(self)

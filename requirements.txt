@@ -8,6 +8,7 @@ pydot
 nodejs
 tabulate
 pyDRMetrics
+gdown
 
 # Jupter lab extensions
 jupyterlab
