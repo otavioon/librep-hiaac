@@ -18,6 +18,17 @@ from librep.utils.file_ops import (
 )
 
 
+standard_activity_codes = {
+    0: "sit",
+    1: "stand",
+    2: "walk",
+    3: "stair up",
+    4: "stair down",
+    5: "run",
+    6: "stair up and down"
+}
+
+
 class PandasMultiModalLoader:
     url: str = ""
     description: str = "Loader"
@@ -437,7 +448,8 @@ class UCIHAR_UnbalancedView20Hz(PandasMultiModalLoader):
 
     feature_columns = ["accel-x", "accel-y", "accel-z", "gyro-x", "gyro-y", "gyro-z"]
     label = "activity code"
-    standard_label = {
+    standard_label = "standard activity code"
+    activity_codes = {
         1: "walking",
         2: "walking upstairs",
         3: "walking downstairs",
