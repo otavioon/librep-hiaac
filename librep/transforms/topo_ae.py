@@ -21,8 +21,11 @@ class TopologicalDimensionalityReduction(Transform):
         self.input_shape = input_shape
         self.max_loss = 10000
         # self.loss_components_values = []
+    
+    def fit_for_1000_epochs(self, X: ArrayLike, y: ArrayLike = None):
+        return
 
-    def fit(self, X: ArrayLike, y: ArrayLike = None):
+    def fit(self, X: ArrayLike, y: ArrayLike = None, title_plot=None):
         train_X, val_X, train_Y, val_Y = train_test_split(X, y, random_state=0, train_size = .8, stratify=y)
         train_data_loader = torch.utils.data.DataLoader(dataset=train_X, batch_size=self.batch_size, shuffle=True)
         val_data_loader = torch.utils.data.DataLoader(dataset=val_X, batch_size=self.batch_size, shuffle=True)
@@ -84,15 +87,26 @@ class TopologicalDimensionalityReduction(Transform):
             else:
                 max_loss = loss_per_epoch
                 patience = self.patience
-        plt.title('Training')
-        plt.plot(plot_train_ae, label='reconstruction error - train')
-        plt.plot(plot_train_topo, label='topological error - train')
-        plt.plot(plot_val_ae, label='reconstruction error - val')
-        plt.plot(plot_val_topo, label='topological error - val')
+        fig,ax = plt.subplots(figsize=(10,10))
+        ax.set_title('Training')
+        if title_plot:
+            ax.set_title(title_plot)
+        ax.plot(plot_train_ae, label='reconstruction error - train', color='red')
+        ax.plot(plot_val_ae, label='reconstruction error - val', color='orange')
+        ax.set_xlabel('Epoch')
+        ax.set_ylabel("Reconstruction error", color="red",fontsize=14)
+        ax.legend(loc=2)
+        
+        ax2=ax.twinx()
+        ax2.plot(plot_val_topo, label='Topological error (val)', color='blue')
+        ax2.plot(plot_train_topo, label='Topological error - train', color='black')
+        ax2.set_ylabel("Topological error", color="blue",fontsize=14)
+        ax2.legend(loc=1)
+        
         plt.grid()
-        plt.legend()
-        plt.xlabel('Epoch')
-        plt.ylabel('Loss')
+        # plt.legend()
+        # plt.xlabel('Epoch')
+        # plt.ylabel('Loss')
         plt.show()
         return self
 
