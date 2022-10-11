@@ -18,6 +18,17 @@ from librep.utils.file_ops import (
 )
 
 
+standard_activity_codes = {
+    0: "sit",
+    1: "stand",
+    2: "walk",
+    3: "stair up",
+    4: "stair down",
+    5: "run",
+    6: "stair up and down"
+}
+
+
 class PandasMultiModalLoader:
     url: str = ""
     description: str = "Loader"
@@ -343,7 +354,7 @@ class ExtraSensorySense_UnbalancedView20HZ(PandasMultiModalLoader):
 
 
 class CHARM_BalancedView20Hz(PandasMultiModalLoader):
-    url: str = "1m3tpfVSG68dM5sVmnlVO5HlbKLAUfwDV"
+    url: str = "143X30U6rJL0Ffuy-CvPDOjC6NvKQiu4y"
     description = (
         "CHARM Balanced View"
     )
@@ -351,9 +362,9 @@ class CHARM_BalancedView20Hz(PandasMultiModalLoader):
     downloader_cls: Downloader = GoogleDriveDownloader
     extractor_cls: Extractor = ZipExtractor
     checksum_cls: Checksum = MD5Checksum
-    zip_filename = "CHARM-balanced_20Hz_train_test-v1.zip"
-    zip_checksum: str = "8cd977b11fee03a60344b9f8a2fb5357"
-    extracted_zip_root_dir: str = "balanced_20Hz_train_test-v1"
+    zip_filename = "CHARM-balanced_20Hz_train_test-v2.zip"
+    zip_checksum: str = "812e5585ee6de86205c0844e07948e65"
+    extracted_zip_root_dir: str = "balanced_20Hz_train_test-v2"
 
     train_file = "train.csv"
     validation_file = None
@@ -437,7 +448,8 @@ class UCIHAR_UnbalancedView20Hz(PandasMultiModalLoader):
 
     feature_columns = ["accel-x", "accel-y", "accel-z", "gyro-x", "gyro-y", "gyro-z"]
     label = "activity code"
-    standard_label = {
+    standard_label = "standard activity code"
+    activity_codes = {
         1: "walking",
         2: "walking upstairs",
         3: "walking downstairs",
