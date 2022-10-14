@@ -9,7 +9,7 @@ import pandas as pd
 import tqdm
 
 from librep.config.type_definitions import PathLike
-from librep.utils.file_ops import download_unzip_check
+#from librep.utils.file_ops import download_unzip_check
 from librep.datasets.har.generator import HARDatasetGenerator, DatasetSplitError
 
 
@@ -86,7 +86,10 @@ class RawMotionSense:
             activity_name = f.parents[0].name
             # Split activity name and trial code(e.g.: ['dws', 1])
             act_name, trial_code = activity_name.split("_")
-            trial_code = int(trial_code)
+            if trial_code == "checkpoints":
+                continue
+            else:
+                trial_code = int(trial_code)
             # Get the activity number from the activity's code
             act_no = self.activity_codes[act_name]
             # Get user code
