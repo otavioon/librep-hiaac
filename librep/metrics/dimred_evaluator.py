@@ -2,7 +2,7 @@ from pathlib import Path
 import numpy as np
 from typing import List
 from pyDRMetrics.pyDRMetrics import DRMetrics
-# from tqdm import tqdm.notebook as tqdm
+import matplotlib.pyplot as plt
 
 from librep.base.evaluators import CustomMultiEvaluator
 from librep.config.type_definitions import ArrayLike, PathLike
@@ -133,7 +133,6 @@ class MultiDimensionalityReductionQualityReport(CustomMultiEvaluator):
         self.use_local_property = use_local_property
         self.use_global_property = use_global_property
         self.neighbors_considered = neighbors_considered
-        self.sampling_threshold = sampling_threshold
         self.output_path = Path(output_path) if output_path is not None else None 
 
         # TODO Save
@@ -146,14 +145,27 @@ class MultiDimensionalityReductionQualityReport(CustomMultiEvaluator):
         
         # Assuming X_HD is the first element Xs[0]
         # Assuming different X_LD are the rest of element Xs[1], Xs[2], Xs[3], ..., Xs[n]
-        X_highdim = Xs[0]
-        if type(X_highdim) == ArrayMultiModalDataset:
-            X_highdim = X_highdim.X
-        X_highdim = X_highdim.astype(np.float32)
+        
+        # Preprocessing all in Xs
+        for dataset in Xs:
+            if type(dataset) == ArrayMultiModalDataset:
+                dataset = dataset.X
+            dataset = dataset.astype(np.float32)
+        # X_highdim = Xs[0]
+        # if type(X_highdim) == ArrayMultiModalDataset:
+        #     X_highdim = X_highdim.X
+        # X_highdim = X_highdim.astype(np.float32)
+        
+        all_dimensions = []
+        
         results = []
+        
+        X_highdim = Xs[0]
         for i in range(1,len(Xs)):
             result = {}
             X_lowdim = Xs[i]
+            result['dim'] = X_lowdim.shape[1]
+            all_dimensions.append(X_lowdim.shape[1])
             if type(X_lowdim) == ArrayMultiModalDataset:
                 X_lowdim = X_lowdim.X
             X_lowdim = X_lowdim.astype(np.float32)
@@ -184,4 +196,22 @@ class MultiDimensionalityReductionQualityReport(CustomMultiEvaluator):
                 res = drm.Qglobal
                 result["global property"] = res
             results.append(result)
+        
+        
+        # plot trustworthiness
+        unique_dims = np.unique(all_dimensions)
+        trustworthiness = [[], [], []]
+        
+        for unique_dim in unique_dims:
+            trustworthiness_for_dim = [data['trustworthiness'] for data in results if data['dim']==unique_dim]
+            # MIN
+            trustworthiness[0].append(np.min(trustworthiness_for_dim))
+            # MEAN
+            trustworthiness[1].append(np.mean(trustworthiness_for_dim))
+            # MAX
+            trustworthiness[2].append(np.max(trustworthiness_for_dim))
+        
+        fig, ax = plt.subplots()
+        ax.plot(unique_dims, trustworthiness[1], '-')
+        ax.fill_between(unique_dims, trustworthiness[0], trustworthiness[2], alpha=0.2)
         return results
