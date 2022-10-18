@@ -98,8 +98,8 @@ class TopologicalDimensionalityReduction(Transform):
         ax.legend(loc=2)
         
         ax2=ax.twinx()
-        ax2.plot(plot_val_topo, label='Topological error (val)', color='blue')
-        ax2.plot(plot_train_topo, label='Topological error - train', color='black')
+        ax2.plot(plot_val_topo, label='Topological error - val', color='black')
+        ax2.plot(plot_train_topo, label='Topological error - train', color='blue')
         ax2.set_ylabel("Topological error", color="blue",fontsize=14)
         ax2.legend(loc=1)
         

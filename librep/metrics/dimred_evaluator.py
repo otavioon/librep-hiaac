@@ -139,6 +139,28 @@ class MultiDimensionalityReductionQualityReport(CustomMultiEvaluator):
         if output_path is not None:
             output_path.mkdir(exist_ok=True, parents=True)
 
+    def __evaluate_plot_helper(self, all_dimensions, tag, results):
+        unique_dims = np.unique(all_dimensions)
+        metric = [[], [], []]
+        for unique_dim in unique_dims:
+            metric_for_dim = [data[tag] for data in results if data['dim']==unique_dim]
+            # MIN
+            metric[0].append(np.min(metric_for_dim))
+            # MEAN
+            metric[1].append(np.mean(metric_for_dim))
+            # MAX
+            metric[2].append(np.max(metric_for_dim))
+        
+        fig, ax = plt.subplots()
+        
+        plt.ylim((0,1))
+        plt.title(tag + ' over dimensions')
+        plt.xlabel('dimensions')
+        plt.ylabel(tag)
+        ax.plot(unique_dims, metric[1], '-')
+        ax.fill_between(unique_dims, metric[0], metric[2], alpha=0.2)
+        plt.grid()
+        
     def evaluate(
         self, Xs: List[ArrayLike]
     ) -> ArrayLike:
@@ -197,21 +219,30 @@ class MultiDimensionalityReductionQualityReport(CustomMultiEvaluator):
                 result["global property"] = res
             results.append(result)
         
+        if self.use_residual_variance_pearson:
+            # plot residual variance (pearson)
+            self.__evaluate_plot_helper(all_dimensions, "residual variance (pearson)", results)
+        if self.use_residual_variance_spearman:
+            # plot residual variance (spearman)
+            self.__evaluate_plot_helper(all_dimensions, "residual variance (spearman)", results)
+        if self.use_trustworthiness:
+            # plot trustworthiness
+            self.__evaluate_plot_helper(all_dimensions, "trustworthiness", results)
+        if self.use_continuity:
+            # plot continuity
+            self.__evaluate_plot_helper(all_dimensions, "continuity", results)
+        if self.use_co_k_nearest_neighbor_size:
+            # plot co k nearest neighbor size
+            self.__evaluate_plot_helper(all_dimensions, "co k nearest neighbor size", results)
+        if self.use_local_continuity_meta_criterion:
+            # plot local continuity meta criterion
+            self.__evaluate_plot_helper(all_dimensions, "local continuity meta criterion", results)
+        if self.use_local_property:
+            # plot local property
+            self.__evaluate_plot_helper(all_dimensions, "local property", results)
+        if self.use_global_property:
+            # plot global property
+            self.__evaluate_plot_helper(all_dimensions, "global property", results)
+
         
-        # plot trustworthiness
-        unique_dims = np.unique(all_dimensions)
-        trustworthiness = [[], [], []]
-        
-        for unique_dim in unique_dims:
-            trustworthiness_for_dim = [data['trustworthiness'] for data in results if data['dim']==unique_dim]
-            # MIN
-            trustworthiness[0].append(np.min(trustworthiness_for_dim))
-            # MEAN
-            trustworthiness[1].append(np.mean(trustworthiness_for_dim))
-            # MAX
-            trustworthiness[2].append(np.max(trustworthiness_for_dim))
-        
-        fig, ax = plt.subplots()
-        ax.plot(unique_dims, trustworthiness[1], '-')
-        ax.fill_between(unique_dims, trustworthiness[0], trustworthiness[2], alpha=0.2)
         return results
