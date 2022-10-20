@@ -39,5 +39,3 @@ class ButterWorthFilter(Transform):
         datas = np.array(datas)
 
         return datas
-
-        # raise NotImplementedError
