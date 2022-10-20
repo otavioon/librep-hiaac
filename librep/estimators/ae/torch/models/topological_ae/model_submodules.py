@@ -261,25 +261,25 @@ class DeepAEforKuhar180ver3(AutoencoderModel):
             # View((-1, input_dims)),
             nn.Linear(input_dims, 200),
             nn.ReLU(True),
-            nn.BatchNorm1d(200),
+            # nn.BatchNorm1d(200),
             nn.Linear(200, 100),
             nn.ReLU(True),
-            nn.BatchNorm1d(100),
+            # nn.BatchNorm1d(100),
             nn.Linear(100, 50),
             nn.ReLU(True),
-            nn.BatchNorm1d(50),
+            # nn.BatchNorm1d(50),
             nn.Linear(50, custom_dim)
         )
         self.decoder = nn.Sequential(
             nn.Linear(custom_dim, 50),
             nn.ReLU(True),
-            nn.BatchNorm1d(50),
+            # nn.BatchNorm1d(50),
             nn.Linear(50, 100),
             nn.ReLU(True),
-            nn.BatchNorm1d(100),
+            # nn.BatchNorm1d(100),
             nn.Linear(100, 200),
             nn.ReLU(True),
-            nn.BatchNorm1d(200),
+            # nn.BatchNorm1d(200),
             nn.Linear(200, input_dims),
             # nn.ReLU(True),
             # nn.BatchNorm1d(500),
@@ -288,7 +288,7 @@ class DeepAEforKuhar180ver3(AutoencoderModel):
             # nn.BatchNorm1d(1000),
             # nn.Linear(1000, n_input_dims),
             # View((-1,) + tuple(input_dims)),
-            nn.ReLU(True)
+            nn.Tanh()
         )
         self.reconst_error = nn.MSELoss()
 
