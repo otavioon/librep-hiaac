@@ -1,9 +1,9 @@
 import numpy as np
 import torch
 import torch.nn as nn
-import topology
+import librep.estimators.ae.torch.models.topological_ae.topology
 
-from topology import PersistentHomologyCalculation
+from librep.estimators.ae.torch.models.topological_ae.topology import PersistentHomologyCalculation
 
 class TopologicalSignatureDistance(nn.Module):
     """Topological signature."""
