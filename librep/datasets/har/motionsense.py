@@ -12,6 +12,8 @@ from librep.config.type_definitions import PathLike
 #from librep.utils.file_ops import download_unzip_check
 from librep.datasets.har.generator import HARDatasetGenerator, DatasetSplitError
 
+from scipy import signal
+
 
 ##### Raw data Handlers and time series generator
 
@@ -309,10 +311,12 @@ class MotionSenseDatasetGenerator(HARDatasetGenerator):
         motionsense_iterator: RawMotionSenseIterator,
         time_window: Optional[int] = None,
         window_overlap: Optional[int] = None,
+        add_gravity: bool = False,
     ):
         self.motionsense_iterator = motionsense_iterator
         self.time_window = time_window
         self.window_overlap = window_overlap
+        self.add_gravity = add_gravity
 
         if window_overlap is not None:
             assert (
@@ -352,7 +356,33 @@ class MotionSenseDatasetGenerator(HARDatasetGenerator):
             "userAcceleration.y",
             "userAcceleration.z",
         ]
-
+                     
+        if self.add_gravity is True:
+            data["userAcceleration.x"] = data["userAcceleration.x"] + data["gravity.x"]
+            data["userAcceleration.y"] = data["userAcceleration.y"] + data["gravity.y"]
+            data["userAcceleration.z"] = data["userAcceleration.z"] + data["gravity.z"] 
+                
+        data["userAcceleration.x"] = (data["userAcceleration.x"])*9.81
+        data["userAcceleration.y"] = (data["userAcceleration.y"])*9.81
+        data["userAcceleration.z"] = (data["userAcceleration.z"])*9.81
+        
+               
+        # Resampling the signal from 50Hz to 20Hz
+        time = data.shape[0] // 50
+        new_data = {column: [] for column in selected_features}
+        for column in selected_features:
+            new_data[column] = signal.resample(data[column], 20*time)
+            
+        new_data = pd.DataFrame(data=new_data)
+        tam = new_data.shape[0]
+        new_data['activity code'] = data['activity code'].iloc[:tam]
+        new_data['length'] = data['length'].iloc[:tam]
+        new_data['trial_code'] = data['trial_code'].iloc[:tam]
+        new_data['index'] = data['index'].iloc[:tam]
+        new_data['user'] = data['user'].iloc[:tam]
+        
+        data = new_data
+        
         for i in range(0, data.shape[0], self.time_window - self.window_overlap):
             window_df = data[i : i + self.time_window]
             # print(i, i+window, len(window_df)) # --> dropna will remove i:i+window ranges < window
