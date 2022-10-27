@@ -303,6 +303,12 @@ class MotionSenseDatasetGenerator(HARDatasetGenerator):
         If None, a sample will be a single instant.
     window_overlap : int
         Number of samples to overlap over windows.
+    add_gravity: bool
+        Parameter to sum the gravity.
+        If True will sum the gravity in the data
+    add_filter: bool
+        Parameter to apply the highpass filter over data.
+        If True will apply a Butteworth filter.
 
     """
 
@@ -312,16 +318,23 @@ class MotionSenseDatasetGenerator(HARDatasetGenerator):
         time_window: Optional[int] = None,
         window_overlap: Optional[int] = None,
         add_gravity: bool = False,
+        add_filter: bool = True,
     ):
         self.motionsense_iterator = motionsense_iterator
         self.time_window = time_window
         self.window_overlap = window_overlap
         self.add_gravity = add_gravity
+        self.add_filter = add_filter
 
         if window_overlap is not None:
             assert (
                 time_window is not None
             ), "Time window must be set when overlap is set"
+
+        if add_filter is True:
+            assert (
+                add_gravity is True
+            ), "Add filter must be true when add gravity is true"
 
     def __create_time_series(self, data: pd.DataFrame) -> pd.DataFrame:
         """Create a time series with defined window size and overlap.
@@ -356,18 +369,39 @@ class MotionSenseDatasetGenerator(HARDatasetGenerator):
             "userAcceleration.y",
             "userAcceleration.z",
         ]
-                     
+
+        # Parameter to sum the gravity 
         if self.add_gravity is True:
             data["userAcceleration.x"] = data["userAcceleration.x"] + data["gravity.x"]
             data["userAcceleration.y"] = data["userAcceleration.y"] + data["gravity.y"]
             data["userAcceleration.z"] = data["userAcceleration.z"] + data["gravity.z"] 
-                
+
+        # Change the accelerometer unit of measurement from g to m/s²      
         data["userAcceleration.x"] = (data["userAcceleration.x"])*9.81
         data["userAcceleration.y"] = (data["userAcceleration.y"])*9.81
         data["userAcceleration.z"] = (data["userAcceleration.z"])*9.81
         
-               
+        # acc = [
+        #     "userAcceleration.x",
+        #     "userAcceleration.y",
+        #     "userAcceleration.z",
+        #     ]
+
+        # print(data, data['trial_code'].unique(), data['user'].unique())
+
+        if self.add_filter is True:
+
+            h = signal.butter(3, .3, 'hp', fs=50, output='sos')
+
+            for axi in selected_features[-3:]:
+                sig = data[axi]
+                zi = signal.sosfilt_zi(h) * sig[:4].mean()
+                sample_filtered = signal.sosfiltfilt(h, sig)
+
+                data[axi] = sample_filtered
+                
         # Resampling the signal from 50Hz to 20Hz
+
         time = data.shape[0] // 50
         new_data = {column: [] for column in selected_features}
         for column in selected_features:
