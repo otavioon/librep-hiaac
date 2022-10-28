@@ -395,7 +395,7 @@ class MotionSenseDatasetGenerator(HARDatasetGenerator):
 
             for axi in selected_features[-3:]:
                 sig = data[axi]
-                zi = signal.sosfilt_zi(h) * sig[:4].mean()
+                # zi = signal.sosfilt_zi(h) * sig[:4].mean()
                 sample_filtered = signal.sosfiltfilt(h, sig)
 
                 data[axi] = sample_filtered

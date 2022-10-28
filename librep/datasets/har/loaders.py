@@ -443,7 +443,7 @@ class UCIHAR_UnbalancedView20Hz(PandasMultiModalLoader):
     extracted_zip_root_dir: str = "unbalanced_20Hz_train_test-v1"
 
     train_file = "train.csv"
-    validation_file = None
+    validation_file = "validation.csv"
     test_file = "test.csv"
 
     feature_columns = ["accel-x", "accel-y", "accel-z", "gyro-x", "gyro-y", "gyro-z"]
