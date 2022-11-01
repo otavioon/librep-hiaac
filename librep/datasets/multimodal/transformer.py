@@ -7,7 +7,6 @@ from librep.config.type_definitions import ArrayLike
 
 from .multimodal import MultiModalDataset, ArrayMultiModalDataset
 
-
 class WindowedTransform:
 
     def __init__(
