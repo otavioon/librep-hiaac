@@ -136,6 +136,66 @@ class ConvolutionalAutoencoder_2D(AutoencoderModel):
         return reconst_error, {'reconstruction_error': reconst_error}
 
 
+class ConvolutionalAutoencoder_custom_dim(AutoencoderModel):
+    """Convolutional Autoencoder with 2d latent space.
+
+    Architecture from:
+        Model 1 in 
+        `A Deep Convolutional Auto-Encoder with Pooling - Unpooling Layers in
+        Caffe - Volodymyr Turchenko, Eric Chalmers, Artur Luczak`
+    """
+    def __init__(self, input_dims=(1, 180), custom_dim=2):
+        print('ConvAECustomDim, Input:', input_dims,'Inner dim:', custom_dim)
+        """Convolutional Autoencoder."""
+        super().__init__()
+        self.encoder = nn.Sequential(
+            nn.Conv2d(1, 5, (1,3), stride=1, padding=0),  # b, 16, 10, 10
+            nn.ReLU(),
+            nn.Conv2d(5, 4, (1,3), stride=1, padding=0),  # b, 2, 3, 3
+            nn.ReLU(),
+            View((-1, 512)),
+            nn.Linear(512, 250),
+            nn.ReLU(),
+            nn.Linear(250, custom_dim)
+        )
+        self.decoder = nn.Sequential(
+            nn.Linear(custom_dim, 250),
+            nn.ReLU(),
+            View((-1, 250, 1, 1)),
+            nn.ReLU(),
+            nn.ConvTranspose2d(250, 4, 12, stride=1, padding=0),
+            nn.ReLU(),
+            nn.ConvTranspose2d(4, 4, 17, stride=1, padding=0),
+            nn.ReLU(),
+            nn.Conv2d(4, 1, 1, stride=1, padding=0),
+            nn.Tanh()
+        )
+        self.reconst_error = nn.MSELoss()
+
+    def encode(self, x):
+        """Compute latent representation using convolutional autoencoder."""
+        return self.encoder(x)
+
+    def decode(self, z):
+        """Compute reconstruction using convolutional autoencoder."""
+        return self.decoder(z)
+
+    def forward(self, x):
+        """Apply autoencoder to batch of input images.
+
+        Args:
+            x: Batch of images with shape [bs x channels x n_row x n_col]
+
+        Returns:
+            tuple(reconstruction_error, dict(other errors))
+
+        """
+        latent = self.encode(x)
+        x_reconst = self.decode(latent)
+        reconst_error = self.reconst_error(x, x_reconst)
+        return reconst_error, {'reconstruction_error': reconst_error}
+
+
 class DeepAEforKuhar180ver1(AutoencoderModel):
     """150-n-150."""
     def __init__(self, input_dims=180, custom_dim=2):
@@ -315,7 +375,134 @@ class DeepAEforKuhar180ver3(AutoencoderModel):
         reconst_error = self.reconst_error(x, x_reconst)
         return reconst_error, {'reconstruction_error': reconst_error}
 
+
+class DeepAEv2(AutoencoderModel):
+    """200 - 100 - 50 - n - 50 - 100 - 200"""
+    def __init__(self, input_dims=(1, 180), custom_dim=2):
+        print('DeepAEv2, Input:', input_dims,'Inner dim:', custom_dim)
+        super().__init__()
+        self.input_dims = input_dims
+        n_input_dims = np.prod(input_dims)
+        self.encoder = nn.Sequential(
+            View((-1, n_input_dims)),
+            nn.Linear(n_input_dims, 500),
+            nn.ReLU(True),
+            nn.BatchNorm1d(500),
+            nn.Linear(500, 250),
+            nn.ReLU(True),
+            nn.BatchNorm1d(250),
+            nn.Linear(250, 50),
+            nn.ReLU(True),
+            nn.BatchNorm1d(50),
+            nn.Linear(50, custom_dim)
+        )
+        self.decoder = nn.Sequential(
+            nn.Linear(custom_dim, 50),
+            nn.ReLU(True),
+            nn.BatchNorm1d(50),
+            nn.Linear(50, 250),
+            nn.ReLU(True),
+            nn.BatchNorm1d(250),
+            nn.Linear(250, 500),
+            nn.ReLU(True),
+            nn.BatchNorm1d(500),
+            nn.Linear(500, n_input_dims),
+            # nn.ReLU(True),
+            # nn.BatchNorm1d(500),
+            # nn.Linear(500, 1000),
+            # nn.ReLU(True),
+            # nn.BatchNorm1d(1000),
+            # nn.Linear(1000, n_input_dims),
+            View((-1,) + tuple(input_dims)),
+            # nn.ReLU(True)
+            nn.Tanh()
+        )
+        self.reconst_error = nn.MSELoss()
+
+    def encode(self, x):
+        """Compute latent representation using convolutional autoencoder."""
+        return self.encoder(x)
+
+    def decode(self, z):
+        """Compute reconstruction using convolutional autoencoder."""
+        return self.decoder(z)
+
+    def forward(self, x):
+        """Apply autoencoder to batch of input images.
+
+        Args:
+            x: Batch of images with shape [bs x channels x n_row x n_col]
+
+        Returns:
+            tuple(reconstruction_error, dict(other errors))
+
+        """
+        latent = self.encode(x)
+        x_reconst = self.decode(latent)
+        reconst_error = self.reconst_error(x, x_reconst)
+        return reconst_error, {'reconstruction_error': reconst_error}
+
     
+class DeepAE_custom_dim(AutoencoderModel):
+    """1000-500-250-2-250-500-1000."""
+    def __init__(self, input_dims=(1, 180), custom_dim=2):
+        print('DeepAE_custom_dim, Input:', input_dims,'Inner dim:', custom_dim)
+        super().__init__()
+        self.input_dims = input_dims
+        n_input_dims = np.prod(input_dims)
+        self.encoder = nn.Sequential(
+            View((-1, n_input_dims)),
+            nn.Linear(n_input_dims, 1000),
+            nn.ReLU(True),
+            nn.BatchNorm1d(1000),
+            nn.Linear(1000, 500),
+            nn.ReLU(True),
+            nn.BatchNorm1d(500),
+            nn.Linear(500, 250),
+            nn.ReLU(True),
+            nn.BatchNorm1d(250),
+            nn.Linear(250, custom_dim)
+        )
+        self.decoder = nn.Sequential(
+            nn.Linear(custom_dim, 250),
+            nn.ReLU(True),
+            nn.BatchNorm1d(250),
+            nn.Linear(250, 500),
+            nn.ReLU(True),
+            nn.BatchNorm1d(500),
+            nn.Linear(500, 1000),
+            nn.ReLU(True),
+            nn.BatchNorm1d(1000),
+            nn.Linear(1000, n_input_dims),
+            View((-1,) + tuple(input_dims)),
+            nn.Tanh()
+        )
+        self.reconst_error = nn.MSELoss()
+
+    def encode(self, x):
+        """Compute latent representation using convolutional autoencoder."""
+        return self.encoder(x)
+
+    def decode(self, z):
+        """Compute reconstruction using convolutional autoencoder."""
+        return self.decoder(z)
+
+    def forward(self, x):
+        """Apply autoencoder to batch of input images.
+
+        Args:
+            x: Batch of images with shape [bs x channels x n_row x n_col]
+
+        Returns:
+            tuple(reconstruction_error, dict(other errors))
+
+        """
+        latent = self.encode(x)
+        x_reconst = self.decode(latent)
+        reconst_error = self.reconst_error(x, x_reconst)
+        return reconst_error, {'reconstruction_error': reconst_error}
+
+
 class DeepAE(AutoencoderModel):
     """1000-500-250-2-250-500-1000."""
     def __init__(self, input_dims=(1, 28, 28)):

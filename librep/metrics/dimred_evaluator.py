@@ -110,6 +110,7 @@ class DimensionalityReductionQualityReport(CustomMultiEvaluator):
 
         return result
 
+
 class MultiDimensionalityReductionQualityReport(CustomMultiEvaluator):
     def __init__(
         self,
