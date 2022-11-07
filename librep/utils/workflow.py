@@ -68,12 +68,12 @@ class SimpleTrainEvalWorkflow:
         if self.evaluator is not None:
             if test_datasets is not None:
                 return [
-                    self.evaluator.evaluate(y_pred, d[:][1])
+                    self.evaluator.evaluate(d[:][1], y_pred)
                     for y_pred, d in zip(y_preds, test_datasets)
                 ]
             else:
                 return [
-                    self.evaluator.evaluate(y_preds[0], train_dataset[:][1])
+                    self.evaluator.evaluate(train_dataset[:][1], y_preds[0])
                 ]
         else:
             return y_preds
