@@ -9,8 +9,10 @@ import pandas as pd
 import tqdm
 
 from librep.config.type_definitions import PathLike
-from librep.utils.file_ops import download_unzip_check
+#from librep.utils.file_ops import download_unzip_check
 from librep.datasets.har.generator import HARDatasetGenerator, DatasetSplitError
+
+from scipy import signal
 
 
 ##### Raw data Handlers and time series generator
@@ -86,7 +88,10 @@ class RawMotionSense:
             activity_name = f.parents[0].name
             # Split activity name and trial code(e.g.: ['dws', 1])
             act_name, trial_code = activity_name.split("_")
-            trial_code = int(trial_code)
+            if trial_code == "checkpoints":
+                continue
+            else:
+                trial_code = int(trial_code)
             # Get the activity number from the activity's code
             act_no = self.activity_codes[act_name]
             # Get user code
@@ -298,6 +303,12 @@ class MotionSenseDatasetGenerator(HARDatasetGenerator):
         If None, a sample will be a single instant.
     window_overlap : int
         Number of samples to overlap over windows.
+    add_gravity: bool
+        Parameter to sum the gravity.
+        If True will sum the gravity in the data
+    add_filter: bool
+        Parameter to apply the highpass filter over data.
+        If True will apply a Butteworth filter.
 
     """
 
@@ -306,15 +317,24 @@ class MotionSenseDatasetGenerator(HARDatasetGenerator):
         motionsense_iterator: RawMotionSenseIterator,
         time_window: Optional[int] = None,
         window_overlap: Optional[int] = None,
+        add_gravity: bool = False,
+        add_filter: bool = True,
     ):
         self.motionsense_iterator = motionsense_iterator
         self.time_window = time_window
         self.window_overlap = window_overlap
+        self.add_gravity = add_gravity
+        self.add_filter = add_filter
 
         if window_overlap is not None:
             assert (
                 time_window is not None
             ), "Time window must be set when overlap is set"
+
+        if add_filter is True:
+            assert (
+                add_gravity is True
+            ), "Add filter must be true when add gravity is true"
 
     def __create_time_series(self, data: pd.DataFrame) -> pd.DataFrame:
         """Create a time series with defined window size and overlap.
@@ -350,6 +370,53 @@ class MotionSenseDatasetGenerator(HARDatasetGenerator):
             "userAcceleration.z",
         ]
 
+        # Parameter to sum the gravity 
+        if self.add_gravity is True:
+            data["userAcceleration.x"] = data["userAcceleration.x"] + data["gravity.x"]
+            data["userAcceleration.y"] = data["userAcceleration.y"] + data["gravity.y"]
+            data["userAcceleration.z"] = data["userAcceleration.z"] + data["gravity.z"] 
+
+        # Change the accelerometer unit of measurement from g to m/s²      
+        data["userAcceleration.x"] = (data["userAcceleration.x"])*9.81
+        data["userAcceleration.y"] = (data["userAcceleration.y"])*9.81
+        data["userAcceleration.z"] = (data["userAcceleration.z"])*9.81
+        
+        # acc = [
+        #     "userAcceleration.x",
+        #     "userAcceleration.y",
+        #     "userAcceleration.z",
+        #     ]
+
+        # print(data, data['trial_code'].unique(), data['user'].unique())
+
+        if self.add_filter is True:
+
+            h = signal.butter(3, .3, 'hp', fs=50, output='sos')
+
+            for axi in selected_features[-3:]:
+                sig = data[axi]
+                # zi = signal.sosfilt_zi(h) * sig[:4].mean()
+                sample_filtered = signal.sosfiltfilt(h, sig)
+
+                data[axi] = sample_filtered
+                
+        # Resampling the signal from 50Hz to 20Hz
+
+        time = data.shape[0] // 50
+        new_data = {column: [] for column in selected_features}
+        for column in selected_features:
+            new_data[column] = signal.resample(data[column], 20*time)
+            
+        new_data = pd.DataFrame(data=new_data)
+        tam = new_data.shape[0]
+        new_data['activity code'] = data['activity code'].iloc[:tam]
+        new_data['length'] = data['length'].iloc[:tam]
+        new_data['trial_code'] = data['trial_code'].iloc[:tam]
+        new_data['index'] = data['index'].iloc[:tam]
+        new_data['user'] = data['user'].iloc[:tam]
+        
+        data = new_data
+        
         for i in range(0, data.shape[0], self.time_window - self.window_overlap):
             window_df = data[i : i + self.time_window]
             # print(i, i+window, len(window_df)) # --> dropna will remove i:i+window ranges < window

@@ -64,8 +64,11 @@ class FFT(InvertibleTransform):
             if self.centered:
                 data = data[:len(data)//2]
             datas.append(data)
-
-        data = np.array(datas)
+            
+        n = len(data)
+        norm = np.sqrt(n)
+        
+        data = np.array(datas) / norm
         return data.T if self.transpose else data
 
     def inverse_transform(self, X: ArrayLike) -> ArrayLike:
