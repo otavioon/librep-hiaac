@@ -8,10 +8,11 @@ The results are organized in:
 - *htmlFile*: There are results in html format;
 - *jsonFile*: There are results in json format;
 - *pngFile*: There are results in png format;
+- *pdfFile*: There are results in pdf format;
 
 Each file is named as follows:
 
-**Domain**_data_**model**_label_**labels_select**_**format**
+**Domain**\_data_**model**\_label_**labels_select**\_**format**
 
 where,
 
