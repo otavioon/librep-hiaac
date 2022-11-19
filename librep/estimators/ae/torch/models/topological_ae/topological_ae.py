@@ -64,13 +64,17 @@ class TopologicallyRegularizedAutoencoder(AutoencoderModel):
         ae_loss, ae_loss_comp = self.autoencoder(x)
 #         print('TEST'*20)
 #         print(self.topo_sig(x_distances, latent_distances))
+        
         topo_error, topo_error_components = self.topo_sig(
             x_distances, latent_distances)
 
         # normalize topo_error according to batch_size
         batch_size = dimensions[0]
         topo_error = topo_error / float(batch_size) 
+        
         loss = ae_loss + self.lam * topo_error
+        if self.lam == 0:
+            loss = ae_loss
         loss_components = {
             'loss.autoencoder': ae_loss,
             'loss.topo_error': topo_error
