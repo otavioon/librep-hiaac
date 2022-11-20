@@ -29,6 +29,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import itertools
 from itertools import combinations
+import pickle
 
 # Librep imports
 from librep.utils.dataset import PandasDatasetsIO          # For quick load train, test and validation CSVs
@@ -538,6 +539,13 @@ for umap_name, train_name, test_name in zip(combinations_sets['Umap'], combinati
     new_end = time.time()
     print(f'Combination: {k} \t Time of execution: {int(new_end - new_start) // 60} minutes and {int(new_end - new_start) % 60} seconds')
     k+=1
+    
+    # Save results
+    with open('df_results.pkl', 'wb') as file:
+        pickle.dump(df_results, file)
+
+    with open('results_dict.pkl', 'wb') as file:
+        pickle.dump(results_dict, file)
 
 end = time.time()
 total = int(end - start)
@@ -549,7 +557,6 @@ df_results = pd.DataFrame(df_results)
 # df_results
 
 # Save results
-import pickle
 
 with open('df_results.pkl', 'wb') as file:
     pickle.dump(df_results, file)
@@ -557,10 +564,10 @@ with open('df_results.pkl', 'wb') as file:
 with open('results_dict.pkl', 'wb') as file:
     pickle.dump(results_dict, file)
 
-with open('df_results.pkl', 'rb') as f:
-    model = pickle.load(f)
+# with open('df_results.pkl', 'rb') as f:
+#     model = pickle.load(f)
 # df_results
 
-with open('results_dict.pkl', 'rb') as f:
-    model = pickle.load(f)
+# with open('results_dict.pkl', 'rb') as f:
+#     model = pickle.load(f)
 # results_dict
