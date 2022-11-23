@@ -281,7 +281,7 @@ data_train_name = ['KuHar', 'MotionSense', 'ExtraSensory', 'WISDM', 'UCI']
 data_test_name = ['KuHar', 'MotionSense', 'WISDM', 'UCI']
 
 combinations_sets = { 
-    'Umap': [],
+    'Umap - 10': [],
     'Train': [],
     'Test': []
 }
@@ -319,14 +319,14 @@ for comb_umap in combination_umap:
                 for comb_test in combination_test:
                     for set_test in comb_test:
                         if len(set_train) != 1 or set_train[0] != 'ExtraSensory':
-                            combinations_sets['Umap'].append(set_umap)
+                            combinations_sets['Umap - 10'].append(set_umap)
                             combinations_sets['Train'].append(set_train)
                             combinations_sets['Test'].append(set_test)   
 
-n = len(combinations_sets['Umap'])
+n = len(combinations_sets['Umap - 10'])
 print(f'Total of combinations without only ExtraSensory as train data: {n}')
 
-columns = ['Classifier', 'Umap', 'Train', 'Test']
+columns = ['Classifier', 'Umap - 10', 'Train', 'Test']
 
 metrics = ['accuracy', 'f1 score (weighted)']
 stats = ['mean', 'std']
@@ -351,7 +351,7 @@ results_dict = {
 
 for classifier in results_dict.keys():
     results_dict[classifier] = {
-        'Umap': [],
+        'Umap - 10': [],
         'Train': [],
         'Test': [],
         'result': []
@@ -386,14 +386,13 @@ def evaluate(umap, train, test, evaluators, df, results_dict, umap_name, train_n
 # The reporter will be the same
 
     fft_transform = FFT(centered=True)
-
-    if umap_name == '-':
+    if umap_name == ['-']:
         transformer = TransformMultiModalDataset(transforms=[fft_transform], 
                                                  new_window_name_prefix="fft.")
 
     else:
         transformer_fft = TransformMultiModalDataset(transforms=[fft_transform], 
-                                                 new_window_name_prefix="reduced.")
+                                                 new_window_name_prefix="fft.")
 
         umap = UMAP(n_components=10, random_state=42)
         train_fft = transformer_fft(train)
@@ -416,13 +415,13 @@ def evaluate(umap, train, test, evaluators, df, results_dict, umap_name, train_n
             debug=False)
 
         results = multi_run_experiment(train_fft, test_fft)
-        results_dict[estimator]['Umap'].append(umap_name)
+        results_dict[estimator]['Umap - 10'].append(umap_name)
         results_dict[estimator]['Train'].append(train_name)
         results_dict[estimator]['Test'].append(test_name)
         results_dict[estimator]['result'].append(results)
 
         df['Classifier'].append(estimator)
-        df['Umap'].append(umap_name)
+        df['Umap - 10'].append(umap_name)
         df['Train'].append(train_name)
         df['Test'].append(test_name)
 
@@ -516,8 +515,18 @@ evaluators = {
 
 train_data.data['standard activity code'] = train_data.data['standard activity code'].astype('int')
 test_data.data['standard activity code'] = test_data.data['standard activity code'].astype('int')
+
+# with open('df_results_fixed.pkl', 'rb') as f:
+#     df_results = pickle.load(f)
+
+
+# with open('results_dict_fixed.pkl', 'rb') as f:
+#     results_dict = pickle.load(f)
+
+# k = 1517
+
 k = 1
-for umap_name, train_name, test_name in zip(combinations_sets['Umap'], combinations_sets['Train'], combinations_sets['Test']):
+for umap_name, train_name, test_name in zip(combinations_sets['Umap - 10'], combinations_sets['Train'], combinations_sets['Test']):
     umap_name, train_name = list(umap_name), list(train_name)
     
     if umap_name != ['-']:
@@ -541,10 +550,12 @@ for umap_name, train_name, test_name in zip(combinations_sets['Umap'], combinati
     k+=1
     
     # Save results
-    with open('df_results.pkl', 'wb') as file:
+    df_results_csv = pd.DataFrame(df_results)
+    df_results_csv.to_csv('df_results.csv')
+    with open('df_results_fixed.pkl', 'wb') as file:
         pickle.dump(df_results, file)
 
-    with open('results_dict.pkl', 'wb') as file:
+    with open('results_dict_fixed.pkl', 'wb') as file:
         pickle.dump(results_dict, file)
 
 end = time.time()
@@ -553,15 +564,15 @@ print(f'Time of execution: {total} seconds')
 print(f'Time of execution: {total // 60} minutes and {total % 60} seconds')
 print(f'Time of execution: {(total // 86400)} days, {(total // 3600) % 24} hours, {(total // 60) % 60} minutes and {total % 60} seconds')
 
-df_results = pd.DataFrame(df_results)
+# df_results = pd.DataFrame(df_results)
 # df_results
 
 # Save results
 
-with open('df_results.pkl', 'wb') as file:
+with open('df_results_fixed.pkl', 'wb') as file:
     pickle.dump(df_results, file)
     
-with open('results_dict.pkl', 'wb') as file:
+with open('results_dict_fixed.pkl', 'wb') as file:
     pickle.dump(results_dict, file)
 
 # with open('df_results.pkl', 'rb') as f:
