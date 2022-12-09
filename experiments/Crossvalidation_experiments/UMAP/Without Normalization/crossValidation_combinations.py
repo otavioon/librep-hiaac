@@ -70,9 +70,9 @@ labels_dataset = {
     'MotionSense': 'MotionSense',
     'ExtraSensory': 'ExtraSensory',
     'WISDM': 'WISDM',
+    'WISDM_V2': 'WISDM_V2',
     'UCI': 'UCI',
 }
-
 
 # ## Load KuHar
 
@@ -81,9 +81,6 @@ loader = KuHar_BalancedView20HzMotionSenseEquivalent(
     Root+"/data/views/KuHar/balanced_20Hz_motionsense_equivalent-v1", 
     download=False)
 train_val_kuhar, test_kuhar = loader.load(concat_train_validation=True, label="standard activity code")
-# train_val_kuhar, test_kuhar
-
-# train_val_kuhar.data.iloc[:,:-10]
 
 train_kuhar_X = train_val_kuhar.data.iloc[:,:-10]
 train_kuhar_Y = train_val_kuhar.data['standard activity code']
@@ -97,18 +94,12 @@ tam = len(test_kuhar_Y)
 test_kuhar_id_dataset = np.array(['KuHar']*tam)
 test_kuhar_label = np.array([labels_activity[i] + ' - ' + labels_dataset[j] for i, j in zip(test_kuhar_Y, test_kuhar_id_dataset)])
 
-
 # ## Load MotionSense
 
 loader = MotionSense_BalancedView20HZ(
     Root+"/data/views/MotionSense/balanced_20Hz_filtered", 
     download=False) 
 train_val_motion, test_motion = loader.load(concat_train_validation=True, label="standard activity code")
-# train_val_motion, test_motion
-
-# train_val_motion.data.iloc[:,540:-6]
-
-# train_val_motion.data.iloc[:,360:540]
 
 train_motion_X = pd.concat([train_val_motion.data.iloc[:,540:-6], train_val_motion.data.iloc[:,360:540]], axis=1)
 train_motion_Y = train_val_motion.data['standard activity code']
@@ -122,17 +113,12 @@ tam = len(test_motion_Y)
 test_motion_id_dataset = np.array(['MotionSense']*tam)
 test_motion_label = np.array([labels_activity[i] + ' - ' + labels_dataset[j] for i, j in zip(test_motion_Y, test_motion_id_dataset)])
 
-# test_motion_X
-
 # ## Load UCI-HAR
 
 loader = UCIHAR_UnbalancedView20Hz(
     Root+"/data/views/UCI-HAR/balanced_20Hz_filtered",
     download=False) 
 train_val_uci, test_uci = loader.load(concat_train_validation=True, label="standard activity code")
-# train_val_uci, test_uci
-
-# train_val_uci.data.iloc[:,:-3]
 
 train_uci_X = train_val_uci.data.iloc[:,:-3]
 train_uci_Y = train_val_uci.data['standard activity code']
@@ -148,18 +134,12 @@ tam = len(test_uci_Y)
 test_uci_id_dataset = np.array(['UCI']*tam)
 test_uci_label = np.array([labels_activity[i] + ' - ' + labels_dataset[j] for i, j in zip(test_uci_Y, test_uci_id_dataset)])
 
-
 # ## Load WISDM
 
 loader = UCIHAR_UnbalancedView20Hz(
     Root+"/data/views/WISDM/balanced_20Hz_filtered", 
     download=False) 
 train_val_wisdm, test_wisdm = loader.load(concat_train_validation=True, label="standard activity code")
-# train_val_wisdm, test_wisdm
-
-# train_val_wisdm.data['standard activity code'].unique()
-
-# train_val_wisdm.data.iloc[:,:-3]
 
 train_wisdm_X = train_val_wisdm.data.iloc[:,:-3]
 train_wisdm_Y = train_val_wisdm.data['standard activity code']
@@ -175,6 +155,21 @@ tam = len(test_wisdm_Y)
 test_wisdm_id_dataset = np.array(['WISDM']*tam)
 test_wisdm_label = np.array([labels_activity[i] + ' - ' + labels_dataset[j] for i, j in zip(test_wisdm_Y, test_wisdm_id_dataset)])
 
+# Remove the class 6 from WISDM
+train_val_wisdm.data = train_val_wisdm.data[-train_val_wisdm.data['standard activity code'].isin([6])]
+train_wisdm_v2_X = train_val_wisdm.data.iloc[:,:-3]
+train_wisdm_v2_Y = train_val_wisdm.data['standard activity code']
+
+tam = len(train_wisdm_Y)
+train_wisdm_id_dataset = np.array(['WISDM']*tam)
+train_wisdm_label = np.array([labels_activity[i] + ' - ' + labels_dataset[j] for i, j in zip(train_wisdm_Y, train_wisdm_id_dataset)])
+
+test_wisdm_X = test_wisdm.data.iloc[:,:-3]
+test_wisdm_Y = test_wisdm.data['standard activity code']
+
+tam = len(test_wisdm_Y)
+test_wisdm_id_dataset = np.array(['WISDM']*tam)
+test_wisdm_label = np.array([labels_activity[i] + ' - ' + labels_dataset[j] for i, j in zip(test_wisdm_Y, test_wisdm_id_dataset)])
 
 # ## Load ExtraSensory
 
@@ -182,9 +177,6 @@ loader = ExtraSensorySense_UnbalancedView20HZ(
     Root+"/data/views/ExtraSensory/unbalanced_20Hz_train-gnoravity-v1", 
     download=False) 
 train_val_extrasensory, test_extrasensory = loader.load(concat_train_validation=True, label="standard activity code")
-# train_val_extrasensory, test_extrasensory
-
-# train_val_extrasensory.data.iloc[:,1:-8]
 
 train_extrasensory_X = train_val_extrasensory.data.iloc[:,1:-8]
 train_extrasensory_Y = train_val_extrasensory.data['standard activity code']
@@ -220,19 +212,15 @@ test_data_id_dataset = np.concatenate(
 test_data_label = np.concatenate(
     [test_kuhar_label, test_motion_label, test_uci_label, test_wisdm_label, test_extrasensory_label])
 
-# train_kuhar_X.shape, train_motion_X.shape, train_uci_X.shape, train_wisdm_X.shape
-
 train_data = train_data_X
 train_data['standard activity code'] = np.array(train_data_y)
 train_data['DataSet'] = np.array(train_data_id_dataset)
 train_data['label'] = np.array(train_data_label)
-# train_data
 
 test_data = test_data_X
 test_data['standard activity code'] = np.array(test_data_y)
 test_data['DataSet'] = np.array(test_data_id_dataset)
 test_data['label'] = np.array(test_data_label)
-# test_data
 
 # Features to select
 features = [
@@ -273,10 +261,8 @@ transformer = TransformMultiModalDataset(
 )
 
 data_umap_name = ['KuHar', 'MotionSense', 'ExtraSensory', 'WISDM', 'UCI']
-# data_umap_name = ['KuHar', 'MotionSense', 'WISDM', 'UCI']
 
-data_train_name = ['KuHar', 'MotionSense', 'ExtraSensory', 'WISDM', 'UCI']
-# data_train_name = ['KuHar', 'MotionSense', 'WISDM', 'UCI']
+data_train_name = ['KuHar', 'MotionSense', 'WISDM', 'UCI']
 
 data_test_name = ['KuHar', 'MotionSense', 'WISDM', 'UCI']
 
@@ -356,6 +342,7 @@ for classifier in results_dict.keys():
         'Test': [],
         'result': []
     }
+umap_dict = {combination: None for combination in combination_umap}
         
 # metrics_class
 
@@ -382,7 +369,7 @@ def create_data_multimodal(data):
 
     return data_multimodal
 
-def evaluate(umap, train, test, evaluators, df, results_dict, umap_name, train_name, test_name, labels_activity, metrics_class, reporter):
+def evaluate(umap, train, test, evaluators, df, results_dict, umap_name, train_name, test_name, labels_activity, metrics_class, reporter, umap_dict):
 # The reporter will be the same
 
     fft_transform = FFT(centered=True)
@@ -390,7 +377,7 @@ def evaluate(umap, train, test, evaluators, df, results_dict, umap_name, train_n
         transformer = TransformMultiModalDataset(transforms=[fft_transform], 
                                                  new_window_name_prefix="fft.")
 
-    else:
+    elif umap_dict[umap_name[0]] == None:
         transformer_fft = TransformMultiModalDataset(transforms=[fft_transform], 
                                                  new_window_name_prefix="fft.")
 
@@ -398,6 +385,7 @@ def evaluate(umap, train, test, evaluators, df, results_dict, umap_name, train_n
         train_fft = transformer_fft(train)
 
         umap.fit(train_fft[:][0])
+        umap_dict[umap_name[0]] = umap
 
         umap_transform = WindowedTransform(
             transform=umap, fit_on=None, transform_on="all"
@@ -405,6 +393,17 @@ def evaluate(umap, train, test, evaluators, df, results_dict, umap_name, train_n
 
         transformer = TransformMultiModalDataset(transforms=[fft_transform, umap_transform], 
                                                  new_window_name_prefix="reduced.")
+
+    else:
+        umap = umap_dict[umap_name[0]]
+        
+        umap_transform = WindowedTransform(
+            transform=umap, fit_on=None, transform_on="all"
+        )
+
+        transformer = TransformMultiModalDataset(transforms=[fft_transform, umap_transform], 
+                                                 new_window_name_prefix="reduced.")
+
     train_fft = transformer(train)
     test_fft = transformer(test)
 
@@ -460,7 +459,7 @@ def evaluate(umap, train, test, evaluators, df, results_dict, umap_name, train_n
                         [res['result'][0]['classification report'][str(index)][metric] for res in results["runs"]]
                     )
                 ) if index in labels else  df[f'{metric} - std - {activity}'].append(np.nan)
-    return df, results_dict
+    return df, results_dict, umap_dict
 
 start = time.time()
 reporter = ClassificationReport(
@@ -469,8 +468,6 @@ reporter = ClassificationReport(
     use_classification_report=True,
     use_confusion_matrix=True,
     plot_confusion_matrix=False,
-#     normalize='true',
-#     display_labels=labels,
 )
 
 evaluators = {
@@ -516,15 +513,6 @@ evaluators = {
 train_data.data['standard activity code'] = train_data.data['standard activity code'].astype('int')
 test_data.data['standard activity code'] = test_data.data['standard activity code'].astype('int')
 
-# with open('df_results_fixed.pkl', 'rb') as f:
-#     df_results = pickle.load(f)
-
-
-# with open('results_dict_fixed.pkl', 'rb') as f:
-#     results_dict = pickle.load(f)
-
-# k = 1517
-
 k = 1
 for umap_name, train_name, test_name in zip(combinations_sets['Umap - 10'], combinations_sets['Train'], combinations_sets['Test']):
     umap_name, train_name = list(umap_name), list(train_name)
@@ -542,7 +530,7 @@ for umap_name, train_name, test_name in zip(combinations_sets['Umap - 10'], comb
     test = create_data_multimodal(test)
     
     new_start = time.time()
-    df_results, results_dict = evaluate(umap, train, test, evaluators, df_results, results_dict, 
+    df_results, results_dict, umap_dict = evaluate(umap, train, test, evaluators, df_results, results_dict, 
                                         umap_name, train_name, test_name, labels_activity, 
                                         metrics_class, reporter)
     new_end = time.time()
