@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import tqdm
 
-from librep.utils.file_ops import download_unzip_check
+from librep.utils.file_ops import download_extract_check
 from librep.config.type_definitions import PathLike
 from librep.datasets.har.generator import HARDatasetGenerator, DatasetSplitError
 
@@ -74,10 +74,9 @@ class RawKuHar:
         # Create directories
         self.dataset_dir.mkdir(exist_ok=True, parents=True)
         file_path = self.dataset_dir / "kuhar.zip"
-        download_unzip_check(
+        download_extract_check(
             url=RawKuHar.dataset_url,
-            download_destination=file_path,
-            unzip_dir=self.dataset_dir,
+            destination_download_file=file_path,
         )
 
     def __read_metadata(self) -> pd.DataFrame:
@@ -589,29 +588,6 @@ class KuHarDatasetGenerator(HARDatasetGenerator):
         validation = validation.reset_index(drop=True)
         test = test.reset_index(drop=True)
 
-        # features = [
-        #     column
-        #     for col_prefix in [
-        #         "accel-x",
-        #         "accel-y",
-        #         "accel-z",
-        #         "gyro-x",
-        #         "gyro-y",
-        #         "gyro-z",
-        #     ]
-        #     for column in df.columns
-        #     if column.startswith(col_prefix)
-        # ]
-
-        # train = PandasDataset(train,
-        #                       features_columns=features,
-        #                       label_columns=self.labels)
-        # validation = PandasDataset(validation,
-        #                            features_columns=features,
-        #                            label_columns=self.labels)
-        # test = PandasDataset(test,
-        #                      features_columns=features,
-        #                      label_columns=self.labels)
 
         return train, validation, test
 
