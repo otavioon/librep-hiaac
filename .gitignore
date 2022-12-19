@@ -18,6 +18,7 @@
 **/.vscode-server/
 **/old/
 **/results/**
+**/core
 **/test/**
 !**/.gitkeep
 docs/build

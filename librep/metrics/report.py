@@ -24,7 +24,8 @@ class ClassificationReport(SupervisedEvaluator):
         output_path: PathLike = None,
         # Parameters to confusion matrix
         normalize: str = None,
-        labels: ArrayLike = None
+        display_labels: ArrayLike = None,
+        xticks_rotation: str = 'horizontal'
     ):
         self.use_accuracy = use_accuracy
         self.use_f1_score = use_f1_score
@@ -33,7 +34,8 @@ class ClassificationReport(SupervisedEvaluator):
         self.plot_confusion_matrix = plot_confusion_matrix
         self.output_path = Path(output_path) if output_path is not None else None 
         self.normalize = normalize
-        self.labels = labels
+        self.display_labels = display_labels
+        self.xticks_rotation = xticks_rotation
 
         # TODO Save
         if output_path is not None:
@@ -67,7 +69,11 @@ class ClassificationReport(SupervisedEvaluator):
             result["classification report"] = res
 
         if self.plot_confusion_matrix:
-            ConfusionMatrixDisplay.from_predictions(y_true, y_pred, normalize=self.normalize, labels=self.labels)
+            if self.display_labels is not None:
+                self.xticks_rotation = 'vertical'
+            ConfusionMatrixDisplay.from_predictions(y_true, y_pred, normalize=self.normalize,
+                                                    display_labels=self.display_labels, 
+                                                    xticks_rotation=self.xticks_rotation)
             plt.show()
 
         return result
