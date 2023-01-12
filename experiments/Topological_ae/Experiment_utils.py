@@ -27,7 +27,6 @@ def create_PandasMultiModalDataset(X, y):
     )
     return X_pmd
 
-
 def run_experiments_accuracy_f1(train_X, train_Y, test_X, test_Y):
     # Create PandasMultiModalDataset
     train_pmd = create_PandasMultiModalDataset(train_X, train_Y)
@@ -53,8 +52,8 @@ def run_experiments_accuracy_f1(train_X, train_Y, test_X, test_Y):
     result = multi_run_experiment(train_pmd, test_pmd)
 
     # Obtain accuracy and f1
-    rf_accuracy = np.mean([run['result'][0]['accuracy'] for run in result['runs']])
-    rf_f1 = np.mean([run['result'][0]['f1 score (weighted)'] for run in result['runs']])
+    rf_accuracy = [run['result'][0]['accuracy'] for run in result['runs']]
+    rf_f1 = [run['result'][0]['f1 score (weighted)'] for run in result['runs']]
 
     # Experiment for SVC
     experiment = SimpleTrainEvalWorkflow(
@@ -69,8 +68,8 @@ def run_experiments_accuracy_f1(train_X, train_Y, test_X, test_Y):
     multi_run_experiment = MultiRunWorkflow(workflow=experiment, num_runs=1, debug=False)
     result = multi_run_experiment(train_pmd, test_pmd)
     # Obtain accuracy and f1
-    svc_accuracy = np.mean([run['result'][0]['accuracy'] for run in result['runs']])
-    svc_f1 = np.mean([run['result'][0]['f1 score (weighted)'] for run in result['runs']])
+    svc_accuracy = [run['result'][0]['accuracy'] for run in result['runs']]
+    svc_f1 = [run['result'][0]['f1 score (weighted)'] for run in result['runs']]
 
     # Experiment for KNN
     experiment = SimpleTrainEvalWorkflow(
@@ -84,8 +83,8 @@ def run_experiments_accuracy_f1(train_X, train_Y, test_X, test_Y):
     multi_run_experiment = MultiRunWorkflow(workflow=experiment, num_runs=1, debug=False)
     result = multi_run_experiment(train_pmd, test_pmd)
     # Obtain accuracy and f1
-    knn_accuracy = np.mean([run['result'][0]['accuracy'] for run in result['runs']])
-    knn_f1 = np.mean([run['result'][0]['f1 score (weighted)'] for run in result['runs']])
+    knn_accuracy = [run['result'][0]['accuracy'] for run in result['runs']]
+    knn_f1 = [run['result'][0]['f1 score (weighted)'] for run in result['runs']]
     return_object = {
         'RF-ACC': rf_accuracy,
         'RF-F1': rf_f1,
